@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
-
+import loginBG     from 'assests/images/login-cover.jpg';
+import loudboxLogo from 'assests/svg/loudbox-logo.svg';
 
 
 export class LoginPage extends React.Component {
@@ -21,7 +22,7 @@ export class LoginPage extends React.Component {
     rightImageContainer: {
       display: 'none',
       // set/config bg image
-      backgroundImage: `url(${require('assests/images/login-cover.jpg')})`,
+      backgroundImage: `url(${loginBG})`,
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
@@ -35,6 +36,11 @@ export class LoginPage extends React.Component {
         display: 'flex'
       }
     },
+    logo: {
+      height: '48px',
+      width: 'auto',
+      marginBottom: '32px',
+    },
   });
 
   render(){
@@ -42,7 +48,13 @@ export class LoginPage extends React.Component {
     return(
       <div className={css(styles.rootContainer)}>
         <div className={css(styles.leftFormContainer)}>
-          <h1>Hello</h1>
+          <div>
+            <img 
+              className={css(styles.logo)}
+              src={loudboxLogo} 
+              alt="LoudBox Logo" 
+            />
+          </div>
         </div>
         <div className={css(styles.rightImageContainer)}/>
       </div>
