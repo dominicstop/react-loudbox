@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
-import { Typography, Box } from '@material-ui/core';
+import { Typography, Box, Button, CircularProgress, Link } from '@material-ui/core';
 import { FormControl, InputLabel, InputBaseProps, FormHelperText } from '@material-ui/core';
 
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
@@ -16,6 +16,28 @@ export class LoginPage extends React.Component {
       flex: 1,
       display: 'flex',
       flexDirection: 'row',
+    },
+    rightImageContainer: {
+      display: 'none',
+      // set/config bg image
+      backgroundImage: `url(${loginBG})`,
+      backgroundPosition: 'center',
+      backgroundRepeat: 'norepeat',
+      backgroundSize: 'cover',
+      // show the right image container if there's enough space
+      '@media (min-width: 750px) and (max-width: 1250px)': {
+        flex: 1,
+        display: 'flex'
+      },
+      '@media (min-width: 1250px)': {
+        flex: 2,
+        display: 'flex'
+      },
+    },
+    logo: {
+      height: '48px',
+      width: 'auto',
+      marginBottom: '32px',
     },
     leftFormContainer: {
       flex: 1,
@@ -35,27 +57,14 @@ export class LoginPage extends React.Component {
       display: 'flex',
       flexDirection: 'column',
     },
-    rightImageContainer: {
-      display: 'none',
-      // set/config bg image
-      backgroundImage: `url(${loginBG})`,
-      backgroundPosition: 'center',
-      backgroundRepeat: 'norepeat',
-      backgroundSize: 'cover',
-      // show the right image container if there's enough space
-      '@media (min-width: 750px) and (max-width: 1250px)': {
-        flex: 1,
-        display: 'flex'
-      },
-      '@media (min-width: 1250px)': {
-        flex: 2,
-        display: 'flex'
-      }
+    formInput: {
+      borderRadius: 4,
+      marginBottom: 15,
+      padding: '10px 12px',
     },
-    logo: {
-      height: '48px',
-      width: 'auto',
-      marginBottom: '32px',
+    formButtonContainer: {
+      display: 'flex',
+      justifyContent: 'space-between',
     },
   });
 
@@ -83,13 +92,30 @@ export class LoginPage extends React.Component {
             <Formik>
               {(params) => (
                 <Form className={css(styles.form)}>
-                  <Field type="email" name="email" />
+                  <Field 
+                    className={css(styles.formInput)}
+                    type="email" name="email"
+                  />
                   <ErrorMessage name="email" component="div" />
-                  <Field type="password" name="password" />
+                  <Field
+                    className={css(styles.formInput)}
+                    type="password" name="password"
+                  />
                   <ErrorMessage name="password" component="div" />
-                  <button type="submit" disabled={params.isSubmitting}>
-                    Submit
-                  </button>
+                  <Box className={css(styles.formButtonContainer)}>
+                    <Button
+                      type="submit"
+                      size="large"
+                      variant="contained"
+                      color="primary"
+                      disabled={params.isSubmitting}
+                    >
+                      { !params.isSubmitting ? 'LOGIN' : <CircularProgress /> }
+                    </Button>
+                    <Link href="/register">
+                      Create an account
+                    </Link>
+                  </Box>
                 </Form>
               )}
             </Formik>
