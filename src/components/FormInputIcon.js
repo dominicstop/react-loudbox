@@ -114,18 +114,6 @@ export class FormInputIcon extends React.Component {
     };
   };
 
-  shouldComponentUpdate(nextProps, nextState){
-    const prevProps = this.props;
-    const prevState = this.state;
-
-    return (
-      prevProps.initial   != nextProps.initial ||
-      prevState.isFocused != prevState.isFocused 
-    );
-
-
-  };
-
   deriveStateFromProps(){
     const props = this.props;
     const state = this.state;
