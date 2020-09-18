@@ -238,7 +238,7 @@ export class LoginPage extends React.Component {
               : 'LOGIN' 
             }
           </Button>
-          <Link href="/register">
+          <Link href="/signup">
             Create an account
           </Link>
         </Box>

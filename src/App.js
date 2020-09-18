@@ -8,8 +8,9 @@ import { BrowserRouter as Router, Switch, Route, Redirect, Link } from "react-ro
 import { ThemeConfig } from "constants/ThemeConfig";
 import { ProtectedRoute } from 'components/ProtectedRoute';
 
-import { LoginPage } from "pages/LoginPage";
-import { HomePage  } from "pages/HomePage";
+import { LoginPage  } from "pages/LoginPage";
+import { SignUpPage } from "pages/SignUpPage";
+import { HomePage   } from "pages/HomePage";
 
 
 export default function App(){
@@ -28,6 +29,9 @@ export default function App(){
             </Route>
             <Route exact path="/login">
               <LoginPage/>
+            </Route>
+            <Route exact path="/signup">
+              <SignUpPage/>
             </Route>
             <ProtectedRoute exact path="/home">
               <HomePage/>
