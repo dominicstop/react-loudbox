@@ -8,6 +8,7 @@ import { ThemeConfig } from "constants/ThemeConfig";
 import { LoginPage } from "pages/LoginPage";
 
 export default class App extends React.Component {
+
   render() {
     return (
       <ThemeProvider theme={ThemeConfig}>

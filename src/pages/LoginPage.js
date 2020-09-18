@@ -1,14 +1,77 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
+import SVG from 'react-inlinesvg';
+import { motion } from "framer-motion";
+
+
 import { Typography, Box, Button, CircularProgress, Link } from '@material-ui/core';
 import { FormControl, InputLabel, InputBaseProps, FormHelperText } from '@material-ui/core';
 
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
+import * as Yup from 'yup';
+
+import { FormInputIcon, ICON_KEYS } from 'components/FormInputIcon';
 
 import loginBG     from 'assests/images/login-cover.jpg';
 import loudboxLogo from 'assests/svg/loudbox-logo.svg';
 
+
+const LOGIN_STATE = {
+  INITIAL : 'INITIAL', // intial form state
+  INVALID : 'INVALID', // invalid email/password
+  LOADING : 'LOADING', // waiting for server resp
+  SUCCESS : 'SUCCESS', // login granted
+  REJECTED: 'INVALID', // login rejected
+  ERROR   : 'ERROR'  , // login error
+};
+
+const VARIANTS = {
+  formContainer: {
+    hidden: { 
+      opacity: 0,
+      y: 50,
+    },
+    visible: {
+      y: 0,
+      opacity: 1
+    },
+  },
+  rightImage: {
+    hidden: { 
+      opacity: 0,
+      scale: 1.25,
+      WebkitFilter: 'blur(7px)',
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      WebkitFilter: 'blur(0px)',
+    },
+  },
+};
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .email()
+    .required("Required"),
+  password: Yup.string()
+    .required("No password provided.")
+    .min(8, "Password is too short - should be 8 chars minimum.")
+    .matches(/(?=.*[0-9])/, "Password must contain a number.")
+});
+
+// icons used for the FormInputIcon comp
+const IconMap = {
+  email: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/mail.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/mail-outline.svg')}/>,
+  },
+  password: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/key.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/key-outline.svg')}/>,
+  },
+};
 
 export class LoginPage extends React.Component {
   static styles = StyleSheet.create({
@@ -19,11 +82,7 @@ export class LoginPage extends React.Component {
     },
     rightImageContainer: {
       display: 'none',
-      // set/config bg image
-      backgroundImage: `url(${loginBG})`,
-      backgroundPosition: 'center',
-      backgroundRepeat: 'norepeat',
-      backgroundSize: 'cover',
+      overflow: 'hidden',
       // show the right image container if there's enough space
       '@media (min-width: 750px) and (max-width: 1250px)': {
         flex: 1,
@@ -33,6 +92,13 @@ export class LoginPage extends React.Component {
         flex: 2,
         display: 'flex'
       },
+    },
+    rightImage: {
+      flex: 1,
+      backgroundImage: `url(${loginBG})`,
+      backgroundPosition: 'center',
+      backgroundRepeat: 'norepeat',
+      backgroundSize: 'cover',
     },
     logo: {
       height: '48px',
@@ -68,8 +134,76 @@ export class LoginPage extends React.Component {
     },
   });
 
-  _handleOnFormSubmit = () => {
+  constructor(props){
+    super(props);
 
+    this.state = {
+      loginState: LOGIN_STATE.INITIAL,
+    };
+  };
+
+  _handleFormikOnSubmit = (values, { setSubmitting }) => {
+    setTimeout(() => {
+      console.log("Logging in", values);
+      setSubmitting(false);
+    }, 500);
+  };
+
+  _renderForm = (formikProps) => {
+    const { values, errors, touched } = formikProps;
+    const { styles } = LoginPage;
+
+    console.log({formikErrors: errors});
+
+    return(
+      <Form 
+        className={css(styles.form)}
+        onSubmit={formikProps.handleSubmit}
+      >
+        <FormInputIcon
+          iconmap={IconMap.email}
+          placeholder={'Email'}
+          id={'email'}
+          type={"email"}
+          name={"email"}
+          value={values.email}
+          error={errors.email}
+          touched={touched.email}
+          onChange={formikProps.handleChange}
+          onBlur={formikProps.handleBlur}
+        />
+        <FormInputIcon
+          iconmap={IconMap.password}
+          placeholder={'Password'}
+          id={'password'}
+          type={"password"}
+          name={"password"}
+          value={values.password}
+          error={errors.password}
+          touched={touched.password}
+          isLoading={formikProps.isSubmitting}
+          onChange={formikProps.handleChange}
+          onBlur={formikProps.handleBlur}
+        />
+        <Box className={css(styles.formButtonContainer)}>
+          <Button
+            type="submit"
+            size="large"
+            variant="contained"
+            color="primary"
+            disabled={formikProps.isSubmitting}
+          >
+            {formikProps.isSubmitting
+              ? <CircularProgress/> 
+              : 'LOGIN' 
+            }
+          </Button>
+          <Link href="/register">
+            Create an account
+          </Link>
+        </Box>
+      </Form>
+    );
   };
 
   render(){
@@ -77,51 +211,44 @@ export class LoginPage extends React.Component {
     return(
       <div className={css(styles.rootContainer)}>
         <div className={css(styles.leftFormContainer)}>
-          <Box className={css(styles.formContainer)}>
+          <motion.div 
+            className={css(styles.formContainer)}
+            variants={VARIANTS.formContainer}
+            transition={{ ease: "easeInOut", duration: 0.5, delay: 0.3 }}
+            initial={"hidden"}
+            animate={"visible"}
+          >
             <Typography
               variant="h5"
               component="h1"
             >
-              Welcome to
+              {'Welcome to '}
             </Typography>
-            <img 
+            <motion.img 
               className={css(styles.logo)}
               src={loudboxLogo} 
-              alt="LoudBox Logo" 
+              alt={"LoudBox Logo"}
+              animate={{ scale: [1, 1.03, 1] }}
+              transition={{ repeat: Infinity, duration: 0.75, delay: 4, repeatDelay: 4, ease: "backIn" }}
             />
-            <Formik>
-              {(params) => (
-                <Form className={css(styles.form)}>
-                  <Field 
-                    className={css(styles.formInput)}
-                    type="email" name="email"
-                  />
-                  <ErrorMessage name="email" component="div" />
-                  <Field
-                    className={css(styles.formInput)}
-                    type="password" name="password"
-                  />
-                  <ErrorMessage name="password" component="div" />
-                  <Box className={css(styles.formButtonContainer)}>
-                    <Button
-                      type="submit"
-                      size="large"
-                      variant="contained"
-                      color="primary"
-                      disabled={params.isSubmitting}
-                    >
-                      { !params.isSubmitting ? 'LOGIN' : <CircularProgress /> }
-                    </Button>
-                    <Link href="/register">
-                      Create an account
-                    </Link>
-                  </Box>
-                </Form>
-              )}
+            <Formik
+              initialValues={{ email: "", password: "" }}
+              onSubmit={this._handleFormikOnSubmit}
+              {...{validationSchema}}
+            >
+              {this._renderForm}
             </Formik>
-          </Box>
+          </motion.div>
         </div>
-        <div className={css(styles.rightImageContainer)}/>
+        <div className={css(styles.rightImageContainer)}>
+          <motion.div 
+            className={css(styles.rightImage)}
+            variants={VARIANTS.rightImage}
+            transition={{ ease: "easeInOut", duration: 2, delay: 1.25 }}
+            initial={"hidden"}
+            animate={"visible"}
+          />
+        </div>
       </div>
     );
   };

@@ -9,9 +9,13 @@
     "@testing-library/user-event": "^7.1.2",
     "aphrodite": "^2.4.0",
     "formik": "^2.1.5",
+    "framer-motion": "^2.6.13",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3"
+    "react-icons": "^3.11.0",
+    "react-inlinesvg": "^2.1.0",
+    "react-scripts": "3.4.3",
+    "yup": "^0.29.3"
   },
   "scripts": {
     "start": "react-scripts start",
