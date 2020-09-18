@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
 import SVG from 'react-inlinesvg';
-import { motion } from "framer-motion";
+import { motion, AnimationControls } from "framer-motion";
 
 
 import { Typography, Box, Button, CircularProgress, Link } from '@material-ui/core';
@@ -16,6 +16,8 @@ import { FormInputIcon, ICON_KEYS } from 'components/FormInputIcon';
 import loginBG     from 'assests/images/login-cover.jpg';
 import loudboxLogo from 'assests/svg/loudbox-logo.svg';
 
+import * as Helpers      from 'functions/helpers';
+import * as FramerValues from 'constants/FramerValues';
 
 const LOGIN_STATE = {
   INITIAL : 'INITIAL', // intial form state
@@ -140,51 +142,74 @@ export class LoginPage extends React.Component {
     this.state = {
       loginState: LOGIN_STATE.INITIAL,
     };
+
+    // workaround to use `useAnimation` in class comps
+    this.formAnimationContols = new AnimationControls();
+  };
+  
+
+  componentDidMount = async () => {
+    this.formAnimationContols.mount();
   };
 
-  _handleFormikOnSubmit = (values, { setSubmitting }) => {
-    setTimeout(() => {
-      console.log("Logging in", values);
-      setSubmitting(false);
-    }, 500);
+  componentWillMount(){
+    this.formAnimationContols.unmount();
+  };
+
+  _handleOnClickSubmit = (formikProps) => {
+    const errorCount = Object.keys(formikProps.errors).length;
+    const hasErrors  = (errorCount > 0);
+
+    if(hasErrors){
+      // shake form
+      this.formAnimationContols.start(FramerValues.shake);
+    };
+  };
+
+  _handleFormikOnSubmit = async (values, actions) => {
+    await Helpers.timeout(2000);
+    console.log("Logging in", values);
+
+    actions.setSubmitting(false);
+    this.formAnimationContols.start(FramerValues.shake);
   };
 
   _renderForm = (formikProps) => {
     const { values, errors, touched } = formikProps;
     const { styles } = LoginPage;
 
-    console.log({formikErrors: errors});
-
     return(
       <Form 
         className={css(styles.form)}
         onSubmit={formikProps.handleSubmit}
       >
-        <FormInputIcon
-          iconmap={IconMap.email}
-          placeholder={'Email'}
-          id={'email'}
-          type={"email"}
-          name={"email"}
-          value={values.email}
-          error={errors.email}
-          touched={touched.email}
-          onChange={formikProps.handleChange}
-          onBlur={formikProps.handleBlur}
-        />
-        <FormInputIcon
-          iconmap={IconMap.password}
-          placeholder={'Password'}
-          id={'password'}
-          type={"password"}
-          name={"password"}
-          value={values.password}
-          error={errors.password}
-          touched={touched.password}
-          isLoading={formikProps.isSubmitting}
-          onChange={formikProps.handleChange}
-          onBlur={formikProps.handleBlur}
-        />
+        <motion.div animate={this.formAnimationContols}>
+          <FormInputIcon
+            iconmap={IconMap.email}
+            placeholder={'Email'}
+            id={'email'}
+            type={"email"}
+            name={"email"}
+            value={values.email}
+            error={errors.email}
+            touched={touched.email}
+            onChange={formikProps.handleChange}
+            onBlur={formikProps.handleBlur}
+          />
+          <FormInputIcon
+            iconmap={IconMap.password}
+            placeholder={'Password'}
+            id={'password'}
+            type={"password"}
+            name={"password"}
+            value={values.password}
+            error={errors.password}
+            touched={touched.password}
+            isLoading={formikProps.isSubmitting}
+            onChange={formikProps.handleChange}
+            onBlur={formikProps.handleBlur}
+          />
+        </motion.div>
         <Box className={css(styles.formButtonContainer)}>
           <Button
             type="submit"
@@ -192,6 +217,8 @@ export class LoginPage extends React.Component {
             variant="contained"
             color="primary"
             disabled={formikProps.isSubmitting}
+            // workaround because submit isnt trigerred when there are form errors
+            onClick={() => { this._handleOnClickSubmit(formikProps) }}
           >
             {formikProps.isSubmitting
               ? <CircularProgress/> 

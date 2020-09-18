@@ -79,10 +79,11 @@ export class FormInputIcon extends React.Component {
     },
     iconContainer: {
       display: 'flex',
+      position: 'absolute',
       alignItems: 'center',
       justifyContent: 'center',
       width: 25,
-      marginLeft: 10,
+      marginLeft: 5,
     },
     iconMotion: {
       display: 'flex',
@@ -97,13 +98,25 @@ export class FormInputIcon extends React.Component {
       flex: 1,
       borderColor: 'transparent',
       outline: 'none',
-      padding: '8px 10px',
+      padding: '5px 10px 5px 35px',
       backgroundColor: 'transparent !important'
     },
     errorContainer: {
-      marginTop: 7,
+      marginTop: 5,
+    },
+    error: {
+      color: Colors.RED[900],
     },
   });
+
+  static deriveStateFrom({props, state}){
+    return (
+      props.isLoading ? INPUT_STATE.LOADING :
+      state.initial   ? INPUT_STATE.INITIAL :
+      state.isFocused ? INPUT_STATE.FOCUSED : 
+      props.error     ? INPUT_STATE.ERROR   : INPUT_STATE.BLURRED
+    );
+  };
 
   constructor(props){
     super(props);
@@ -114,26 +127,26 @@ export class FormInputIcon extends React.Component {
     };
   };
 
-  deriveStateFromProps(){
-    const props = this.props;
-    const state = this.state;
-    
-    const temp = (
-      props.isLoading ? INPUT_STATE.LOADING :
-      state.initial   ? INPUT_STATE.INITIAL :
-      state.isFocused ? INPUT_STATE.FOCUSED : 
-      props.error     ? INPUT_STATE.ERROR   : INPUT_STATE.BLURRED
+  shouldComponentUpdate(nextProps, nextState){
+    const prevProps = this.props;
+    const prevState = this.state;
+
+    const prevFormState = FormInputIcon.deriveStateFrom({props: prevProps, state: prevState});
+    const nextFormState = FormInputIcon.deriveStateFrom({props: nextProps, state: nextState});
+
+    return (
+      (prevFormState       != nextFormState      ) ||
+      (prevProps.value     != nextProps.value    ) ||
+      (prevState.initial   != nextState.initial  ) ||
+      (prevState.isFocused != nextState.isFocused) 
     );
+  };
 
-    console.log(`id: ${props.id}` , {
-      inputState : temp           ,
-      isLoading  : props.isLoading,
-      touched    : props.touched  ,
-      error      : props.error    ,
+  deriveStateFromProps(){
+    return FormInputIcon.deriveStateFrom({
+      props: this.props,
+      state: this.state,
     });
-
-
-    return temp;
   };
 
   deriveValuesFromState(){
@@ -147,7 +160,7 @@ export class FormInputIcon extends React.Component {
         iconColor: Colors.GREY[500],
       };
       case INPUT_STATE.INITIAL: return {
-        iconColor: Colors.GREY[500],
+        iconColor: Colors.GREY[700],
       };
       case INPUT_STATE.FOCUSED: return {
         iconColor: Colors.GREY[900],
@@ -235,7 +248,8 @@ export class FormInputIcon extends React.Component {
           className={css(styles.inputContainer)}
           variants={VARIANTS.inputContainer}
           animate={inputState}
-          transition={{ duration: 0.3 }}
+          transition={{ ease: 'easeInOut', duration: 0.3 }}
+          whileHover={{ scale: 1.02 }}
         >
           {this._renderFormIcon()}
           <Field {...props}
@@ -245,12 +259,14 @@ export class FormInputIcon extends React.Component {
           />
         </motion.div>
         <motion.div
+          className={css(styles.errorContainer)}
           animate={hasError? 'visible' : 'hidden'}
           variants={VARIANTS.errorContainer}
           transition={{ ease: 'easeInOut', duration: 0.4 }}
-          className={css(styles.errorContainer)}
         >
-          <ErrorMessage name={props.name}/>
+          <label className={css(styles.error)}>
+            {props.error}
+          </label>
         </motion.div>
       </div>
     );
