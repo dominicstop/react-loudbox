@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from "framer-motion"
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 
+import { IoIosAlert } from "react-icons/io";
+
 import * as Colors from 'constants/Colors';
 
 export const ICON_KEYS = {
@@ -102,9 +104,18 @@ export class FormInputIcon extends React.Component {
       backgroundColor: 'transparent !important'
     },
     errorContainer: {
+      display: 'flex',
+      alignItems: 'center',
       marginTop: 5,
     },
+    errorIcon: {
+      marginRight: 5,
+      color: Colors.RED[400],
+      fontSize: 17,
+    },
     error: {
+      flex: 1,
+      textAlign: 'left',
       color: Colors.RED[900],
     },
   });
@@ -264,6 +275,7 @@ export class FormInputIcon extends React.Component {
           variants={VARIANTS.errorContainer}
           transition={{ ease: 'easeInOut', duration: 0.4 }}
         >
+          <IoIosAlert className={css(styles.errorIcon)}/>
           <label className={css(styles.error)}>
             {props.error}
           </label>

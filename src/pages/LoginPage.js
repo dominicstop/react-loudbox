@@ -51,6 +51,15 @@ const VARIANTS = {
       WebkitFilter: 'blur(0px)',
     },
   },
+  inputContainer: {
+    visible: {
+      opacity: 1
+    },
+    loading: {
+      opacity: 0.5
+    },
+    shake: FramerValues.shake,
+  },
 };
 
 const validationSchema = Yup.object().shape({
@@ -162,16 +171,18 @@ export class LoginPage extends React.Component {
 
     if(hasErrors){
       // shake form
-      this.formAnimationContols.start(FramerValues.shake);
+      this.formAnimationContols.start('shake');
     };
   };
 
   _handleFormikOnSubmit = async (values, actions) => {
-    await Helpers.timeout(2000);
+    await this.formAnimationContols.start('loading');
     console.log("Logging in", values);
+    await Helpers.timeout(2000);
 
     actions.setSubmitting(false);
-    this.formAnimationContols.start(FramerValues.shake);
+    this.formAnimationContols.start('visible');
+    this.formAnimationContols.start('shake');
   };
 
   _renderForm = (formikProps) => {
@@ -183,7 +194,10 @@ export class LoginPage extends React.Component {
         className={css(styles.form)}
         onSubmit={formikProps.handleSubmit}
       >
-        <motion.div animate={this.formAnimationContols}>
+        <motion.div
+          variants={VARIANTS.inputContainer}
+          animate={this.formAnimationContols}
+        >
           <FormInputIcon
             iconmap={IconMap.email}
             placeholder={'Email'}
@@ -217,7 +231,8 @@ export class LoginPage extends React.Component {
             variant="contained"
             color="primary"
             disabled={formikProps.isSubmitting}
-            // workaround because submit isnt trigerred when there are form errors
+            // workaround because submit isnt trigerred when there 
+            // are form errors
             onClick={() => { this._handleOnClickSubmit(formikProps) }}
           >
             {formikProps.isSubmitting
