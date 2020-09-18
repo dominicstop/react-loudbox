@@ -6,7 +6,6 @@ import { motion, AnimationControls } from "framer-motion";
 
 
 import { Typography, Box, Button, CircularProgress, Link } from '@material-ui/core';
-import { FormControl, InputLabel, InputBaseProps, FormHelperText } from '@material-ui/core';
 
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
@@ -155,7 +154,6 @@ export class LoginPage extends React.Component {
     // workaround to use `useAnimation` in class comps
     this.formAnimationContols = new AnimationControls();
   };
-  
 
   componentDidMount = async () => {
     this.formAnimationContols.mount();

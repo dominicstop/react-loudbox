@@ -14,6 +14,7 @@ export const ICON_KEYS = {
   inactive: 'inactive',
 };
 
+// state machine modes for input
 const INPUT_STATE = {
   ERROR  : 'ERROR'  ,
   INITIAL: 'INITIAL',
@@ -33,7 +34,7 @@ const VARIANTS = {
       backgroundColor: 'white',
     },
     [INPUT_STATE.BLURRED]: {
-      borderColor: Colors.BLACK[500],
+      borderColor: Colors.BLUE[500],
       backgroundColor: Colors.BLUE[50],
     },
     [INPUT_STATE.FOCUSED]: {
@@ -173,7 +174,7 @@ export class FormInputIcon extends React.Component {
         iconColor: Colors.RED[900],
       };
       case INPUT_STATE.BLURRED: return {
-        iconColor: Colors.GREY[500],
+        iconColor: Colors.BLUE[500],
       };
       case INPUT_STATE.INITIAL: return {
         iconColor: Colors.GREY[700],
@@ -254,7 +255,7 @@ export class FormInputIcon extends React.Component {
 
     return(
       <div className={css(styles.rootContainer)}>
-        {false && (
+        {false && ( // debug
           <div>
             <p>{inputState}</p>
             <p>{`isFocused: ${isFocused} \ntouched: ${props.touched}} \n initial : ${this.state.initial}`}</p>
