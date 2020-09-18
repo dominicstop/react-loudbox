@@ -25,19 +25,24 @@ const INPUT_STATE = {
 const VARIANTS = {
   inputContainer: {
     [INPUT_STATE.ERROR]: {
-      borderColor: Colors.RED[900]
+      borderColor: Colors.RED[900],
+      backgroundColor: Colors.RED[50],
     },
     [INPUT_STATE.INITIAL]: {
-      borderColor: Colors.BLACK[500]
+      borderColor: Colors.BLACK[500],
+      backgroundColor: 'white',
     },
     [INPUT_STATE.BLURRED]: {
-      borderColor: Colors.BLACK[500]
+      borderColor: Colors.BLACK[500],
+      backgroundColor: Colors.BLUE[50],
     },
     [INPUT_STATE.FOCUSED]: {
-      borderColor: Colors.BLACK[900]
+      borderColor: Colors.BLACK[900],
+      backgroundColor: 'white',
     },
     [INPUT_STATE.LOADING]: {
-      borderColor: Colors.BLACK[500]
+      borderColor: Colors.BLACK[500],
+      backgroundColor: 'white',
     },
   },
   errorContainer: {
