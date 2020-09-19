@@ -2,11 +2,14 @@
 
 import * as Helpers from 'functions/helpers';
 
+import { UserModel } from 'models/UserModel';
+
 
 const structure = {
   /** @type {string} */ token         : null,
   /** @type {string} */ expirationDate: null,
-  /** @type {object} */ user          : null,
+  /// comppund types ---------------------------
+  /** @type {UserModel.structure} */ user: null,
 };
 
 /** Enum of keys for LoginResponse
