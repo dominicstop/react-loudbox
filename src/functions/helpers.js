@@ -196,10 +196,12 @@ export function roundToTwo(num){
  */
 
 export function createEnumFromObject(object = {}){
-  const keys = Object.keys(object);
+  // written like this for type inference
+  let acc = {};
 
-  return ({
-    ...object,
-    ...keys.reduce((acc, curr) => (acc[curr] = curr), {})
-  });
+  for(const key of Object.keys(object ?? {})) {
+    acc[key] = key;
+  };
+
+  return acc;
 };
