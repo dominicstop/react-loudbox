@@ -2,46 +2,54 @@ import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
 
-import { motion, AnimatePresence } from "framer-motion"
-import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
-
+import { motion } from "framer-motion"
+import { Field } from 'formik';
 import { IoIosAlert } from "react-icons/io";
 
 import * as Colors from 'constants/Colors';
 
+//#region --- Constants 
+/** enum property keys for iconmap prop
+* @readonly
+* @enum {string}
+*/
 export const ICON_KEYS = {
-  active  : 'active'  ,
-  inactive: 'inactive',
+  /** Icon when in focus */ active  : 'active'  ,
+  /** Icon when blurred  */ inactive: 'inactive',
 };
 
-// state machine modes for input
-const INPUT_STATE = {
-  ERROR  : 'ERROR'  ,
-  INITIAL: 'INITIAL',
-  BLURRED: 'BLURRED',
-  FOCUSED: 'FOCUSED',
-  LOADING: 'LOADING',
+/** state machine enums for input
+* @readonly
+* @enum {string}
+*/
+const INPUT_MODE = {
+  /** Input error/invalid */ ERROR  : 'ERROR'  ,
+  /** No Interactions yet */ INITIAL: 'INITIAL',
+  /** Input not in focus  */ BLURRED: 'BLURRED',
+  /** Input is focused    */ FOCUSED: 'FOCUSED',
+  /** The form is loading */ LOADING: 'LOADING',
 };
 
+// framer motion animation keyframes/state
 const VARIANTS = {
   inputContainer: {
-    [INPUT_STATE.ERROR]: {
+    [INPUT_MODE.ERROR]: {
       borderColor: Colors.RED[900],
       backgroundColor: Colors.RED[50],
     },
-    [INPUT_STATE.INITIAL]: {
+    [INPUT_MODE.INITIAL]: {
       borderColor: Colors.BLACK[500],
       backgroundColor: 'white',
     },
-    [INPUT_STATE.BLURRED]: {
+    [INPUT_MODE.BLURRED]: {
       borderColor: Colors.BLUE[500],
       backgroundColor: Colors.BLUE[50],
     },
-    [INPUT_STATE.FOCUSED]: {
+    [INPUT_MODE.FOCUSED]: {
       borderColor: Colors.BLACK[900],
       backgroundColor: 'white',
     },
-    [INPUT_STATE.LOADING]: {
+    [INPUT_MODE.LOADING]: {
       borderColor: Colors.BLACK[500],
       backgroundColor: 'white',
     },
@@ -59,6 +67,8 @@ const VARIANTS = {
     },
   },
 };
+
+//#endregion 
 
 export class FormInputIcon extends React.Component {
   static propTypes = {
@@ -126,12 +136,12 @@ export class FormInputIcon extends React.Component {
     },
   });
 
-  static deriveStateFrom({props, state}){
+  static deriveModeFrom({props, state}){
     return (
-      props.isLoading ? INPUT_STATE.LOADING :
-      state.initial   ? INPUT_STATE.INITIAL :
-      state.isFocused ? INPUT_STATE.FOCUSED : 
-      props.error     ? INPUT_STATE.ERROR   : INPUT_STATE.BLURRED
+      props.isLoading ? INPUT_MODE.LOADING :
+      state.initial   ? INPUT_MODE.INITIAL :
+      state.isFocused ? INPUT_MODE.FOCUSED : 
+      props.error     ? INPUT_MODE.ERROR   : INPUT_MODE.BLURRED
     );
   };
 
@@ -148,41 +158,41 @@ export class FormInputIcon extends React.Component {
     const prevProps = this.props;
     const prevState = this.state;
 
-    const prevFormState = FormInputIcon.deriveStateFrom({props: prevProps, state: prevState});
-    const nextFormState = FormInputIcon.deriveStateFrom({props: nextProps, state: nextState});
+    const prevInputState = FormInputIcon.deriveModeFrom({props: prevProps, state: prevState});
+    const nextInputState = FormInputIcon.deriveModeFrom({props: nextProps, state: nextState});
 
     return (
-      (prevFormState       != nextFormState      ) ||
+      (prevInputState      != nextInputState     ) ||
       (prevProps.value     != nextProps.value    ) ||
       (prevState.initial   != nextState.initial  ) ||
       (prevState.isFocused != nextState.isFocused) 
     );
   };
 
-  deriveStateFromProps(){
-    return FormInputIcon.deriveStateFrom({
+  deriveModeFromProps(){
+    return FormInputIcon.deriveModeFrom({
       props: this.props,
       state: this.state,
     });
   };
 
-  deriveValuesFromState(){
-    const inputState = this.deriveStateFromProps();
+  deriveValuesFromMode(){
+    const inputState = this.deriveModeFromProps();
     
     switch (inputState) {
-      case INPUT_STATE.ERROR: return {
+      case INPUT_MODE.ERROR: return {
         iconColor: Colors.RED[900],
       };
-      case INPUT_STATE.BLURRED: return {
+      case INPUT_MODE.BLURRED: return {
         iconColor: Colors.BLUE[500],
       };
-      case INPUT_STATE.INITIAL: return {
+      case INPUT_MODE.INITIAL: return {
         iconColor: Colors.GREY[700],
       };
-      case INPUT_STATE.FOCUSED: return {
+      case INPUT_MODE.FOCUSED: return {
         iconColor: Colors.GREY[900],
       };
-      case INPUT_STATE.LOADING: return {
+      case INPUT_MODE.LOADING: return {
         iconColor: Colors.GREY[500],
       };
     };
@@ -207,13 +217,13 @@ export class FormInputIcon extends React.Component {
     onBlur && onBlur(params)
   };
 
+  // the animated icon on the left of the input
   _renderFormIcon(){
     const { styles } = FormInputIcon;
     const { isFocused } = this.state;
     const { iconmap } = this.props;
 
-    const inputState = this.deriveStateFromProps();
-    const { iconColor } = this.deriveValuesFromState();
+    const { iconColor } = this.deriveValuesFromMode();
 
     const sharedIconProps = {
       className: css(styles.icon),
@@ -221,6 +231,7 @@ export class FormInputIcon extends React.Component {
       stroke   : iconColor,
     };
 
+    // inject props to the svg icons
     const iconActive   = React.cloneElement(iconmap[ICON_KEYS.active  ], sharedIconProps);
     const iconInactive = React.cloneElement(iconmap[ICON_KEYS.inactive], sharedIconProps);
 
@@ -249,9 +260,8 @@ export class FormInputIcon extends React.Component {
     const { isFocused } = this.state;
     const { isLoading, ...props } = this.props;
 
-    const inputState = this.deriveStateFromProps();
-
-    const hasError = (inputState == INPUT_STATE.ERROR);
+    const inputState = this.deriveModeFromProps();
+    const hasError = (inputState == INPUT_MODE.ERROR);
 
     return(
       <div className={css(styles.rootContainer)}>
