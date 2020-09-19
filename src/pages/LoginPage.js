@@ -2,15 +2,16 @@ import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
 import SVG from 'react-inlinesvg';
-import { motion, AnimationControls } from "framer-motion";
-
-
+import { motion, AnimationControls, AnimatePresence } from "framer-motion";
 import { Typography, Box, Button, CircularProgress, Link } from '@material-ui/core';
 
-import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
+import { Formik, Form } from 'formik';
 
 import { FormInputIcon, ICON_KEYS } from 'components/FormInputIcon';
+import { AuthLogin, testLoginCredentials } from 'api/Auth';
+import { LoginPayload } from 'models/LoginPayload';
+
 
 import loginBG     from 'assests/images/login-cover.jpg';
 import loudboxLogo from 'assests/svg/loudbox-logo.svg';
@@ -67,8 +68,7 @@ const validationSchema = Yup.object().shape({
     .required("Required"),
   password: Yup.string()
     .required("No password provided.")
-    .min(8, "Password is too short - should be 8 chars minimum.")
-    .matches(/(?=.*[0-9])/, "Password must contain a number.")
+    .min(9, "Password is too short - should be 8 chars minimum.")
 });
 
 // icons used for the FormInputIcon comp
@@ -174,13 +174,35 @@ export class LoginPage extends React.Component {
   };
 
   _handleFormikOnSubmit = async (values, actions) => {
-    await this.formAnimationContols.start('loading');
-    console.log("Logging in", values);
-    await Helpers.timeout(2000);
+    const triggerErrorAnimation = () => {
+      actions.setSubmitting(false);
+      this.formAnimationContols.start('visible');
+      this.formAnimationContols.start('shake');
+    };
 
-    actions.setSubmitting(false);
-    this.formAnimationContols.start('visible');
-    this.formAnimationContols.start('shake');
+    try {
+      const loginCredentials = LoginPayload.factory({
+        username: values?.email    ?? '',
+        password: values?.password ?? '',
+      });
+
+      // transition to logging in animation
+      // and POST to login api
+      const [loginResult] = await Promise.all([
+        AuthLogin.login(loginCredentials),
+        this.formAnimationContols.start('loading'),
+      ]);
+
+      if(loginResult.isSuccess){
+        alert('logged in');
+
+      } else {
+        triggerErrorAnimation();
+      };
+
+    } catch (error) {
+      triggerErrorAnimation();
+    };
   };
 
   _renderForm = (formikProps) => {
@@ -204,7 +226,6 @@ export class LoginPage extends React.Component {
             name={"email"}
             value={values.email}
             error={errors.email}
-            touched={touched.email}
             onChange={formikProps.handleChange}
             onBlur={formikProps.handleBlur}
           />
@@ -216,7 +237,6 @@ export class LoginPage extends React.Component {
             name={"password"}
             value={values.password}
             error={errors.password}
-            touched={touched.password}
             isLoading={formikProps.isSubmitting}
             onChange={formikProps.handleChange}
             onBlur={formikProps.handleBlur}
