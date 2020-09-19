@@ -26,7 +26,11 @@ const structure = {
   /** @type {string} */ dateUpdated    : null,
 };
 
-const RegisterKeys = {
+/** Enum of keys for RegisterModel
+ * @readonly
+ * @enum {string}
+ */
+export const RegisterKeys = {
   ...structure,
   ...Helpers.createEnumFromObject(structure)
 };
