@@ -159,7 +159,7 @@ export class LoginPage extends React.Component {
     this.formAnimationContols.mount();
   };
 
-  componentWillMount(){
+  componentWillUnmount(){
     this.formAnimationContols.unmount();
   };
 
@@ -174,6 +174,8 @@ export class LoginPage extends React.Component {
   };
 
   _handleFormikOnSubmit = async (values, actions) => {
+    const { history } = this.props;
+
     const triggerErrorAnimation = () => {
       actions.setSubmitting(false);
       this.formAnimationContols.start('visible');
@@ -195,12 +197,14 @@ export class LoginPage extends React.Component {
 
       if(loginResult.isSuccess){
         alert('logged in');
+        history.push('/home');
 
       } else {
         triggerErrorAnimation();
       };
 
     } catch (error) {
+      console.log('login error', error);
       triggerErrorAnimation();
     };
   };
