@@ -186,3 +186,20 @@ export function stringHash(string = '') {
 export function roundToTwo(num){
   return Math.round((num + Number.EPSILON) * 100) / 100;
 };
+
+/**
+ * extracts all the property keys from an object 
+ * and creates an enum of property keys
+ * ### Example:
+ *   - `createEnumFromObject({ a: 1, b: 2 })`
+ *      will return: `{ a: 'a', b: 'b'}`
+ */
+
+export function createEnumFromObject(object = {}){
+  const keys = Object.keys(object);
+
+  return ({
+    ...object,
+    ...keys.reduce((acc, curr) => (acc[curr] = curr), {})
+  });
+};
