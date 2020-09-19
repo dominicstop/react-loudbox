@@ -5,11 +5,21 @@ import { LoginPayload  } from 'models/LoginPayload';
 import { ErrorModel    } from 'models/ErrorModel';
 import { LoginResponse, LoginResponseKeys } from 'models/LoginResponse';
 
+//#region - JSDOC Types
+/**
+ * @typedef  {Object } LoginResult
+ * @property {boolean} isSuccess - is login successfull
+ * optional values -----------------------------------------------------------------
+ * @property {ErrorModel   .structure |undefined} loginResponse - error details/info
+ * @property {LoginResponse.structure |undefined} error         - login data
+ */
+//#endregion
+
+
 export const testLoginCredentials = LoginPayload.factory({
   username: 'admin@gmail.com',
   password: 'adminuser'
 });
-
 
 export class AuthLogin {
   /** possible error types based on the login response
@@ -100,7 +110,9 @@ export class AuthLogin {
 
       if(isSuccess){
         const loginResponse = LoginResponse.factory(json);
-        alert('login success');
+
+        /** @type {LoginResult} */
+        return { isSuccess: true, response: loginResponse };
 
       } else {
         const errorType    = AuthLogin.getErrorTypeFromResponse(json);
@@ -112,14 +124,9 @@ export class AuthLogin {
           errorMessage: errorMessage,
         });
 
-        alert(`login failed ${errorType}`);
+        /** @type {LoginResult} */
         return { isSuccess: false, error };
       };
-      
-
-      console.log('login response: ', json);
-      console.log('login response keys: ', Object.keys(json));
-
 
     } catch(error){
       const { ERROR_TYPES } = AuthLogin;
@@ -130,6 +137,7 @@ export class AuthLogin {
         errorMessage: 'An unexpected error has occured',
       });
 
+      /** @type {LoginResult} */
       return { isSuccess: false, error: errorObj };
     };
   };
