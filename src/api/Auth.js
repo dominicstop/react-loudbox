@@ -114,7 +114,7 @@ export class AuthLogin {
       const isSuccess = AuthLogin.isLoginSuccess(json);
 
       if(isSuccess){
-        // wrap and save/persist loginResponse
+        // login success, wrap and save/persist the loginResponse
         const loginResponse = LoginResponse.factory(json);
         AuthStore.setAuth(loginResponse);
 
@@ -127,7 +127,7 @@ export class AuthLogin {
         const errorMessage = AuthLogin.getErrorMessage(errorType);
 
         const error = ErrorModel.factory({
-          error       : JSON.stringify(json),
+          error       : json,
           errorKey    : errorType,
           errorMessage: errorMessage,
         });
@@ -139,8 +139,7 @@ export class AuthLogin {
     } catch(error){
       const { ERROR_TYPES } = AuthLogin;
 
-      const errorObj = ErrorModel.factory({
-        error       : JSON.stringify(error),
+      const errorObj = ErrorModel.factory({error,
         errorKey    : ERROR_TYPES.UnknownError,
         errorMessage: 'An unexpected error has occured',
       });
