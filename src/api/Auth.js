@@ -12,8 +12,8 @@ import AuthStore from 'functions/AuthStore';
  * @typedef  {Object } LoginResult
  * @property {boolean} isSuccess - is login successfull
  * optional values -----------------------------------------------------------------
- * @property {ErrorModel   .structure |undefined} loginResponse - error details/info
- * @property {LoginResponse.structure |undefined} error         - login data
+ * @property {ErrorModel   .structure |undefined} error         - error details/info
+ * @property {LoginResponse.structure |undefined} loginResponse - login data
  */
 //#endregion
 
@@ -99,6 +99,7 @@ export class AuthLogin {
     const loginPayload = LoginPayload.factory(payload);
     
     try {
+      // query login API if login is valid
       const response = await fetch(Endpoints.loginURL, {
         method: 'POST',
         mode: 'cors',
@@ -111,6 +112,7 @@ export class AuthLogin {
       const isSuccess = AuthLogin.isLoginSuccess(json);
 
       if(isSuccess){
+        // wrap and save/persist loginResponse
         const loginResponse = LoginResponse.factory(json);
         AuthStore.setAuth(loginResponse);
 

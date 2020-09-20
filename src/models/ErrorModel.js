@@ -22,7 +22,7 @@ export class ErrorModel {
   static structure = structure;
 
   static factory(values = {...structure}){
-    return { ...structure, values };
+    return { ...structure, ...values };
   };
 };
 
