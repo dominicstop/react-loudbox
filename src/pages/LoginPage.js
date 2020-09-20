@@ -327,7 +327,7 @@ export class LoginPage extends React.Component {
             onClick={() => { this._handleOnClickSubmit(formikProps) }}
           >
             {formikProps.isSubmitting
-              ? <CircularProgress/> 
+              ? <CircularProgress size={30}/> 
               : 'LOGIN' 
             }
           </Button>
