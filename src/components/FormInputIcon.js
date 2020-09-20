@@ -196,7 +196,7 @@ export class FormInputIcon extends React.Component {
         iconColor: Colors.BLUE[500],
       };
       case INPUT_MODE.INITIAL: return {
-        iconColor: Colors.GREY[700],
+        iconColor: Colors.GREY[500],
       };
       case INPUT_MODE.FOCUSED: return {
         iconColor: Colors.GREY[900],

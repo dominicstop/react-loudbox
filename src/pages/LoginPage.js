@@ -130,6 +130,7 @@ export class LoginPage extends React.Component {
     logo: {
       height: '48px',
       width: 'auto',
+      marginTop: 10,
       marginBottom: '32px',
     },
     leftFormContainer: {
@@ -138,7 +139,7 @@ export class LoginPage extends React.Component {
       backgroundColor: 'white',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 20,
+      padding: 25,
     },
     formContainer: {
       height: 'auto',
