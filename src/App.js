@@ -29,7 +29,11 @@ export default function App(){
               </Route>
               <Route 
                 path="/login"
-                component={LoginPage}
+                component={(loggedIn
+                  // expects comp so wrap redirect element
+                  ? () => <Redirect to="/home" /> 
+                  : LoginPage
+                )}
               />
               <Route path="/signup">
                 <SignUpPage/>
