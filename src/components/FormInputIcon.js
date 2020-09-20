@@ -261,7 +261,9 @@ export class FormInputIcon extends React.Component {
     const { isLoading, ...props } = this.props;
 
     const inputState = this.deriveModeFromProps();
-    const hasError = (inputState == INPUT_MODE.ERROR);
+
+    const hasError     = (inputState == INPUT_MODE.ERROR);
+    const hasErrorText = (hasError && (typeof error === 'string'));
 
     return(
       <div className={css(styles.rootContainer)}>
@@ -287,7 +289,7 @@ export class FormInputIcon extends React.Component {
         </motion.div>
         <motion.div
           className={css(styles.errorContainer)}
-          animate={hasError? 'visible' : 'hidden'}
+          animate={hasErrorText? 'visible' : 'hidden'}
           variants={VARIANTS.errorContainer}
           transition={{ ease: 'easeInOut', duration: 0.4 }}
         >

@@ -4,21 +4,24 @@ import { StyleSheet, css } from 'aphrodite';
 import SVG from 'react-inlinesvg';
 import { motion, AnimationControls, AnimatePresence } from "framer-motion";
 import { Typography, Box, Button, CircularProgress, Link } from '@material-ui/core';
+import { IoIosAlert } from "react-icons/io";
 
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 
+import { AuthLogin } from 'api/Auth';
 import { FormInputIcon, ICON_KEYS } from 'components/FormInputIcon';
-import { AuthLogin, testLoginCredentials } from 'api/Auth';
 import { LoginPayload } from 'models/LoginPayload';
-
 
 import loginBG     from 'assests/images/login-cover.jpg';
 import loudboxLogo from 'assests/svg/loudbox-logo.svg';
 
+import * as Colors       from 'constants/Colors';
 import * as Helpers      from 'functions/helpers';
 import * as FramerValues from 'constants/FramerValues';
 
+
+//#region - Constants
 const LOGIN_STATE = {
   INITIAL : 'INITIAL', // intial form state
   INVALID : 'INVALID', // invalid email/password
@@ -60,6 +63,18 @@ const VARIANTS = {
     },
     shake: FramerValues.shake,
   },
+  formError: {
+    hidden: {
+      height : 0,
+      opacity: 0,
+      y      : 5,
+    },
+    visible: {
+      height : 'auto',
+      opacity: 1,
+      y      : 0,
+    },
+  },
 };
 
 const validationSchema = Yup.object().shape({
@@ -82,6 +97,8 @@ const IconMap = {
     [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/key-outline.svg')}/>,
   },
 };
+//#endregion
+
 
 export class LoginPage extends React.Component {
   static styles = StyleSheet.create({
@@ -142,6 +159,21 @@ export class LoginPage extends React.Component {
       display: 'flex',
       justifyContent: 'space-between',
     },
+    formErrorContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: 10,
+    },
+    formErrorIcon: {
+      marginRight: 5,
+      color: Colors.RED[400],
+      fontSize: 17,
+    },
+    formError: {
+      flex: 1,
+      textAlign: 'left',
+      color: Colors.RED[900],
+    },
   });
 
   constructor(props){
@@ -200,17 +232,29 @@ export class LoginPage extends React.Component {
 
       } else {
         triggerErrorAnimation();
+        actions.setErrors({
+          email    : true, 
+          password : true,
+          formError: loginResult.error.errorMessage,
+        });
       };
 
     } catch (error) {
       console.log('login error', error);
       triggerErrorAnimation();
+      actions.setErrors({
+        email    : true, 
+        password : true,
+        formError: 'An unexpected error has occured',
+      });
     };
   };
 
   _renderForm = (formikProps) => {
     const { values, errors, touched } = formikProps;
     const { styles } = LoginPage;
+
+    console.log({errors});
 
     return(
       <Form 
@@ -244,6 +288,17 @@ export class LoginPage extends React.Component {
             onChange={formikProps.handleChange}
             onBlur={formikProps.handleBlur}
           />
+        </motion.div>
+        <motion.div
+          className={css(styles.formErrorContainer)}
+          animate={errors.formError? 'visible' : 'hidden'}
+          variants={VARIANTS.formError}
+          transition={{ ease: 'easeInOut', duration: 0.4 }}
+        >
+          <IoIosAlert className={css(styles.formErrorIcon)}/>
+          <label className={css(styles.formError)}>
+            {errors.formError}
+          </label>
         </motion.div>
         <Box className={css(styles.formButtonContainer)}>
           <Button
