@@ -86,7 +86,7 @@ export class FormInputIcon extends React.Component {
       flex: 1,
       flexDirection: 'column',
       alignItems: 'flex-start',
-      marginBottom: 25,
+      marginBottom: 30,
     },
     inputContainer: {
       display: 'flex',
@@ -122,7 +122,8 @@ export class FormInputIcon extends React.Component {
       borderColor: 'transparent',
       outline: 'none',
       padding: '5px 10px 5px 35px',
-      backgroundColor: 'transparent !important'
+      backgroundColor: 'transparent !important',
+      fontSize: 16,
     },
     errorContainer: {
       display: 'flex',

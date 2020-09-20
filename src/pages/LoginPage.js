@@ -138,6 +138,7 @@ export class LoginPage extends React.Component {
       backgroundColor: 'white',
       alignItems: 'center',
       justifyContent: 'center',
+      padding: 20,
     },
     formContainer: {
       height: 'auto',
