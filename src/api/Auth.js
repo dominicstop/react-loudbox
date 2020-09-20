@@ -1,9 +1,11 @@
 
 import * as Endpoints from 'constants/Endpoints';
 
-import { LoginPayload  } from 'models/LoginPayload';
-import { ErrorModel    } from 'models/ErrorModel';
+import { LoginPayload } from 'models/LoginPayload';
+import { ErrorModel   } from 'models/ErrorModel';
 import { LoginResponse, LoginResponseKeys } from 'models/LoginResponse';
+
+import AuthStore from 'functions/AuthStore';
 
 //#region - JSDOC Types
 /**
@@ -110,6 +112,7 @@ export class AuthLogin {
 
       if(isSuccess){
         const loginResponse = LoginResponse.factory(json);
+        AuthStore.setAuth(loginResponse);
 
         /** @type {LoginResult} */
         return { isSuccess: true, response: loginResponse };

@@ -5,8 +5,8 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Switch, Route, Redirect, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion"
 
-import { ThemeConfig } from "constants/ThemeConfig";
 import { ProtectedRoute } from 'components/ProtectedRoute';
+import { RootContextProvider } from 'contexts/RootContextsProvider';
 
 import { LoginPage  } from "pages/LoginPage";
 import { SignUpPage } from "pages/SignUpPage";
@@ -16,7 +16,7 @@ export default function App(){
   const loggedIn = true;
 
   return (
-    <ThemeProvider theme={ThemeConfig}>
+    <RootContextProvider>
       <div className={"app-root-container"}>
         <Router>
           <AnimatePresence initial={true} exitBeforeEnter>
@@ -41,6 +41,6 @@ export default function App(){
           </AnimatePresence>
         </Router>
       </div>
-    </ThemeProvider>
+    </RootContextProvider>
   );
 };

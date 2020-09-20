@@ -196,7 +196,6 @@ export class LoginPage extends React.Component {
       ]);
 
       if(loginResult.isSuccess){
-        alert('logged in');
         history.push('/home');
 
       } else {

@@ -2,18 +2,21 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 
-export class ProtectedRoute extends React.Component {
+import { AuthContext } from 'contexts/AuthContext';
+import { AuthStoreData } from 'functions/AuthStore';
 
-  render() {
-    const { children, ...routeProps } = this.props;
-    const isAuthenticated = false; //todo
 
-    return (
-      <Route {...routeProps} 
-        render={(props) => (isAuthenticated
-          ? React.cloneElement(children, props)
-          : <Redirect to='/login' />
-      )}/>
-    );
-  };
+export function ProtectedRoute(props){
+  const { children, ...routeProps } = props;
+
+  /** @type {AuthStoreData}*/
+  const { isLoggedIn } = React.useContext(AuthContext);
+
+  return (
+    <Route {...routeProps} 
+      render={(props) => (isLoggedIn
+        ? React.cloneElement(children, props)
+        : <Redirect to='/login' />
+    )}/>
+  );
 };
