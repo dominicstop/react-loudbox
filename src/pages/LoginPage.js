@@ -195,6 +195,7 @@ export class LoginPage extends React.Component {
     this.formAnimationContols.unmount();
   };
 
+  // gets called when the login button is pressed
   _handleOnClickSubmit = (formikProps) => {
     const errorCount = Object.keys(formikProps.errors).length;
     const hasErrors  = (errorCount > 0);
@@ -205,9 +206,11 @@ export class LoginPage extends React.Component {
     };
   };
 
+  // gets called when the login form is submitted
   _handleFormikOnSubmit = async (values, actions) => {
     const { history } = this.props;
 
+    // shakes + transitions form back into normal
     const triggerErrorAnimation = () => {
       actions.setSubmitting(false);
       this.formAnimationContols.start('visible');
@@ -215,6 +218,7 @@ export class LoginPage extends React.Component {
     };
 
     try {
+      // get the form values from formik
       const loginCredentials = LoginPayload.factory({
         username: values?.email    ?? '',
         password: values?.password ?? '',
@@ -228,9 +232,11 @@ export class LoginPage extends React.Component {
       ]);
 
       if(loginResult.isSuccess){
+        // go to home page
         history.push('/home');
 
       } else {
+        // login failed, show error + shake form
         triggerErrorAnimation();
         actions.setErrors({
           email    : true, 
@@ -250,11 +256,10 @@ export class LoginPage extends React.Component {
     };
   };
 
+  // render formik form contents
   _renderForm = (formikProps) => {
     const { values, errors, touched } = formikProps;
     const { styles } = LoginPage;
-
-    console.log({errors});
 
     return(
       <Form 

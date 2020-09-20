@@ -86,7 +86,9 @@ export class AuthLogin {
     );
   };
 
-  /** checks whether the login was successful based on the response */
+  /** checks whether the login was successful based on the response 
+   * @param {LoginResponse.structure} response
+  */
   static isLoginSuccess(response = {}){
     return (
       (LoginResponseKeys.user           in response) &&
@@ -99,7 +101,7 @@ export class AuthLogin {
     const loginPayload = LoginPayload.factory(payload);
     
     try {
-      // query login API if login is valid
+      // first, query login API if login is valid
       const response = await fetch(Endpoints.loginURL, {
         method: 'POST',
         mode: 'cors',
@@ -107,7 +109,7 @@ export class AuthLogin {
         body: JSON.stringify(loginPayload)
       });
 
-      // parse response and check if login success
+      // then parse response and check if login success
       const json      = await response.json();
       const isSuccess = AuthLogin.isLoginSuccess(json);
 
@@ -120,6 +122,7 @@ export class AuthLogin {
         return { isSuccess: true, response: loginResponse };
 
       } else {
+        // login failed, get the error code + friendly msg
         const errorType    = AuthLogin.getErrorTypeFromResponse(json);
         const errorMessage = AuthLogin.getErrorMessage(errorType);
 

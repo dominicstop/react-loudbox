@@ -8,10 +8,12 @@ import AuthStore, { AuthStoreData } from 'functions/AuthStore';
  */
 export const AuthContext = React.createContext({});
 
+/** Reads the stored auth value and passes it to a provider */
 export class AuthProvider extends React.Component {
   constructor(props){
     super(props);
 
+    // read the initial auth value
     const { isLoggedIn, loginResponse } = AuthStore.getAuth();
 
     this.state = {
@@ -21,17 +23,22 @@ export class AuthProvider extends React.Component {
   };
 
   componentDidMount(){
+    // add listener for when auth changes
     AuthStore.onChangeSubscribe(this._handleOnChangeAuth);
   };
 
   componentWillUnmount(){
+    // remove auth listener
     AuthStore.onChangeUnsubscribe(this._handleOnChangeAuth);
   };
 
   /** listener for AuthStore changes
-   * @param {AuthStoreData} authStoreData */
+   * @param {AuthStoreData} authStoreData 
+   */
   _handleOnChangeAuth = (authStoreData) => {
+    // todo - remove
     alert(JSON.stringify(authStoreData));
+
     this.setState({
       isLoggedIn   : authStoreData.isLoggedIn   ,
       loginResponse: authStoreData.loginResponse,

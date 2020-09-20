@@ -70,9 +70,14 @@ const VARIANTS = {
 
 //#endregion 
 
+/** component that renders formik field with an animated left svg icon.*/
 export class FormInputIcon extends React.Component {
   static propTypes = {
     iconmap: PropTypes.object,
+    error  : PropTypes.oneOf(
+      PropTypes.bool  , // trigger error color only
+      PropTypes.string, // trigger error color + message
+    ),
   }; 
 
   static styles = StyleSheet.create({
@@ -136,6 +141,7 @@ export class FormInputIcon extends React.Component {
     },
   });
 
+  // based on the current props/state, return a INPUT_MODE value
   static deriveModeFrom({props, state}){
     return (
       props.isLoading ? INPUT_MODE.LOADING :
@@ -164,6 +170,7 @@ export class FormInputIcon extends React.Component {
     return (
       (prevInputState      != nextInputState     ) ||
       (prevProps.value     != nextProps.value    ) ||
+      (prevProps.error     != nextProps.error    ) ||
       (prevState.initial   != nextState.initial  ) ||
       (prevState.isFocused != nextState.isFocused) 
     );
@@ -176,6 +183,7 @@ export class FormInputIcon extends React.Component {
     });
   };
 
+  // return values based on the current INPUT_MODE
   deriveValuesFromMode(){
     const inputState = this.deriveModeFromProps();
     
@@ -198,6 +206,7 @@ export class FormInputIcon extends React.Component {
     };
   };
 
+  // input received focus
   _handleFieldOnFocus = (params) => {
     const { initial } = this.state;
 
@@ -210,6 +219,7 @@ export class FormInputIcon extends React.Component {
     onFocus && onFocus(params)
   };
 
+  // input lost focus
   _handleFieldOnBlur = (params) => {
     this.setState({ isFocused: false });
 
@@ -262,6 +272,7 @@ export class FormInputIcon extends React.Component {
 
     const inputState = this.deriveModeFromProps();
 
+    // check if there's an error and check if the error has a msg
     const hasError     = (inputState == INPUT_MODE.ERROR);
     const hasErrorText = (hasError && (typeof error === 'string'));
 
