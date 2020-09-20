@@ -274,7 +274,7 @@ export class FormInputIcon extends React.Component {
 
     // check if there's an error and check if the error has a msg
     const hasError     = (inputState == INPUT_MODE.ERROR);
-    const hasErrorText = (hasError && (typeof error === 'string'));
+    const hasErrorText = (hasError && (typeof props.error === 'string'));
 
     return(
       <div className={css(styles.rootContainer)}>
