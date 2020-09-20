@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
 import SVG from 'react-inlinesvg';
-import { motion, AnimationControls, AnimatePresence } from "framer-motion";
+import { motion, AnimationControls } from "framer-motion";
 import { Typography, Box, Button, CircularProgress, Link } from '@material-ui/core';
 import { IoIosAlert } from "react-icons/io";
 
@@ -185,14 +185,17 @@ export class LoginPage extends React.Component {
 
     // workaround to use `useAnimation` in class comps
     this.formAnimationContols = new AnimationControls();
+    this.rootAnimationContols = new AnimationControls();
   };
 
   componentDidMount = async () => {
     this.formAnimationContols.mount();
+    this.rootAnimationContols.mount();
   };
 
   componentWillUnmount(){
     this.formAnimationContols.unmount();
+    this.rootAnimationContols.unmount();
   };
 
   // gets called when the login button is pressed
@@ -210,7 +213,7 @@ export class LoginPage extends React.Component {
   _handleFormikOnSubmit = async (values, actions) => {
     const { history } = this.props;
 
-    // shakes + transitions form back into normal
+    // shakes + transitions form back to normal
     const triggerErrorAnimation = () => {
       actions.setSubmitting(false);
       this.formAnimationContols.start('visible');
@@ -232,6 +235,13 @@ export class LoginPage extends React.Component {
       ]);
 
       if(loginResult.isSuccess){
+        // fade out page
+        // temp: use AnimatePresense in the future
+        await this.rootAnimationContols.start({
+          opacity: 0,
+          transition: { duration: 0.5 },
+        });
+
         // go to home page
         history.push('/home');
 
@@ -332,7 +342,10 @@ export class LoginPage extends React.Component {
   render(){
     const { styles } = LoginPage;
     return(
-      <div className={css(styles.rootContainer)}>
+      <motion.div 
+        className={css(styles.rootContainer)}
+        animate={this.rootAnimationContols}
+      >
         <div className={css(styles.leftFormContainer)}>
           <motion.div 
             className={css(styles.formContainer)}
@@ -372,7 +385,7 @@ export class LoginPage extends React.Component {
             animate={"visible"}
           />
         </div>
-      </div>
+      </motion.div>
     );
   };
 };
