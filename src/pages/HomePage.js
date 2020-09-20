@@ -1,7 +1,17 @@
 import React from 'react';
 
-export function HomePage(){
+import AuthStore from 'functions/AuthStore';
+
+export function HomePage(props){
   return(
-    <h1>Homepage</h1>
+    <div>
+      <h1>Homepage</h1>
+      <button onClick={() => {
+        AuthStore.resetAuth();
+        props.history.push('/login');
+      }}>
+        Log Out
+      </button>
+    </div>
   );
 };

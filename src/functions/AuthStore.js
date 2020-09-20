@@ -35,11 +35,12 @@ class AuthStore {
     this.emitter = new EventEmitter();
   };
 
-  /** update the auth value */
+  /** set/update the stored auth value */
   setAuth(loginResponse = LoginResponse.structure){
     // save and persist the loginResponse object
-    //localStorage.setItem(AuthStore.STORE_KEY, loginResponse);
+    localStorage.setItem(AuthStore.STORE_KEY, loginResponse);
 
+    // notify the subscribers that auth has been updated
     this.emitter.emit(AuthStoreEvents.onAuthChange, 
       /** @type {AuthStoreData} */ {
       isLoggedIn: AuthStore.verifyLoginResponse(loginResponse),
@@ -58,6 +59,19 @@ class AuthStore {
       isLoggedIn: AuthStore.verifyLoginResponse(loginResponse),
       loginResponse,
     };
+  };
+
+  /** remove the stored auth value  */
+  resetAuth(){
+    // clear the stored loginResponse object
+    localStorage.removeItem(AuthStore.STORE_KEY);
+
+    // notify the subscribers that auth has cleared
+    this.emitter.emit(AuthStoreEvents.onAuthChange, 
+      /** @type {AuthStoreData} */ {
+      isLoggedIn: false,
+      loginResponse: null,
+    });
   };
 
   /** subscribe/listen to auth store changes
