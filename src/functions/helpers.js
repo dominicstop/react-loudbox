@@ -194,7 +194,6 @@ export function roundToTwo(num){
  *   - `createEnumFromObject({ a: 1, b: 2 })`
  *      will return: `{ a: 'a', b: 'b'}`
  */
-
 export function createEnumFromObject(object = {}){
   // written like this for type inference
   let acc = {};
@@ -204,4 +203,20 @@ export function createEnumFromObject(object = {}){
   };
 
   return acc;
+};
+
+/**
+ * 
+ * @param {NodeRequire} require 
+ */
+export function preloadImage(require){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    
+    img.src = require;
+    img.onload = resolve;
+    img.onerror = reject;
+
+    return img;
+  })
 };

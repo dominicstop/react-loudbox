@@ -10,15 +10,20 @@ import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 
 import { AuthLogin } from 'api/Auth';
+import { FadeInImage } from 'components/FadeInImage';
 import { FormInputIcon, ICON_KEYS } from 'components/FormInputIcon';
 import { LoginPayload } from 'models/LoginPayload';
 
+import { ROUTES } from 'constants/Routes';
+import { PreloadPages } from 'functions/PreloadPages';
+
+
+import * as Helpers      from 'functions/helpers';
+import * as Colors       from 'constants/Colors';
+import * as FramerValues from 'constants/FramerValues';
+
 import loginBG     from 'assests/images/login-cover.jpg';
 import loudboxLogo from 'assests/svg/loudbox-logo.svg';
-
-import * as Colors       from 'constants/Colors';
-import * as Helpers      from 'functions/helpers';
-import * as FramerValues from 'constants/FramerValues';
 
 
 //#region - Constants
@@ -34,24 +39,29 @@ const LOGIN_STATE = {
 const VARIANTS = {
   formContainer: {
     hidden: { 
-      opacity: 0,
       y: 50,
+      opacity: 0,
+      transition: { ease: 'easeInOut', duration: 0.3 },
     },
     visible: {
       y: 0,
-      opacity: 1
+      opacity: 1,
+      transition: { ease: 'easeInOut', duration: 0.5, delay: 0.5 },
     },
   },
   rightImage: {
-    hidden: { 
+    hidden: {
+      x: 100, 
       opacity: 0,
       scale: 1.25,
       WebkitFilter: 'blur(7px)',
     },
     visible: {
+      x: 0,
       opacity: 1,
       scale: 1,
       WebkitFilter: 'blur(0px)',
+      transition: { ease: "easeInOut", duration: 2, delay: 1.25 },
     },
   },
   inputContainer: {
@@ -100,7 +110,7 @@ const IconMap = {
 //#endregion
 
 
-export class LoginPage extends React.Component {
+export default class LoginPage extends React.Component {
   static styles = StyleSheet.create({
     rootContainer: {
       flex: 1,
@@ -121,7 +131,8 @@ export class LoginPage extends React.Component {
       },
     },
     rightImage: {
-      flex: 1,
+      width: '100%',
+      height: '100%',
       backgroundImage: `url(${loginBG})`,
       backgroundPosition: 'center',
       backgroundRepeat: 'norepeat',
@@ -130,13 +141,14 @@ export class LoginPage extends React.Component {
     logo: {
       height: '48px',
       width: 'auto',
+    },
+    logoContainer: {
       marginTop: 10,
       marginBottom: '32px',
     },
     leftFormContainer: {
       flex: 1,
       display: 'flex',
-      backgroundColor: 'white',
       alignItems: 'center',
       justifyContent: 'center',
       padding: 25,
@@ -147,6 +159,7 @@ export class LoginPage extends React.Component {
       paddingTop: '64px',
       paddingBottom: '64px',
       textAlign: 'center',
+      backgroundColor: 'white',
     },
     form: {
       display: 'flex',
@@ -183,21 +196,73 @@ export class LoginPage extends React.Component {
 
     this.state = {
       loginState: LOGIN_STATE.INITIAL,
+      mountRightImage: false,
     };
 
     // workaround to use `useAnimation` in class comps
-    this.formAnimationContols = new AnimationControls();
-    this.rootAnimationContols = new AnimationControls();
+    this.animationContolsRootContainer  = new AnimationControls();
+    this.animationContolsFormContainer  = new AnimationControls();
+    this.animationContolsImageContainer = new AnimationControls();
+    this.animationContolsInputContainer = new AnimationControls();
   };
 
   componentDidMount = async () => {
-    this.formAnimationContols.mount();
-    this.rootAnimationContols.mount();
+    this.animationContolsRootContainer .mount();
+    this.animationContolsFormContainer .mount();
+    this.animationContolsImageContainer.mount();
+    this.animationContolsInputContainer.mount();
+
+    // start entrance animation for left form
+    this.animationContolsFormContainer.start('visible');
+
+    // wait for the right 'cover' image to load before showing it
+    await Helpers.preloadImage(require('assests/images/login-cover.jpg'));
+    this.setState({ mountRightImage: true });
   };
 
   componentWillUnmount(){
-    this.formAnimationContols.unmount();
-    this.rootAnimationContols.unmount();
+    this.animationContolsRootContainer .unmount();
+    this.animationContolsFormContainer .unmount();
+    this.animationContolsImageContainer.unmount();
+    this.animationContolsInputContainer.unmount();
+  };
+
+  _handleOnClickCreateAccount = async (event) => {
+    const { history } = this.props;
+
+    //disable href behaviour
+    event.preventDefault();
+
+    //get window dimensions
+    const windowWidth  = window.innerWidth;
+
+    const { width: formWidth } = 
+      this.leftFormContainerRef.getBoundingClientRect();
+
+    //get 'right image' dimensions
+    const { width: imageWidth } = 
+      this.rightImageContainerRef.getBoundingClientRect();
+
+    // place 'right image' on top 
+    //this.rightImageContainerRef.style.zIndex = 99;
+
+    await Promise.all([
+       PreloadPages.preloadPage(ROUTES.SIGNUP),
+       this.animationContolsFormContainer.start({
+         translateX: -formWidth,
+         opacity: 0,
+         scale: 0.8,
+         transition: { ease: 'easeInOut', duration: 0.7 },
+       }),
+       this.animationContolsImageContainer.start({
+         // move the image to the left
+         translateX: -(windowWidth - imageWidth),
+         //opacity: [1, 1, 0],
+         transition: { ease: 'easeInOut', duration: 0.75 },
+       }),
+    ]);
+
+    history.push('/signup', {});
   };
 
   // gets called when the login button is pressed
@@ -207,7 +272,7 @@ export class LoginPage extends React.Component {
 
     if(hasErrors){
       // shake form
-      this.formAnimationContols.start('shake');
+      this.animationContolsInputContainer.start('shake');
     };
   };
 
@@ -218,8 +283,8 @@ export class LoginPage extends React.Component {
     // shakes + transitions form back to normal
     const triggerErrorAnimation = () => {
       actions.setSubmitting(false);
-      this.formAnimationContols.start('visible');
-      this.formAnimationContols.start('shake');
+      this.animationContolsInputContainer.start('visible');
+      this.animationContolsInputContainer.start('shake');
     };
 
     try {
@@ -233,13 +298,13 @@ export class LoginPage extends React.Component {
       // and POST to login api
       const [loginResult] = await Promise.all([
         AuthLogin.login(loginCredentials),
-        this.formAnimationContols.start('loading'),
+        this.animationContolsInputContainer.start('loading'),
       ]);
 
       if(loginResult.isSuccess){
         // fade out page
         // temp: use AnimatePresense in the future
-        await this.rootAnimationContols.start({
+        await this.animationContolsRootContainer.start({
           opacity: 0,
           transition: { duration: 0.5 },
         });
@@ -280,7 +345,7 @@ export class LoginPage extends React.Component {
       >
         <motion.div
           variants={VARIANTS.inputContainer}
-          animate={this.formAnimationContols}
+          animate={this.animationContolsInputContainer}
         >
           <FormInputIcon
             iconmap={IconMap.email}
@@ -330,10 +395,13 @@ export class LoginPage extends React.Component {
           >
             {formikProps.isSubmitting
               ? <CircularProgress size={30}/> 
-              : 'LOGIN' 
+              : 'LOGIN'
             }
           </Button>
-          <Link href="/signup">
+          <Link
+            href={'/signup'}
+            onClick={this._handleOnClickCreateAccount}
+          >
             Create an account
           </Link>
         </Box>
@@ -343,18 +411,22 @@ export class LoginPage extends React.Component {
 
   render(){
     const { styles } = LoginPage;
+    const state = this.state;
+
     return(
       <motion.div 
         className={css(styles.rootContainer)}
-        animate={this.rootAnimationContols}
+        animate={this.animationContolsRootContainer}
       >
-        <div className={css(styles.leftFormContainer)}>
+        <div
+          ref={r => this.leftFormContainerRef = r }
+          className={css(styles.leftFormContainer)}
+        >
           <motion.div 
             className={css(styles.formContainer)}
             variants={VARIANTS.formContainer}
-            transition={{ ease: "easeInOut", duration: 0.5, delay: 0.3 }}
+            animate={this.animationContolsFormContainer}
             initial={"hidden"}
-            animate={"visible"}
           >
             <Typography
               variant="h5"
@@ -362,13 +434,19 @@ export class LoginPage extends React.Component {
             >
               {'Welcome to '}
             </Typography>
-            <motion.img 
-              className={css(styles.logo)}
-              src={loudboxLogo} 
-              alt={"LoudBox Logo"}
+            <motion.div
+              className={css(styles.logoContainer)}
               animate={{ scale: [1, 1.03, 1] }}
-              transition={{ repeat: Infinity, duration: 0.75, delay: 4, repeatDelay: 4, ease: "backIn" }}
-            />
+              transition={{ repeat: Infinity, duration: 0.75, delay: 6, repeatDelay: 4, ease: "backIn" }}
+            >
+              <FadeInImage 
+                className={css(styles.logo)}
+                //animateInitial={{ y: 0 }}
+                //animateEntrance={{ y: 0, transition: { ease: 'easeInOut', duration: 0.3 }}}
+                src={loudboxLogo} 
+                alt={"LoudBox Logo"}
+              />
+            </motion.div>
             <Formik
               initialValues={{ email: "", password: "" }}
               onSubmit={this._handleFormikOnSubmit}
@@ -378,15 +456,21 @@ export class LoginPage extends React.Component {
             </Formik>
           </motion.div>
         </div>
-        <div className={css(styles.rightImageContainer)}>
-          <motion.div 
-            className={css(styles.rightImage)}
-            variants={VARIANTS.rightImage}
-            transition={{ ease: "easeInOut", duration: 2, delay: 1.25 }}
-            initial={"hidden"}
-            animate={"visible"}
-          />
-        </div>
+        <motion.div 
+          ref={r => this.rightImageContainerRef = r}
+          className={css(styles.rightImageContainer)}
+          initial={{ translateX: 0 }}
+          animate={this.animationContolsImageContainer}
+        >
+          {this.state.mountRightImage && (
+            <motion.div 
+              className={css(styles.rightImage)}
+              variants={VARIANTS.rightImage}
+              initial={"hidden"}
+              animate={'visible'}
+            />
+          )}
+        </motion.div>
       </motion.div>
     );
   };

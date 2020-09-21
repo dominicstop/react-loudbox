@@ -158,6 +158,8 @@ export class FormInputIcon extends React.Component {
     this.state = {
       initial  : true ,
       isFocused: false,
+      iconLoadedActive  : false,
+      iconLoadedInactive: false,
     };
   };
 
@@ -173,7 +175,9 @@ export class FormInputIcon extends React.Component {
       (prevProps.value     != nextProps.value    ) ||
       (prevProps.error     != nextProps.error    ) ||
       (prevState.initial   != nextState.initial  ) ||
-      (prevState.isFocused != nextState.isFocused) 
+      (prevState.isFocused != nextState.isFocused) ||
+      (prevState.iconLoadedActive   != nextState.iconLoadedActive  ) ||
+      (prevState.iconLoadedInactive != nextState.iconLoadedInactive)
     );
   };
 
@@ -231,36 +235,61 @@ export class FormInputIcon extends React.Component {
   // the animated icon on the left of the input
   _renderFormIcon(){
     const { styles } = FormInputIcon;
-    const { isFocused } = this.state;
     const { iconmap } = this.props;
+    const { isFocused, ...state } = this.state;
 
     const { iconColor } = this.deriveValuesFromMode();
-
     const sharedIconProps = {
       className: css(styles.icon),
       fill     : iconColor,
       stroke   : iconColor,
     };
 
-    // inject props to the svg icons
-    const iconActive   = React.cloneElement(iconmap[ICON_KEYS.active  ], sharedIconProps);
-    const iconInactive = React.cloneElement(iconmap[ICON_KEYS.inactive], sharedIconProps);
+    const iconsLoaded = (
+      state.iconLoadedInactive &&
+      state.iconLoadedActive
+    );
+
+    const animations = {
+      inactive: {
+        opacity: (
+          !iconsLoaded? 0 : 
+          isFocused   ? 0 : 1
+        ),
+      },
+      active: {
+        opacity: (
+          !iconsLoaded? 0 : 
+          isFocused   ? 1 : 0
+        ),
+      },
+    };
+
+    const activeIcon = React.cloneElement(iconmap[ICON_KEYS.active], {
+      ...sharedIconProps,
+      onLoad: () => { this.setState({ iconLoadedActive: true }) }
+    });
+
+    const inactiveIcon = React.cloneElement(iconmap[ICON_KEYS.inactive], {
+      ...sharedIconProps,
+      onLoad: () => { this.setState({ iconLoadedInactive: true }) }
+    });
 
     return(
       <div className={css(styles.iconContainer)}>
         <motion.div
           className={css(styles.iconMotion)}
-          animate={{ opacity: isFocused ? 1 : 0 }}
+          animate={animations.active}
           initial={false}
         >
-          {iconActive}
+          {activeIcon}
         </motion.div>
         <motion.div
           className={css(styles.iconMotion)}
-          animate={{ opacity: isFocused ? 0 : 1 }}
-          initial={true}
+          animate={animations.inactive}
+          initial={{ opacity: 0 }}
         >
-          {iconInactive}
+          {inactiveIcon}
         </motion.div>
       </div>
     );
