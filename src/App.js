@@ -1,17 +1,32 @@
 import React from 'react';
+
 import "./App.css";
 
-import { ThemeProvider } from '@material-ui/core/styles';
-import { BrowserRouter as Router, Switch, Route, Redirect, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion"
+import { BrowserRouter as Router, Switch, Route, Redirect, Link } from "react-router-dom";
 
-import { AuthContext    } from 'contexts/AuthContext';
-import { AuthStoreData  } from 'functions/AuthStore';
+import { AuthContext   } from 'contexts/AuthContext';
+import { LazyPreload   } from 'functions/LazyPreload';
+import { PreloadPages  } from 'functions/PreloadPages';
+import { AuthStoreData } from 'functions/AuthStore';
+
+import { LoadingPage    } from 'pages/LoadingPage';
 import { ProtectedRoute } from 'components/ProtectedRoute';
 
-import { LoginPage  } from "pages/LoginPage";
-import { SignUpPage } from "pages/SignUpPage";
-import { HomePage   } from "pages/HomePage";
+import { ROUTES } from 'constants/Routes';
+
+
+// lazy import pages
+const LoginPage  = LazyPreload(() => import('pages/LoginPage' ));
+const SignUpPage = LazyPreload(() => import('pages/SignUpPage'));
+const HomePage   = LazyPreload(() => import('pages/HomePage'  ));
+
+//register pages to programtically preload later
+PreloadPages.registerPages([
+  { key: ROUTES.LOGIN  , pageComp: LoginPage  },
+  { key: ROUTES.SIGNUP, pageComp: SignUpPage },
+  { key: ROUTES.HOME  , pageComp: HomePage   },
+]);
 
 
 export default function App(){
@@ -20,32 +35,33 @@ export default function App(){
 
   return (
     <div className={"app-root-container"}>
-      <Router>
-        <AnimatePresence initial={true} exitBeforeEnter>
+      <React.Suspense fallback={<LoadingPage/>}>
+        <Router>
           <Switch>
             <Route exact path="/">
               {isLoggedIn
-                ? <Redirect to="/home" /> 
-                : <Redirect to="/login"/>
+                ? <Redirect to={ROUTES.LOGIN} /> 
+                : <Redirect to={ROUTES.HOME}/>
               }
             </Route>
             <Route 
-              path="/login"
+              path={ROUTES.LOGIN}
               component={(isLoggedIn
                 // expects comp so wrap redirect element
-                ? () => <Redirect to="/home" /> 
+                ? () => <Redirect to={ROUTES.LOGIN} /> 
                 : LoginPage
               )}
             />
-            <Route path="/signup">
-              <SignUpPage/>
-            </Route>
-            <ProtectedRoute path="/home">
+            <Route 
+              path={ROUTES.SIGNUP}
+              component={SignUpPage}
+            />
+            <ProtectedRoute path={ROUTES.HOME}>
               <HomePage/>
             </ProtectedRoute>
           </Switch>
-        </AnimatePresence>
-      </Router>
+        </Router>
+      </React.Suspense>
     </div>
   );
 };
