@@ -4,6 +4,8 @@ import { StyleSheet, css } from 'aphrodite';
 import SVG from 'react-inlinesvg';
 import { motion, AnimationControls, AnimatePresence } from "framer-motion";
 import { Typography, Box, Button, CircularProgress, Link } from '@material-ui/core';
+import Scrollbar from 'react-scrollbars-custom';
+
 
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
@@ -70,26 +72,23 @@ export default class SignUpPage extends React.Component {
     rightFormContainer: {
       flex: 1,
       display: 'flex',
-      alignItems: 'center',
+      backgroundColor: 'white',
+    },
+    formWrapper: {
+      flex: 1,
+      display: 'flex',
       justifyContent: 'center',
-      padding: 25,
     },
     formContainer: {
-      height: 'auto',
       width: '320px',
-      paddingTop: '64px',
-      paddingBottom: '64px',
+      paddingTop: 72,
+      paddingBottom: 80,
       textAlign: 'center',
-      backgroundColor: 'white',
+      alignItems: 'center',
     },
     form: {
       display: 'flex',
       flexDirection: 'column',
-    },
-    formInput: {
-      borderRadius: 4,
-      marginBottom: 15,
-      padding: '10px 12px',
     },
     formButtonContainer: {
       display: 'flex',
@@ -124,14 +123,19 @@ export default class SignUpPage extends React.Component {
     };
 
     // workaround to use `useAnimation` in class comps
-    this.animationContolsImagePrev = new AnimationControls();
+    this.animationContolsImagePrev     = new AnimationControls();
+    this.animationContolsFormContainer = new AnimationControls();
   };
 
   componentDidMount = async () => {
-    this.animationContolsImagePrev.mount();
+    this.animationContolsImagePrev    .mount();
+    this.animationContolsFormContainer.mount();
+
+    // start entrance animation for left form
+    this.animationContolsFormContainer.start('visible');
 
     const { location, history } = this.props;
-    const { isLoginPrevPath } = this.state;
+    const { isLoginPrevPath   } = this.state;
 
     // clear fromPath from router so the animation does not trigger on reload
     history.replace(location.pathname, { fromPath: null });
@@ -155,7 +159,192 @@ export default class SignUpPage extends React.Component {
   };
 
   componentWillUnmount(){
-    this.animationContolsImagePrev.unmount();
+    this.animationContolsImagePrev    .unmount();
+    this.animationContolsFormContainer.unmount();
+  };
+
+  _handleFormikOnSubmit = () => {
+    
+  };
+
+  // render formik form contents
+  _renderForm = (formikProps) => {
+    const { styles } = SignUpPage;
+    const { values, errors, touched } = formikProps;
+
+    const sharedProps = {
+      bottomSpace: 15,
+      // pass down formik props
+      onBlur   : formikProps.handleBlur  ,
+      onChange : formikProps.handleChange,
+      isLoading: formikProps.isSubmitting,
+    };
+
+    return(
+      <Form 
+        className={css(styles.form)}
+        onSubmit={formikProps.handleSubmit}
+      >
+        <motion.div
+          //variants={VARIANTS.inputContainer}
+          animate={this.animationContolsInputContainer}
+        >
+          <FormInputIcon
+            //iconmap={IconMap.email}
+            placeholder={'First Name'}
+            id={'firstname'}
+            type={"text"}
+            name={"firstname"}
+            //value={values.email}
+            error={false}//errors.email}
+            {...sharedProps}
+          />
+          <FormInputIcon
+            //iconmap={IconMap.password}
+            placeholder={'Middle Name'}
+            id={'middlename'}
+            type={"text"}
+            name={"middlename"}
+            //value={values.password}
+            //error={errors.password}
+            error={false}//errors.email}
+            {...sharedProps}
+          />
+          <FormInputIcon
+            //iconmap={IconMap.password}
+            placeholder={'Last Name'}
+            id={'lastname'}
+            type={"text"}
+            name={"lastname"}
+            //value={values.password}
+            //error={errors.password}
+            error={false}//errors.email}
+            {...sharedProps}
+          />
+
+          <FormInputIcon
+            //iconmap={IconMap.password}
+            placeholder={'Street'}
+            id={'lastname'}
+            type={"text"}
+            name={"lastname"}
+            //value={values.password}
+            //error={errors.password}
+            error={false}//errors.email}
+            {...sharedProps}
+          />
+          <FormInputIcon
+            //iconmap={IconMap.password}
+            placeholder={'Barangay'}
+            id={'lastname'}
+            type={"text"}
+            name={"lastname"}
+            //value={values.password}
+            //error={errors.password}
+            error={false}//errors.email}
+            {...sharedProps}
+          />
+          <FormInputIcon
+            //iconmap={IconMap.password}
+            placeholder={'City'}
+            id={'lastname'}
+            type={"text"}
+            name={"lastname"}
+            //value={values.password}
+            //error={errors.password}
+            error={false}//errors.email}
+            {...sharedProps}
+          />
+          <FormInputIcon
+            //iconmap={IconMap.password}
+            placeholder={'Postal Code'}
+            id={'lastname'}
+            type={"text"}
+            name={"lastname"}
+            //value={values.password}
+            //error={errors.password}
+            error={false}//errors.email}
+            {...sharedProps}
+          />
+          <FormInputIcon
+            //iconmap={IconMap.password}
+            placeholder={'Province'}
+            id={'lastname'}
+            type={"text"}
+            name={"lastname"}
+            //value={values.password}
+            //error={errors.password}
+            error={false}//errors.email}
+            {...sharedProps}
+          />
+          <FormInputIcon
+            //iconmap={IconMap.password}
+            placeholder={'Phone Number 1'}
+            id={'lastname'}
+            type={"text"}
+            name={"lastname"}
+            //value={values.password}
+            //error={errors.password}
+            error={false}//errors.email}
+            {...sharedProps}
+          />
+          <FormInputIcon
+            //iconmap={IconMap.password}
+            placeholder={'Phone Number 2'}
+            id={'lastname'}
+            type={"text"}
+            name={"lastname"}
+            //value={values.password}
+            //error={errors.password}
+            error={false}//errors.email}
+            {...sharedProps}
+          />
+
+          <FormInputIcon
+            //iconmap={IconMap.password}
+            placeholder={'Email'}
+            id={'lastname'}
+            type={"text"}
+            name={"lastname"}
+            //value={values.password}
+            //error={errors.password}
+            error={false}//errors.email}
+            {...sharedProps}
+          />
+          <FormInputIcon
+            //iconmap={IconMap.password}
+            placeholder={'Password'}
+            id={'lastname'}
+            type={"text"}
+            name={"lastname"}
+            //value={values.password}
+            //error={errors.password}
+            error={false}//errors.email}
+            {...sharedProps}
+          />
+        </motion.div>
+        <Box className={css(styles.formButtonContainer)}>
+          <Button
+            type="submit"
+            size="large"
+            variant="contained"
+            color="primary"
+            disabled={formikProps.isSubmitting}
+          >
+            {formikProps.isSubmitting
+              ? <CircularProgress size={30}/> 
+              : 'CREATE ACCOUNT'
+            }
+          </Button>
+          <Link
+            href={'/signup'}
+            onClick={this._handleOnClickCreateAccount}
+          >
+            {'Back to Sign In'}
+          </Link>
+        </Box>
+      </Form>
+    );
   };
 
   render(){
@@ -190,11 +379,24 @@ export default class SignUpPage extends React.Component {
             />
           )}
         </motion.div>
-        <motion.div className={css(styles.rightFormContainer)}>
-          <div className={css(styles.formContainer)}>
-            {/** INSERT FORMIK FORM */}
-          </div>
-        </motion.div>
+          <Scrollbar className={css(styles.rightFormContainer)}>
+            <div className={css(styles.formWrapper)}>
+              <motion.div 
+                className={css(styles.formContainer)}
+                variants={VARIANTS.formContainer}
+                animate={this.animationContolsFormContainer}
+                initial={"hidden"}
+              >
+                <Formik
+                  //initialValues={{ email: "", password: "" }}
+                  onSubmit={this._handleFormikOnSubmit}
+                  //{...{validationSchema}}
+                >
+                  {this._renderForm}
+                </Formik>
+              </motion.div>
+            </div>
+          </Scrollbar>
       </motion.div>
     );
   };
@@ -224,6 +426,18 @@ const VARIANTS = {
       scale: 1,
       WebkitFilter: 'blur(0px)',
       transition: { ease: "easeInOut", duration: 2 },
+    },
+  },
+  formContainer: {
+    hidden: { 
+      y: 50,
+      opacity: 0,
+      transition: { ease: 'easeInOut', duration: 0.3 },
+    },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { ease: 'easeInOut', duration: 0.5, delay: 0.5 },
     },
   },
 };

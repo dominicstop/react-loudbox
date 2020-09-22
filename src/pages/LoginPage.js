@@ -79,7 +79,6 @@ export default class LoginPage extends React.Component {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 25,
     },
     formContainer: {
       height: 'auto',

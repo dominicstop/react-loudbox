@@ -73,12 +73,17 @@ const VARIANTS = {
 /** component that renders formik field with an animated left svg icon.*/
 export class FormInputIcon extends React.Component {
   static propTypes = {
-    iconmap: PropTypes.object,
-    error  : PropTypes.oneOf(
+    iconmap    : PropTypes.object,
+    bottomSpace: PropTypes.number,
+    error      : PropTypes.oneOf([
       PropTypes.bool  , // trigger error color only
       PropTypes.string, // trigger error color + message
-    ),
+    ]),
   }; 
+
+  static defaultProps = {
+    bottomSpace: 30,
+  };
 
   static styles = StyleSheet.create({
     rootContainer: {
@@ -86,7 +91,6 @@ export class FormInputIcon extends React.Component {
       flex: 1,
       flexDirection: 'column',
       alignItems: 'flex-start',
-      marginBottom: 30,
     },
     inputContainer: {
       display: 'flex',
@@ -121,9 +125,12 @@ export class FormInputIcon extends React.Component {
       flex: 1,
       borderColor: 'transparent',
       outline: 'none',
-      padding: '5px 10px 5px 35px',
+      padding: '5px 10px 5px 10px',
       backgroundColor: 'transparent !important',
       fontSize: 16,
+    },
+    inputIconSpace: {
+      paddingLeft: 35,
     },
     errorContainer: {
       display: 'flex',
@@ -211,6 +218,17 @@ export class FormInputIcon extends React.Component {
     };
   };
 
+  // check if icons were provided
+  hasIcons(){
+    const { iconmap } = this.props;
+    if(!iconmap) return false;
+
+    return(
+      iconmap[ICON_KEYS.active  ] &&
+      iconmap[ICON_KEYS.inactive]
+    );
+  };
+
   // input received focus
   _handleFieldOnFocus = (params) => {
     const { initial } = this.state;
@@ -237,6 +255,9 @@ export class FormInputIcon extends React.Component {
     const { styles } = FormInputIcon;
     const { iconmap } = this.props;
     const { isFocused, ...state } = this.state;
+
+    // guard: dont render if no icons
+    if(!this.hasIcons()) return null;
 
     const { iconColor } = this.deriveValuesFromMode();
     const sharedIconProps = {
@@ -297,9 +318,9 @@ export class FormInputIcon extends React.Component {
 
   render(){
     const { styles } = FormInputIcon;
-    const { isFocused } = this.state;
-    const { isLoading, ...props } = this.props;
+    const { isLoading, bottomSpace, ...props } = this.props;
 
+    const hasIcons   = this.hasIcons();
     const inputState = this.deriveModeFromProps();
 
     // check if there's an error and check if the error has a msg
@@ -307,11 +328,14 @@ export class FormInputIcon extends React.Component {
     const hasErrorText = (hasError && (typeof props.error === 'string'));
 
     return(
-      <div className={css(styles.rootContainer)}>
+      <div 
+        className={css(styles.rootContainer)}
+        style={{marginBottom: bottomSpace}}
+      >
         {false && ( // debug
           <div>
             <p>{inputState}</p>
-            <p>{`isFocused: ${isFocused} \ntouched: ${props.touched}} \n initial : ${this.state.initial}`}</p>
+            <p>{`error: ${props.error} \hasError: ${hasError}} \n hasErrorText : ${hasErrorText}`}</p>
           </div>
         )}
         <motion.div 
@@ -323,13 +347,14 @@ export class FormInputIcon extends React.Component {
         >
           {this._renderFormIcon()}
           <Field {...props}
-            className={css(styles.input)}
+            className={css(styles.input, hasIcons && styles.inputIconSpace)}
             onFocus={this._handleFieldOnFocus}
             onBlur={this._handleFieldOnBlur}
           />
         </motion.div>
         <motion.div
           className={css(styles.errorContainer)}
+          initial={'hidden'}
           animate={hasErrorText? 'visible' : 'hidden'}
           variants={VARIANTS.errorContainer}
           transition={{ ease: 'easeInOut', duration: 0.4 }}
