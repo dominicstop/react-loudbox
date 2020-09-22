@@ -24,6 +24,7 @@ import * as FramerValues from 'constants/FramerValues';
 
 import loginBG     from 'assests/images/login-cover.jpg';
 import loudboxLogo from 'assests/svg/loudbox-logo.svg';
+import { portalRoot } from 'components/RootPortal';
 
 
 //#region - Constants
@@ -138,6 +139,18 @@ export default class LoginPage extends React.Component {
       backgroundRepeat: 'norepeat',
       backgroundSize: 'cover',
     },
+    rightImageOverlaySharedElement: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      //width: 100,
+      zIndex: 999,
+      backgroundImage: `url(${loginBG})`,
+      backgroundPosition: 'center',
+      backgroundRepeat: 'norepeat',
+      backgroundSize: 'cover',
+    },
     logo: {
       height: '48px',
       width: 'auto',
@@ -228,7 +241,7 @@ export default class LoginPage extends React.Component {
   };
 
   _handleOnClickCreateAccount = async (event) => {
-    const { history } = this.props;
+    const { history, location } = this.props;
 
     //disable href behaviour
     event.preventDefault();
@@ -242,9 +255,6 @@ export default class LoginPage extends React.Component {
     //get 'right image' dimensions
     const { width: imageWidth } = 
       this.rightImageContainerRef.getBoundingClientRect();
-
-    // place 'right image' on top 
-    //this.rightImageContainerRef.style.zIndex = 99;
 
     await Promise.all([
        PreloadPages.preloadPage(ROUTES.SIGNUP),
@@ -262,7 +272,10 @@ export default class LoginPage extends React.Component {
        }),
     ]);
 
-    history.push('/signup', {});
+    // fix for the flickering
+    LoginPageHelpers.appendSharedElementImage(this.rightImageContainerRef);
+
+    history.push('/signup', { fromPath: location.pathname });
   };
 
   // gets called when the login button is pressed
@@ -473,5 +486,35 @@ export default class LoginPage extends React.Component {
         </motion.div>
       </motion.div>
     );
+  };
+};
+
+class LoginPageHelpers {
+  /**
+   * when tranitioning to the signup page for the first time, 
+   * sometimes the image will flicker in/out for a few ms bc 
+   * the image hasn't been cached yet.
+   * 
+   * This func recreates the image outside of the comp hiearchy
+   * and positions it on top as an overlay for a few ms then quickly
+   * removes it.
+   */
+  static appendSharedElementImage(rightImageContainerRef){
+    const { styles } = LoginPage;
+    const div = document.createElement("div");
+
+    div.id = 'right-shared-element-image';
+    div.className = css(styles.rightImageOverlaySharedElement);
+
+    const { width } = rightImageContainerRef.getBoundingClientRect();
+    div.style.width = `${width}px`;
+
+    portalRoot.appendChild(div);
+
+    setTimeout(() => { 
+      if(document.contains(div)){
+        portalRoot.removeChild(div);
+      };
+    }, 500);
   };
 };

@@ -10,6 +10,7 @@ import { Formik, Form } from 'formik';
 
 import { FormInputIcon, ICON_KEYS } from 'components/FormInputIcon';
 import { login } from 'api/Auth';
+import { ROUTES } from 'constants/Routes';
 
 import loginBG     from 'assests/images/login-cover.jpg';
 import signupBG    from 'assests/images/register-cover.jpg';
@@ -25,7 +26,7 @@ class SignUpHelpers {
       const img = new Image();
       
       img.src = require('assests/images/register-cover.jpg');
-      img.onload = resolve;
+      img.onload = () => resolve(img);
       img.onerror = reject;
     })
   };
@@ -41,6 +42,7 @@ export default class SignUpPage extends React.Component {
     leftImageContainer: {
       display: 'none',
       overflow: 'hidden',
+      position: 'relative',
       // show the right image container if there's enough space
       '@media (min-width: 750px) and (max-width: 1250px)': {
         flex: 1,
@@ -57,7 +59,18 @@ export default class SignUpPage extends React.Component {
       backgroundPosition: 'center',
       backgroundRepeat: 'norepeat',
       backgroundSize: 'cover',
-      //backgroundImage: `url(${loginBG})`,
+      backgroundImage: `url(${signupBG})`,
+    },
+    leftImagePrev: {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundPosition: 'center',
+      backgroundRepeat: 'norepeat',
+      backgroundSize: 'cover',
+      backgroundImage: `url(${loginBG})`,
     },
     logo: {
       height: '48px',
@@ -113,21 +126,45 @@ export default class SignUpPage extends React.Component {
   constructor(props){
     super(props);
 
+    // get props from prev page
+    const { fromPath } = props.location.state;
+
+    this.state = {
+      isLoginPrevPath: (fromPath == ROUTES.LOGIN),
+    };
+
+    // todo: remov
+    console.log('location - construnctor', props.location);
+    console.log('history', props.history);
+    console.log('isLoginPrevPath: ', (fromPath == ROUTES.LOGIN));
+
     // workaround to use `useAnimation` in class comps
-    this.animationContolsImageContainer = new AnimationControls();
+    this.animationContolsImagePrev = new AnimationControls();
   };
 
   componentDidMount = async () => {
-    this.animationContolsImageContainer.mount();
+    this.animationContolsImagePrev.mount();
+
+    const { location, history } = this.props;
+    const { isLoginPrevPath } = this.state;
+
+    // clear fromPath from router so the animation does not trigger on reload
+    history.replace(location.pathname, { fromPath: null });
+
+    const prevImage = document.getElementById('right-shared-element-image');
+    prevImage && prevImage.remove();
 
     //const imageSrc = await import('assests/images/register-cover.jpg');
     //alert(JSON.stringify(imageSrc));
 
     
-    this.leftImage.style.backgroundImage = `url(${loginBG})`;
-    
     await SignUpHelpers.preloadSignupBG();
-    this.leftImage.style.backgroundImage = `url(${signupBG})`;
+    if(isLoginPrevPath){
+      // since login was the prev path, we are trans. so hide the prev image first
+      this.animationContolsImagePrev.start({ opacity: 0 });
+    } else {
+
+    };
 
 
     return;
@@ -147,28 +184,39 @@ export default class SignUpPage extends React.Component {
     //console.log(sharedImage);
     //this.leftImage.style.backgroundImage = sharedImage;
 
-    this.animationContolsImageContainer.start({
+    this.animationContolsImagePrev.start({
       //translateX: [((windowWidth - imageWidth) / 2), 0],
       transition: { ease: 'easeInOut', duration: 0.75 },
     });
   };
 
   componentWillUnmount(){
-    this.animationContolsImageContainer.unmount();
+    this.animationContolsImagePrev.unmount();
   };
 
   render(){
     const { styles } = SignUpPage;
+    const { location } = this.props;
+    const { isLoginPrevPath } = this.state;
+
+    console.log('location - render', location);
+
+
     return(
       <motion.div className={css(styles.rootContainer)}>
         <motion.div 
           ref={r => this.leftImageContainer = r}
           className={css(styles.leftImageContainer)}
-          animate={this.animationContolsImageContainer}
         >
           <motion.div 
-            ref={r => this.leftImage = r}
-            className={css(styles.leftImage)}/>
+            className={css(styles.leftImage)}
+          />
+          {isLoginPrevPath && (
+            <motion.div 
+              animate={this.animationContolsImagePrev}
+              className={css(styles.leftImagePrev)}
+            />
+          )}
         </motion.div>
         <motion.div className={css(styles.rightFormContainer)}>
           <div className={css(styles.formContainer)}>
