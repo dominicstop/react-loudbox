@@ -11,6 +11,8 @@ import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 
 import { FormInputIcon, ICON_KEYS } from 'components/FormInputIcon';
+import { FadeInImage } from 'components/FadeInImage';
+
 import { login } from 'api/Auth';
 import { ROUTES } from 'constants/Routes';
 
@@ -75,16 +77,14 @@ export default class SignUpPage extends React.Component {
       backgroundColor: 'white',
     },
     formWrapper: {
-      flex: 1,
       display: 'flex',
-      justifyContent: 'center',
+      flexDirection: 'column',
+      alignItems: 'center',
+      paddingTop: 80,
+      paddingBottom: 80,
     },
     formContainer: {
       width: '320px',
-      paddingTop: 80,
-      paddingBottom: 80,
-      textAlign: 'center',
-      alignItems: 'center',
       paddingLeft: 30,
       paddingRight: 30,
     },
@@ -125,16 +125,16 @@ export default class SignUpPage extends React.Component {
     };
 
     // workaround to use `useAnimation` in class comps
-    this.animationContolsImagePrev     = new AnimationControls();
-    this.animationContolsFormContainer = new AnimationControls();
+    this.animationContolsImagePrev   = new AnimationControls();
+    this.animationContolsFormWrapper = new AnimationControls();
   };
 
   componentDidMount = async () => {
     this.animationContolsImagePrev    .mount();
-    this.animationContolsFormContainer.mount();
+    this.animationContolsFormWrapper.mount();
 
     // start entrance animation for left form
-    this.animationContolsFormContainer.start('visible');
+    this.animationContolsFormWrapper.start('visible');
 
     const { location, history } = this.props;
     const { isLoginPrevPath   } = this.state;
@@ -161,8 +161,8 @@ export default class SignUpPage extends React.Component {
   };
 
   componentWillUnmount(){
-    this.animationContolsImagePrev    .unmount();
-    this.animationContolsFormContainer.unmount();
+    this.animationContolsImagePrev  .unmount();
+    this.animationContolsFormWrapper.unmount();
   };
 
   _handleFormikOnSubmit = () => {
@@ -382,13 +382,27 @@ export default class SignUpPage extends React.Component {
           )}
         </motion.div>
           <Scrollbar className={css(styles.rightFormContainer)}>
-            <div className={css(styles.formWrapper)}>
+            <motion.div  
+              className={css(styles.formWrapper)}
+              variants={VARIANTS.formContainer}
+              animate={this.animationContolsFormWrapper}
+              initial={"hidden"}
+            >
+              <FadeInImage
+                className={css(styles.logo)}
+                src={loudboxLogo} 
+                alt={"LoudBox Logo"}
+              />
               <motion.div 
                 className={css(styles.formContainer)}
-                variants={VARIANTS.formContainer}
-                animate={this.animationContolsFormContainer}
-                initial={"hidden"}
               >
+                <Typography
+                  variant="h6"
+                  component="h1"
+                  gutterBottom
+                >
+                  Create an account.
+                </Typography>
                 <Formik
                   //initialValues={{ email: "", password: "" }}
                   onSubmit={this._handleFormikOnSubmit}
@@ -397,7 +411,7 @@ export default class SignUpPage extends React.Component {
                   {this._renderForm}
                 </Formik>
               </motion.div>
-            </div>
+            </motion.div>
           </Scrollbar>
       </motion.div>
     );
