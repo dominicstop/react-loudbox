@@ -42,7 +42,7 @@ export default class LoginPage extends React.Component {
         display: 'flex'
       },
       '@media (min-width: 1250px)': {
-        flex: 2,
+        flex: 1.5,
         display: 'flex'
       },
     },
@@ -83,8 +83,10 @@ export default class LoginPage extends React.Component {
     formContainer: {
       height: 'auto',
       width: '320px',
-      paddingTop: '64px',
-      paddingBottom: '64px',
+      paddingTop: 64,
+      paddingBottom: 64,
+      paddingLeft: 30,
+      paddingRight: 30,
       textAlign: 'center',
       backgroundColor: 'white',
     },

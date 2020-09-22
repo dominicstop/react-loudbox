@@ -38,7 +38,7 @@ const VARIANTS = {
       backgroundColor: Colors.RED[50],
     },
     [INPUT_MODE.INITIAL]: {
-      borderColor: Colors.BLACK[500],
+      borderColor: Colors.BLACK[400],
       backgroundColor: 'white',
     },
     [INPUT_MODE.BLURRED]: {

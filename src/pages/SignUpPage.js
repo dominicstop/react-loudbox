@@ -40,7 +40,7 @@ export default class SignUpPage extends React.Component {
         display: 'flex'
       },
       '@media (min-width: 1250px)': {
-        flex: 2,
+        flex: 1.5,
         display: 'flex'
       },
     },
@@ -81,10 +81,12 @@ export default class SignUpPage extends React.Component {
     },
     formContainer: {
       width: '320px',
-      paddingTop: 72,
+      paddingTop: 80,
       paddingBottom: 80,
       textAlign: 'center',
       alignItems: 'center',
+      paddingLeft: 30,
+      paddingRight: 30,
     },
     form: {
       display: 'flex',
@@ -173,7 +175,7 @@ export default class SignUpPage extends React.Component {
     const { values, errors, touched } = formikProps;
 
     const sharedProps = {
-      bottomSpace: 15,
+      bottomSpace: 25,
       // pass down formik props
       onBlur   : formikProps.handleBlur  ,
       onChange : formikProps.handleChange,
