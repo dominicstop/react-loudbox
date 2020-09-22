@@ -12,11 +12,11 @@ import { Formik, Form } from 'formik';
 import { AuthLogin } from 'api/Auth';
 import { FadeInImage } from 'components/FadeInImage';
 import { FormInputIcon, ICON_KEYS } from 'components/FormInputIcon';
-import { LoginPayload } from 'models/LoginPayload';
+import { portalRoot } from 'components/RootPortal';
 
 import { ROUTES } from 'constants/Routes';
 import { PreloadPages } from 'functions/PreloadPages';
-
+import { LoginPayload } from 'models/LoginPayload';
 
 import * as Helpers      from 'functions/helpers';
 import * as Colors       from 'constants/Colors';
@@ -24,91 +24,6 @@ import * as FramerValues from 'constants/FramerValues';
 
 import loginBG     from 'assests/images/login-cover.jpg';
 import loudboxLogo from 'assests/svg/loudbox-logo.svg';
-import { portalRoot } from 'components/RootPortal';
-
-
-//#region - Constants
-const LOGIN_STATE = {
-  INITIAL : 'INITIAL', // intial form state
-  INVALID : 'INVALID', // invalid email/password
-  LOADING : 'LOADING', // waiting for server resp
-  SUCCESS : 'SUCCESS', // login granted
-  REJECTED: 'INVALID', // login rejected
-  ERROR   : 'ERROR'  , // login error
-};
-
-const VARIANTS = {
-  formContainer: {
-    hidden: { 
-      y: 50,
-      opacity: 0,
-      transition: { ease: 'easeInOut', duration: 0.3 },
-    },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { ease: 'easeInOut', duration: 0.5, delay: 0.5 },
-    },
-  },
-  rightImage: {
-    hidden: {
-      x: 100, 
-      opacity: 0,
-      scale: 1.25,
-      WebkitFilter: 'blur(7px)',
-    },
-    visible: {
-      x: 0,
-      opacity: 1,
-      scale: 1,
-      WebkitFilter: 'blur(0px)',
-      transition: { ease: "easeInOut", duration: 2, delay: 1.25 },
-    },
-  },
-  inputContainer: {
-    visible: {
-      opacity: 1
-    },
-    loading: {
-      opacity: 0.5
-    },
-    shake: FramerValues.shake,
-  },
-  formError: {
-    hidden: {
-      height : 0,
-      opacity: 0,
-      y      : 5,
-    },
-    visible: {
-      height : 'auto',
-      opacity: 1,
-      y      : 0,
-    },
-  },
-};
-
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email()
-    .required("Required"),
-  password: Yup.string()
-    .required("No password provided.")
-    .min(9, "Password is too short - should be 8 chars minimum.")
-});
-
-// icons used for the FormInputIcon comp
-const IconMap = {
-  email: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/mail.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/mail-outline.svg')}/>,
-  },
-  password: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/key.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/key-outline.svg')}/>,
-  },
-};
-//#endregion
 
 
 export default class LoginPage extends React.Component {
@@ -208,9 +123,10 @@ export default class LoginPage extends React.Component {
     super(props);
 
     this.state = {
-      loginState: LOGIN_STATE.INITIAL,
       mountRightImage: false,
     };
+
+    this.isRightImageAnimatingIn = true;
 
     // workaround to use `useAnimation` in class comps
     this.animationContolsRootContainer  = new AnimationControls();
@@ -261,15 +177,21 @@ export default class LoginPage extends React.Component {
        this.animationContolsFormContainer.start({
          translateX: -formWidth,
          opacity: 0,
-         scale: 0.8,
-         transition: { ease: 'easeInOut', duration: 0.7 },
+         scale: 1.2,
+         transition: { ease: 'easeInOut', duration: 0.6 },
        }),
        this.animationContolsImageContainer.start({
          // move the image to the left
          translateX: -(windowWidth - imageWidth),
-         //opacity: [1, 1, 0],
          transition: { ease: 'easeInOut', duration: 0.75 },
        }),
+       // wait if the right image is still animating in
+       this.isRightImageAnimatingIn && Helpers.promiseWithTimeout({
+         ms: 1500, shouldReject: false, 
+         promise: new Promise(resolve => {
+          this.onAnimationCompleteRightImage = resolve;
+        })
+       }) 
     ]);
 
     // fix for the flickering
@@ -475,18 +397,99 @@ export default class LoginPage extends React.Component {
           initial={{ translateX: 0 }}
           animate={this.animationContolsImageContainer}
         >
-          {this.state.mountRightImage && (
+          {state.mountRightImage && (
             <motion.div 
               className={css(styles.rightImage)}
               variants={VARIANTS.rightImage}
               initial={"hidden"}
               animate={'visible'}
+              onAnimationComplete={() => {
+                this.isRightImageAnimatingIn = false;
+                this.onAnimationCompleteRightImage && 
+                  this.onAnimationCompleteRightImage();
+              }}
             />
           )}
         </motion.div>
       </motion.div>
     );
   };
+};
+
+//#region - Constants + Helpers
+
+/** animation values */
+const VARIANTS = {
+  formContainer: {
+    hidden: { 
+      y: 50,
+      opacity: 0,
+      transition: { ease: 'easeInOut', duration: 0.3 },
+    },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { ease: 'easeInOut', duration: 0.5, delay: 0.5 },
+    },
+  },
+  rightImage: {
+    hidden: {
+      x: 100, 
+      opacity: 0,
+      scale: 1.25,
+      WebkitFilter: 'blur(7px)',
+    },
+    visible: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      WebkitFilter: 'blur(0px)',
+      transition: { ease: "easeInOut", duration: 2, delay: 1.25 },
+    },
+  },
+  inputContainer: {
+    visible: {
+      opacity: 1
+    },
+    loading: {
+      opacity: 0.5
+    },
+    shake: FramerValues.shake,
+  },
+  formError: {
+    hidden: {
+      height : 0,
+      opacity: 0,
+      y      : 5,
+    },
+    visible: {
+      height : 'auto',
+      opacity: 1,
+      y      : 0,
+    },
+  },
+};
+
+/** formik schema for login validation */
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .email()
+    .required("Required"),
+  password: Yup.string()
+    .required("No password provided.")
+    .min(9, "Password is too short - should be 8 chars minimum.")
+});
+
+// icons used for the FormInputIcon comp
+const IconMap = {
+  email: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/mail.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/mail-outline.svg')}/>,
+  },
+  password: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/key.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/key-outline.svg')}/>,
+  },
 };
 
 class LoginPageHelpers {
@@ -500,6 +503,9 @@ class LoginPageHelpers {
    * removes it.
    */
   static appendSharedElementImage(rightImageContainerRef){
+    // guard: early exit if null
+    if(!rightImageContainerRef) return;
+
     const { styles } = LoginPage;
     const div = document.createElement("div");
 
@@ -515,6 +521,7 @@ class LoginPageHelpers {
       if(document.contains(div)){
         portalRoot.removeChild(div);
       };
-    }, 500);
+    }, 3000);
   };
 };
+//#endregion

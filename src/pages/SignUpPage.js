@@ -20,16 +20,31 @@ import * as Helpers      from 'functions/helpers';
 import * as Colors       from 'constants/Colors';
 import * as FramerValues from 'constants/FramerValues';
 
-class SignUpHelpers {
-  static preloadSignupBG(){
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      
-      img.src = require('assests/images/register-cover.jpg');
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-    })
-  };
+const VARIANTS = {
+  leftImage: {
+    hiddenTrans: {
+      opacity: 0,
+      WebkitFilter: 'blur(7px)',
+    },
+    visibleTrans: {
+      opacity: 1,
+      WebkitFilter: 'blur(0px)',
+      transition: { duration: 2 },
+    },
+    hidden: {
+      x: -100, 
+      opacity: 0,
+      scale: 1.25,
+      WebkitFilter: 'blur(7px)',
+    },
+    visible: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      WebkitFilter: 'blur(0px)',
+      transition: { ease: "easeInOut", duration: 2 },
+    },
+  },
 };
 
 export default class SignUpPage extends React.Component {
@@ -131,6 +146,7 @@ export default class SignUpPage extends React.Component {
 
     this.state = {
       isLoginPrevPath: (fromPath == ROUTES.LOGIN),
+      mountLeftImage: false,
     };
 
     // todo: remov
@@ -151,21 +167,22 @@ export default class SignUpPage extends React.Component {
     // clear fromPath from router so the animation does not trigger on reload
     history.replace(location.pathname, { fromPath: null });
 
-    const prevImage = document.getElementById('right-shared-element-image');
-    prevImage && prevImage.remove();
-
-    //const imageSrc = await import('assests/images/register-cover.jpg');
-    //alert(JSON.stringify(imageSrc));
-
-    
+    // wait for the cover image to load first
     await SignUpHelpers.preloadSignupBG();
+    // then show the cover image
+    this.setState({ mountLeftImage: true });
+
     if(isLoginPrevPath){
-      // since login was the prev path, we are trans. so hide the prev image first
-      this.animationContolsImagePrev.start({ opacity: 0 });
-    } else {
-
+      // if the prev image is still mounted, remove it
+      SignUpHelpers.removePrevImage();
+      
+      // since login was the prev path, we are trans. so hide the prev image 
+      this.animationContolsImagePrev.start({
+        opacity: 0,
+        WebkitFilter: 'blur(7px)',
+        transition: { duration: 2 },
+      });
     };
-
 
     return;
      //get window dimensions
@@ -196,11 +213,15 @@ export default class SignUpPage extends React.Component {
 
   render(){
     const { styles } = SignUpPage;
-    const { location } = this.props;
-    const { isLoginPrevPath } = this.state;
+    const state = this.state;
 
-    console.log('location - render', location);
-
+    const leftImageProps = (state.isLoginPrevPath? {
+      initial: 'hiddenTrans',
+      animate: 'visibleTrans'
+    }:{
+      initial: 'hidden',
+      animate: 'visible'
+    });
 
     return(
       <motion.div className={css(styles.rootContainer)}>
@@ -208,10 +229,14 @@ export default class SignUpPage extends React.Component {
           ref={r => this.leftImageContainer = r}
           className={css(styles.leftImageContainer)}
         >
-          <motion.div 
-            className={css(styles.leftImage)}
-          />
-          {isLoginPrevPath && (
+          {(state.mountLeftImage) && (
+            <motion.div 
+              className={css(styles.leftImage)}
+              variants={VARIANTS.leftImage}
+              {...leftImageProps}
+            />
+          )}
+          {state.isLoginPrevPath && (
             <motion.div 
               animate={this.animationContolsImagePrev}
               className={css(styles.leftImagePrev)}
@@ -225,5 +250,23 @@ export default class SignUpPage extends React.Component {
         </motion.div>
       </motion.div>
     );
+  };
+};
+
+
+class SignUpHelpers {
+  static preloadSignupBG(){
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      
+      img.src = require('assests/images/register-cover.jpg');
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+    })
+  };
+
+  static removePrevImage(){
+    const prevImage = document.getElementById('right-shared-element-image');
+    prevImage && prevImage.remove();
   };
 };
