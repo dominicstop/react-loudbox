@@ -92,6 +92,12 @@ export default class SignUpPage extends React.Component {
       display: 'flex',
       flexDirection: 'column',
     },
+    formTitle: {
+      fontWeight: 'bold',
+    },
+    formGroup: {
+      marginBottom: 40,
+    },
     formButtonContainer: {
       display: 'flex',
       justifyContent: 'space-between',
@@ -174,8 +180,14 @@ export default class SignUpPage extends React.Component {
     const { styles } = SignUpPage;
     const { values, errors, touched } = formikProps;
 
-    const sharedProps = {
-      bottomSpace: 25,
+    const groupTitleProps = {
+      component   : "h3"   ,
+      variant     : "body1",
+      gutterBottom: true   ,
+    };
+
+    const inputProps = {
+      bottomSpace: 15,
       // pass down formik props
       onBlur   : formikProps.handleBlur  ,
       onChange : formikProps.handleChange,
@@ -191,139 +203,152 @@ export default class SignUpPage extends React.Component {
           //variants={VARIANTS.inputContainer}
           animate={this.animationContolsInputContainer}
         >
-          <FormInputIcon
-            //iconmap={IconMap.email}
-            placeholder={'First Name'}
-            id={'firstname'}
-            type={"text"}
-            name={"firstname"}
-            //value={values.email}
-            error={false}//errors.email}
-            {...sharedProps}
-          />
-          <FormInputIcon
-            //iconmap={IconMap.password}
-            placeholder={'Middle Name'}
-            id={'middlename'}
-            type={"text"}
-            name={"middlename"}
-            //value={values.password}
-            //error={errors.password}
-            error={false}//errors.email}
-            {...sharedProps}
-          />
-          <FormInputIcon
-            //iconmap={IconMap.password}
-            placeholder={'Last Name'}
-            id={'lastname'}
-            type={"text"}
-            name={"lastname"}
-            //value={values.password}
-            //error={errors.password}
-            error={false}//errors.email}
-            {...sharedProps}
-          />
-
-          <FormInputIcon
-            //iconmap={IconMap.password}
-            placeholder={'Street'}
-            id={'lastname'}
-            type={"text"}
-            name={"lastname"}
-            //value={values.password}
-            //error={errors.password}
-            error={false}//errors.email}
-            {...sharedProps}
-          />
-          <FormInputIcon
-            //iconmap={IconMap.password}
-            placeholder={'Barangay'}
-            id={'lastname'}
-            type={"text"}
-            name={"lastname"}
-            //value={values.password}
-            //error={errors.password}
-            error={false}//errors.email}
-            {...sharedProps}
-          />
-          <FormInputIcon
-            //iconmap={IconMap.password}
-            placeholder={'City'}
-            id={'lastname'}
-            type={"text"}
-            name={"lastname"}
-            //value={values.password}
-            //error={errors.password}
-            error={false}//errors.email}
-            {...sharedProps}
-          />
-          <FormInputIcon
-            //iconmap={IconMap.password}
-            placeholder={'Postal Code'}
-            id={'lastname'}
-            type={"text"}
-            name={"lastname"}
-            //value={values.password}
-            //error={errors.password}
-            error={false}//errors.email}
-            {...sharedProps}
-          />
-          <FormInputIcon
-            //iconmap={IconMap.password}
-            placeholder={'Province'}
-            id={'lastname'}
-            type={"text"}
-            name={"lastname"}
-            //value={values.password}
-            //error={errors.password}
-            error={false}//errors.email}
-            {...sharedProps}
-          />
-          <FormInputIcon
-            //iconmap={IconMap.password}
-            placeholder={'Phone Number 1'}
-            id={'lastname'}
-            type={"text"}
-            name={"lastname"}
-            //value={values.password}
-            //error={errors.password}
-            error={false}//errors.email}
-            {...sharedProps}
-          />
-          <FormInputIcon
-            //iconmap={IconMap.password}
-            placeholder={'Phone Number 2'}
-            id={'lastname'}
-            type={"text"}
-            name={"lastname"}
-            //value={values.password}
-            //error={errors.password}
-            error={false}//errors.email}
-            {...sharedProps}
-          />
-
-          <FormInputIcon
-            //iconmap={IconMap.password}
-            placeholder={'Email'}
-            id={'lastname'}
-            type={"text"}
-            name={"lastname"}
-            //value={values.password}
-            //error={errors.password}
-            error={false}//errors.email}
-            {...sharedProps}
-          />
-          <FormInputIcon
-            //iconmap={IconMap.password}
-            placeholder={'Password'}
-            id={'lastname'}
-            type={"text"}
-            name={"lastname"}
-            //value={values.password}
-            //error={errors.password}
-            error={false}//errors.email}
-            {...sharedProps}
-          />
+          <div className={css(styles.formGroup)}>
+            <Typography {...groupTitleProps}>
+              {'Personal Information'}
+            </Typography>
+            <FormInputIcon
+              iconmap={IconMap.firstName}
+              placeholder={'First Name'}
+              id={'firstname'}
+              type={"text"}
+              name={"firstname"}
+              //value={values.email}
+              error={false}//errors.email}
+              {...inputProps}
+            />
+            <FormInputIcon
+              iconmap={IconMap.middleLastName}
+              placeholder={'Middle Name'}
+              id={'middlename'}
+              type={"text"}
+              name={"middlename"}
+              //value={values.password}
+              //error={errors.password}
+              error={false}//errors.email}
+              {...inputProps}
+            />
+            <FormInputIcon
+              iconmap={IconMap.middleLastName}
+              placeholder={'Last Name'}
+              id={'lastname'}
+              type={"text"}
+              name={"lastname"}
+              //value={values.password}
+              //error={errors.password}
+              error={false}//errors.email}
+              {...inputProps}
+            />
+          </div>
+          <div className={css(styles.formGroup)}>
+            <Typography {...groupTitleProps}>
+              {'Contact Information'}
+            </Typography>
+            <FormInputIcon
+              iconmap={IconMap.street}
+              placeholder={'Street'}
+              id={'lastname'}
+              type={"text"}
+              name={"lastname"}
+              //value={values.password}
+              //error={errors.password}
+              error={false}//errors.email}
+              {...inputProps}
+            />
+            <FormInputIcon
+              iconmap={IconMap.barangay}
+              placeholder={'Barangay'}
+              id={'lastname'}
+              type={"text"}
+              name={"lastname"}
+              //value={values.password}
+              //error={errors.password}
+              error={false}//errors.email}
+              {...inputProps}
+            />
+            <FormInputIcon
+              iconmap={IconMap.city}
+              placeholder={'City'}
+              id={'lastname'}
+              type={"text"}
+              name={"lastname"}
+              //value={values.password}
+              //error={errors.password}
+              error={false}//errors.email}
+              {...inputProps}
+            />
+            <FormInputIcon
+              iconmap={IconMap.postalCode}
+              placeholder={'Postal Code'}
+              id={'lastname'}
+              type={"text"}
+              name={"lastname"}
+              //value={values.password}
+              //error={errors.password}
+              error={false}//errors.email}
+              {...inputProps}
+            />
+            <FormInputIcon
+              iconmap={IconMap.province}
+              placeholder={'Province'}
+              id={'lastname'}
+              type={"text"}
+              name={"lastname"}
+              //value={values.password}
+              //error={errors.password}
+              error={false}//errors.email}
+              {...inputProps}
+            />
+            <FormInputIcon
+              iconmap={IconMap.phone}
+              placeholder={'Phone Number 1'}
+              id={'lastname'}
+              type={"text"}
+              name={"lastname"}
+              //value={values.password}
+              //error={errors.password}
+              error={false}//errors.email}
+              {...inputProps}
+            />
+            <FormInputIcon
+              iconmap={IconMap.phone}
+              placeholder={'Phone Number 2'}
+              id={'lastname'}
+              type={"text"}
+              name={"lastname"}
+              //value={values.password}
+              //error={errors.password}
+              error={false}//errors.email}
+              {...inputProps}
+            />
+          </div>
+          <div className={css(styles.formGroup)}>
+            <Typography {...groupTitleProps}>
+              {'Account Information'}
+            </Typography>
+            <FormInputIcon
+              iconmap={IconMap.email}
+              placeholder={'Email'}
+              id={'lastname'}
+              type={"text"}
+              name={"lastname"}
+              //value={values.password}
+              //error={errors.password}
+              error={false}//errors.email}
+              {...inputProps}
+            />
+            <FormInputIcon
+              iconmap={IconMap.password}
+              placeholder={'Password'}
+              id={'lastname'}
+              type={"text"}
+              name={"lastname"}
+              //value={values.password}
+              //error={errors.password}
+              error={false}//errors.email}
+              {...inputProps}
+            />
+          </div>
         </motion.div>
         <Box className={css(styles.formButtonContainer)}>
           <Button
@@ -397,11 +422,11 @@ export default class SignUpPage extends React.Component {
                 className={css(styles.formContainer)}
               >
                 <Typography
-                  variant="h6"
+                  className={css(styles.formTitle)}
                   component="h1"
-                  gutterBottom
+                  variant="h5"
                 >
-                  Create an account.
+                  {'Create an account.'}
                 </Typography>
                 <Formik
                   //initialValues={{ email: "", password: "" }}
@@ -455,6 +480,54 @@ const VARIANTS = {
       opacity: 1,
       transition: { ease: 'easeInOut', duration: 0.5, delay: 0.5 },
     },
+  },
+};
+
+// icons used for the FormInputIcon comp
+const IconMap = {
+  firstName: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/person.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/person-outline.svg')}/>,
+  },
+  middleLastName: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/people.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/people-outline.svg')}/>,
+  },
+  middleLastName: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/people.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/people-outline.svg')}/>,
+  },
+  street: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/home.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/home-outline.svg')}/>,
+  },
+  barangay: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/location.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/location-outline.svg')}/>,
+  },
+  city: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/business.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/business-outline.svg')}/>,
+  },
+  postalCode: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/mail-open.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/mail-open-outline.svg')}/>,
+  },
+  province: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/map.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/map-outline.svg')}/>,
+  },
+  phone: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/call.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/call-outline.svg')}/>,
+  },
+  email: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/mail.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/mail-outline.svg')}/>,
+  },
+  password: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/key.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/key-outline.svg')}/>,
   },
 };
 
