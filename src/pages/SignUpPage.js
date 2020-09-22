@@ -20,32 +20,6 @@ import * as Helpers      from 'functions/helpers';
 import * as Colors       from 'constants/Colors';
 import * as FramerValues from 'constants/FramerValues';
 
-const VARIANTS = {
-  leftImage: {
-    hiddenTrans: {
-      opacity: 0,
-      WebkitFilter: 'blur(7px)',
-    },
-    visibleTrans: {
-      opacity: 1,
-      WebkitFilter: 'blur(0px)',
-      transition: { duration: 2 },
-    },
-    hidden: {
-      x: -100, 
-      opacity: 0,
-      scale: 1.25,
-      WebkitFilter: 'blur(7px)',
-    },
-    visible: {
-      x: 0,
-      opacity: 1,
-      scale: 1,
-      WebkitFilter: 'blur(0px)',
-      transition: { ease: "easeInOut", duration: 2 },
-    },
-  },
-};
 
 export default class SignUpPage extends React.Component {
   static styles = StyleSheet.create({
@@ -149,11 +123,6 @@ export default class SignUpPage extends React.Component {
       mountLeftImage: false,
     };
 
-    // todo: remov
-    console.log('location - construnctor', props.location);
-    console.log('history', props.history);
-    console.log('isLoginPrevPath: ', (fromPath == ROUTES.LOGIN));
-
     // workaround to use `useAnimation` in class comps
     this.animationContolsImagePrev = new AnimationControls();
   };
@@ -231,6 +200,33 @@ export default class SignUpPage extends React.Component {
   };
 };
 
+//#region - Constants & Helpers
+const VARIANTS = {
+  leftImage: {
+    hiddenTrans: {
+      opacity: 0,
+      WebkitFilter: 'blur(7px)',
+    },
+    visibleTrans: {
+      opacity: 1,
+      WebkitFilter: 'blur(0px)',
+      transition: { duration: 2 },
+    },
+    hidden: {
+      x: -100, 
+      opacity: 0,
+      scale: 1.25,
+      WebkitFilter: 'blur(7px)',
+    },
+    visible: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      WebkitFilter: 'blur(0px)',
+      transition: { ease: "easeInOut", duration: 2 },
+    },
+  },
+};
 
 class SignUpHelpers {
   static preloadSignupBG(){
@@ -248,3 +244,4 @@ class SignUpHelpers {
     prevImage && prevImage.remove();
   };
 };
+//#endregion

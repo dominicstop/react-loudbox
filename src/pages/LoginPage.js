@@ -376,8 +376,6 @@ export default class LoginPage extends React.Component {
             >
               <FadeInImage 
                 className={css(styles.logo)}
-                //animateInitial={{ y: 0 }}
-                //animateEntrance={{ y: 0, transition: { ease: 'easeInOut', duration: 0.3 }}}
                 src={loudboxLogo} 
                 alt={"LoudBox Logo"}
               />
