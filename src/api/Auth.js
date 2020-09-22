@@ -23,6 +23,7 @@ export const testLoginCredentials = LoginPayload.factory({
   password: 'adminuser'
 });
 
+/** Logic for sending data to the `/login` endpoint */
 export class AuthLogin {
   /** possible error types based on the login response
    * @readonly
@@ -36,7 +37,7 @@ export class AuthLogin {
     UnknownError      : 'UnknownError'      ,
   };
 
-  /** get the corresonding 'friendly' error message for errorType */
+  /** get the corresonding 'friendly' error message for `errorType` */
   static getErrorMessage(errorType){
     const { ERROR_TYPES } = AuthLogin;
 
@@ -51,7 +52,7 @@ export class AuthLogin {
     };
   };
 
-  /** get the error type based on the login response */
+  /** get the error type based on the login response from the API */
   static getErrorTypeFromResponse(response = {}){
     const { ERROR_TYPES } = AuthLogin;
 
@@ -86,7 +87,7 @@ export class AuthLogin {
     );
   };
 
-  /** checks whether the login was successful based on the response 
+  /** checks whether the login was successful based on the response from the API
    * @param {LoginResponse.structure} response
   */
   static isLoginSuccess(response = {}){

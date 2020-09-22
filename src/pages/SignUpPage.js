@@ -175,7 +175,7 @@ export default class SignUpPage extends React.Component {
     if(isLoginPrevPath){
       // if the prev image is still mounted, remove it
       SignUpHelpers.removePrevImage();
-      
+
       // since login was the prev path, we are trans. so hide the prev image 
       this.animationContolsImagePrev.start({
         opacity: 0,
@@ -183,28 +183,6 @@ export default class SignUpPage extends React.Component {
         transition: { duration: 2 },
       });
     };
-
-    return;
-     //get window dimensions
-    const windowWidth  = window.innerWidth;
-    
-
-
-    //get 'right image' dimensions
-    const { width: imageWidth } = 
-      this.leftImageContainer.getBoundingClientRect();
-
-    // place 'right image' on top 
-    //this.rightImageContainerRef.style.zIndex = 99;
-
-    //const sharedImage = this.props.location.state.sharedImage;
-    //console.log(sharedImage);
-    //this.leftImage.style.backgroundImage = sharedImage;
-
-    this.animationContolsImagePrev.start({
-      //translateX: [((windowWidth - imageWidth) / 2), 0],
-      transition: { ease: 'easeInOut', duration: 0.75 },
-    });
   };
 
   componentWillUnmount(){
