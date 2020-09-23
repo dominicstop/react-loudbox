@@ -13,8 +13,7 @@ import { PreloadPages } from 'functions/PreloadPages';
 import { LoginPayload } from 'models/LoginPayload';
 import { ROUTES } from 'constants/Routes';
 
-import * as Helpers      from 'functions/helpers';
-import * as Colors       from 'constants/Colors';
+import * as Helpers from 'functions/helpers';
 
 import loginBG     from 'assests/images/login-cover.jpg';
 import loudboxLogo from 'assests/svg/loudbox-logo.svg';

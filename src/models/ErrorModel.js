@@ -13,7 +13,7 @@ const structure = {
  * @readonly
  * @enum {string}
  */
-const ErrorKeys = {
+export const ErrorKeys = {
   ...structure,
   ...Helpers.createEnumFromObject(structure)
 };

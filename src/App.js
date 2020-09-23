@@ -1,9 +1,7 @@
 import React from 'react';
-
 import "./App.css";
 
-import { motion, AnimatePresence } from "framer-motion"
-import { BrowserRouter as Router, Switch, Route, Redirect, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
 import { AuthContext   } from 'contexts/AuthContext';
 import { LazyPreload   } from 'functions/LazyPreload';

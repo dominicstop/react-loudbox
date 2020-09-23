@@ -17,7 +17,7 @@ export class FormInputIcon extends React.Component {
     isLoading      : PropTypes.bool  ,
     iconmap        : PropTypes.object,
     bottomSpace    : PropTypes.number,
-    error          : PropTypes.oneOf([
+    error          : PropTypes.oneOfType([
       PropTypes.bool  , // trigger error color only
       PropTypes.string, // trigger error color + message
     ]),
@@ -131,13 +131,13 @@ export class FormInputIcon extends React.Component {
     const nextInputState = FormInputIcon.deriveModeFrom({props: nextProps, state: nextState});
 
     return (
-      (prevInputState      != nextInputState     ) ||
-      (prevProps.value     != nextProps.value    ) ||
-      (prevProps.error     != nextProps.error    ) ||
-      (prevState.initial   != nextState.initial  ) ||
-      (prevState.isFocused != nextState.isFocused) ||
-      (prevState.iconLoadedActive   != nextState.iconLoadedActive  ) ||
-      (prevState.iconLoadedInactive != nextState.iconLoadedInactive)
+      (prevInputState      !== nextInputState     ) ||
+      (prevProps.value     !== nextProps.value    ) ||
+      (prevProps.error     !== nextProps.error    ) ||
+      (prevState.initial   !== nextState.initial  ) ||
+      (prevState.isFocused !== nextState.isFocused) ||
+      (prevState.iconLoadedActive   !== nextState.iconLoadedActive  ) ||
+      (prevState.iconLoadedInactive !== nextState.iconLoadedInactive)
     );
   };
 
@@ -278,13 +278,14 @@ export class FormInputIcon extends React.Component {
     const inputState = this.deriveModeFromProps();
 
     // check if there's an error and check if the error has a msg
-    const hasError     = (inputState == INPUT_MODE.ERROR);
+    const hasError     = (inputState === INPUT_MODE.ERROR);
     const hasErrorText = (hasError && (typeof props.error === 'string'));
 
     const showLabel = (
-      (props.label != null) && // has label
-      (props.value != ''  ) && // has value
-      ((inputState != INPUT_MODE.INITIAL) || hasErrorText) ||
+      (props.label !=  null) && // has label
+      (props.value !== ''  ) && // has value
+      (inputState  !== INPUT_MODE.INITIAL) ||
+      (hasErrorText         ) ||
       (props.alwaysShowLabel)
     );
 
@@ -293,12 +294,6 @@ export class FormInputIcon extends React.Component {
         className={css(styles.rootContainer)}
         style={{marginBottom: bottomSpace}}
       >
-        {false && ( // debug
-          <div>
-            <p>{inputState}</p>
-            <p>{`error: ${props.error} \hasError: ${hasError}} \n hasErrorText : ${hasErrorText}`}</p>
-          </div>
-        )}
         <motion.div
           className={css(styles.labelContainer)}
           initial={(props.alwaysShowLabel)? INPUT_MODE.INITIAL : 'hidden'}

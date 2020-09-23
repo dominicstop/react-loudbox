@@ -1,29 +1,18 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
-import SVG from 'react-inlinesvg';
-import { motion, AnimationControls, AnimatePresence } from "framer-motion";
-import { Typography, Box, Button, CircularProgress, Link } from '@material-ui/core';
+import { motion, AnimationControls } from "framer-motion";
 import Scrollbar from 'react-scrollbars-custom';
 
-
-import * as Yup from 'yup';
-import { Formik, Form } from 'formik';
-
-import { FormInputIcon, ICON_KEYS } from 'components/FormInputIcon';
 import { FadeInImage } from 'components/FadeInImage';
+import { SignUpForm } from 'forms/SignUpForm';
 
-import { login } from 'api/Auth';
 import { ROUTES } from 'constants/Routes';
 
 import loginBG     from 'assests/images/login-cover.jpg';
 import signupBG    from 'assests/images/register-cover.jpg';
 import loudboxLogo from 'assests/svg/loudbox-logo.svg';
 
-import * as Helpers      from 'functions/helpers';
-import * as Colors       from 'constants/Colors';
-import * as FramerValues from 'constants/FramerValues';
-import { SignUpForm } from 'forms/SIgnUpForm';
 
 
 export default class SignUpPage extends React.Component {
