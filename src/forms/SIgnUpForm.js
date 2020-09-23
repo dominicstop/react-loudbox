@@ -7,7 +7,7 @@ import { Typography, Box, Button, CircularProgress, Link } from '@material-ui/co
 import Scrollbar from 'react-scrollbars-custom';
 
 import * as Yup from 'yup';
-import { Formik, Form, withFormik } from 'formik';
+import { Formik, Form } from 'formik';
 
 import { FormInputIcon, ICON_KEYS } from 'components/FormInputIcon';
 import { FadeInImage } from 'components/FadeInImage';
@@ -25,7 +25,7 @@ import * as FramerValues from 'constants/FramerValues';
 import { YupSchemas } from 'constants/YupSchemas';
 
 
-class SignUpFormBase extends React.Component {
+export class SignUpForm extends React.Component {
   static styles = StyleSheet.create({
     form: {
       display: 'flex',
@@ -58,10 +58,16 @@ class SignUpFormBase extends React.Component {
     },
   });
 
-  render(){
-    const { styles } = SignUpFormBase;
+  constructor(props){
+    super(props);
+
+    this.initialValues = 
+      SignUpFormHelpers.getFormDefaultValues();
+  };
+
+  _renderForm(formikProps){
+    const { styles } = SignUpForm;
     const { getFieldProps } = SignUpFormHelpers;
-    const { values, errors, touched, ...props} = this.props;
 
     const groupTitleProps = {
       component   : "h3"   ,
@@ -72,19 +78,19 @@ class SignUpFormBase extends React.Component {
     const inputProps = {
       bottomSpace: 15,
       // pass down formik props
-      onBlur   : props.handleBlur  ,
-      onChange : props.handleChange,
-      isLoading: props.isSubmitting,
+      onBlur   : formikProps.handleBlur  ,
+      onChange : formikProps.handleChange,
+      isLoading: formikProps.isSubmitting,
     };
     
     return(
-      <Form 
+      <Form
         className={css(styles.form)}
-        onSubmit={props.handleSubmit}
+        onSubmit={formikProps.handleSubmit}
       >
         <motion.div
           //variants={VARIANTS.inputContainer}
-          animate={this.animationContolsInputContainer}
+          //animate={this.animationContolsInputContainer}
         >
           <div className={css(styles.formGroup)}>
             <Typography {...groupTitleProps}>
@@ -93,19 +99,19 @@ class SignUpFormBase extends React.Component {
             <FormInputIcon
               placeholder={'First Name'}
               type={"text"}
-              {...getFieldProps(SignUpFormKeys.firstName, props)}
+              {...getFieldProps(SignUpFormKeys.firstName, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
               placeholder={'Middle Name'}
               type={"text"}
-              {...getFieldProps(SignUpFormKeys.middleName, props)}
+              {...getFieldProps(SignUpFormKeys.middleName, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
               placeholder={'Last Name'}
               type={"text"}
-              {...getFieldProps(SignUpFormKeys.lastName, props)}
+              {...getFieldProps(SignUpFormKeys.lastName, formikProps)}
               {...inputProps}
             />
           </div>
@@ -116,43 +122,43 @@ class SignUpFormBase extends React.Component {
             <FormInputIcon
               placeholder={'Street'}
               type={"text"}
-              {...getFieldProps(SignUpFormKeys.street, props)}
+              {...getFieldProps(SignUpFormKeys.street, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
               placeholder={'Barangay'}
               type={"text"}
-              {...getFieldProps(SignUpFormKeys.barangay, props)}
+              {...getFieldProps(SignUpFormKeys.barangay, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
               placeholder={'City'}
               type={"text"}
-              {...getFieldProps(SignUpFormKeys.city, props)}
+              {...getFieldProps(SignUpFormKeys.city, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
               placeholder={'Postal Code'}
               type={"text"}
-              {...getFieldProps(SignUpFormKeys.postalCode, props)}
+              {...getFieldProps(SignUpFormKeys.postalCode, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
               placeholder={'Province'}
               name={"lastname"}
-              {...getFieldProps(SignUpFormKeys.province, props)}
+              {...getFieldProps(SignUpFormKeys.province, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
               placeholder={'Phone Number 1'}
               type={"text"}
-              {...getFieldProps(SignUpFormKeys.phone1, props)}
+              {...getFieldProps(SignUpFormKeys.phone1, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
               placeholder={'Phone Number 2'}
               type={"text"}
-              {...getFieldProps(SignUpFormKeys.phone2, props)}
+              {...getFieldProps(SignUpFormKeys.phone2, formikProps)}
               {...inputProps}
             />
           </div>
@@ -163,13 +169,13 @@ class SignUpFormBase extends React.Component {
             <FormInputIcon
               placeholder={'Email'}
               type={"text"}
-              {...getFieldProps(SignUpFormKeys.email, props)}
+              {...getFieldProps(SignUpFormKeys.email, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
               placeholder={'Password'}
               type={"text"}
-              {...getFieldProps(SignUpFormKeys.password, props)}
+              {...getFieldProps(SignUpFormKeys.password, formikProps)}
               {...inputProps}
             />
           </div>
@@ -180,21 +186,34 @@ class SignUpFormBase extends React.Component {
             size="large"
             variant="contained"
             color="primary"
-            disabled={props.isSubmitting}
+            disabled={formikProps.isSubmitting}
           >
-            {props.isSubmitting
+            {formikProps.isSubmitting
               ? <CircularProgress size={30}/> 
               : 'CREATE ACCOUNT'
             }
           </Button>
           <Link
             href={'/signup'}
-            onClick={this._handleOnClickCreateAccount}
+            //onClick={this._handleOnClickCreateAccount}
           >
             {'Back to Sign In'}
           </Link>
         </Box>
       </Form>
+    );
+  };
+
+  render(){
+    const { ...props } = this.props;
+
+    return(
+      <Formik
+        initialValues={this.initialValues}
+        render={this._renderForm}
+        {...{validationSchema}}
+        {...props}
+      />
     );
   };
 };
@@ -325,37 +344,25 @@ const validationSchema = Yup.object().shape({
   ),
 });
 
-
-class SignUpFormHelpers {
+export class SignUpFormHelpers {
   /** get the field props based on the key */
   static getFieldProps(key, props){
     return {
       iconmap: IconMap[key],
       id     : key,
       name   : key,
-      value  : props.value?.[key] ?? ''   ,
-      error  : props.error?.[key] ?? false,
+      value  : props.values?.[key],
+      error  : props.errors?.[key],
     };
   };
 
   static getFormDefaultValues(){
-    const keys = Object.keys(SignUpFormKeys);
-    return keys.reduce((acc, curr) => { acc[curr] = '' }, {});
-  };
+    const reducer = 
+      (acc = {}, curr) => ({[curr]: '', ...acc});
 
-  static getWrappedForm(){
-    const wrapper = withFormik({
-      // default values
-      mapPropsToValues: () => ({ 
-      }),
-      validationSchema,
-    });
-
-    return wrapper(SignUpFormBase);
+    return Object
+      .keys(SignUpFormKeys)
+      .reduce(reducer, {});
   };
 };
 //#endregion
-
-
-export const SignUpForm = 
-  SignUpFormHelpers.getWrappedForm();
