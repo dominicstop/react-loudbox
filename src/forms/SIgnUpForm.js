@@ -229,10 +229,11 @@ export class SignUpForm extends React.Component {
     return(
       <Formik
         initialValues={this.initialValues}
-        render={this._renderForm}
         {...{validationSchema}}
         {...props}
-      />
+      >
+        {this._renderForm}
+      </Formik>
     );
   };
 };
