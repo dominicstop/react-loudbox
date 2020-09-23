@@ -8,74 +8,15 @@ import { IoIosAlert } from "react-icons/io";
 
 import * as Colors from 'constants/Colors';
 
-//#region --- Constants 
-/** enum property keys for iconmap prop
-* @readonly
-* @enum {string}
-*/
-export const ICON_KEYS = {
-  /** Icon when in focus */ active  : 'active'  ,
-  /** Icon when blurred  */ inactive: 'inactive',
-};
-
-/** state machine enums for input
-* @readonly
-* @enum {string}
-*/
-const INPUT_MODE = {
-  /** Input error/invalid */ ERROR  : 'ERROR'  ,
-  /** No Interactions yet */ INITIAL: 'INITIAL',
-  /** Input not in focus  */ BLURRED: 'BLURRED',
-  /** Input is focused    */ FOCUSED: 'FOCUSED',
-  /** The form is loading */ LOADING: 'LOADING',
-};
-
-// framer motion animation keyframes/state
-const VARIANTS = {
-  inputContainer: {
-    [INPUT_MODE.ERROR]: {
-      borderColor: Colors.RED[900],
-      backgroundColor: Colors.RED[50],
-    },
-    [INPUT_MODE.INITIAL]: {
-      borderColor: Colors.BLACK[400],
-      backgroundColor: 'white',
-    },
-    [INPUT_MODE.BLURRED]: {
-      borderColor: Colors.BLUE[500],
-      backgroundColor: Colors.BLUE[50],
-    },
-    [INPUT_MODE.FOCUSED]: {
-      borderColor: Colors.BLACK[900],
-      backgroundColor: 'white',
-    },
-    [INPUT_MODE.LOADING]: {
-      borderColor: Colors.BLACK[500],
-      backgroundColor: 'white',
-    },
-  },
-  errorContainer: {
-    hidden: {
-      height : 0,
-      opacity: 0,
-      y      : 5,
-    },
-    visible: {
-      height : 'auto',
-      opacity: 1,
-      y      : 0,
-    },
-  },
-};
-
-//#endregion 
 
 /** component that renders formik field with an animated left svg icon.*/
 export class FormInputIcon extends React.Component {
   static propTypes = {
-    iconmap    : PropTypes.object,
-    bottomSpace: PropTypes.number,
-    error      : PropTypes.oneOf([
+    label          : PropTypes.string,
+    alwaysShowLabel: PropTypes.bool  ,
+    iconmap        : PropTypes.object,
+    bottomSpace    : PropTypes.number,
+    error          : PropTypes.oneOf([
       PropTypes.bool  , // trigger error color only
       PropTypes.string, // trigger error color + message
     ]),
@@ -83,6 +24,7 @@ export class FormInputIcon extends React.Component {
 
   static defaultProps = {
     bottomSpace: 30,
+    //alwaysShowLabel: true,
   };
 
   static styles = StyleSheet.create({
@@ -103,6 +45,14 @@ export class FormInputIcon extends React.Component {
       borderWidth: 2,
       borderRadius: 5,
       borderStyle: 'solid',
+    },
+    labelContainer: {
+      marginBottom: 5,
+    },
+    formLabel: {
+      fontFamily: 'Roboto',
+      fontSize: 15,
+      fontWeight: 100,
     },
     iconContainer: {
       display: 'flex',
@@ -327,6 +277,13 @@ export class FormInputIcon extends React.Component {
     const hasError     = (inputState == INPUT_MODE.ERROR);
     const hasErrorText = (hasError && (typeof props.error === 'string'));
 
+    const showLabel = (
+      (props.label != null) && // has label
+      (props.value != ''  ) && // has value
+      ((inputState != INPUT_MODE.INITIAL) || hasErrorText) ||
+      (props.alwaysShowLabel)
+    );
+
     return(
       <div 
         className={css(styles.rootContainer)}
@@ -338,6 +295,17 @@ export class FormInputIcon extends React.Component {
             <p>{`error: ${props.error} \hasError: ${hasError}} \n hasErrorText : ${hasErrorText}`}</p>
           </div>
         )}
+        <motion.div
+          className={css(styles.labelContainer)}
+          initial={(props.alwaysShowLabel)? INPUT_MODE.INITIAL : 'hidden'}
+          animate={(!showLabel)? 'hidden' : inputState}
+          variants={VARIANTS.labelContainer}
+          transition={{ ease: 'easeInOut', duration: 0.4 }}
+        >
+          <label className={css(styles.formLabel)}>
+            {props.label}
+          </label>
+        </motion.div>
         <motion.div 
           className={css(styles.inputContainer)}
           variants={VARIANTS.inputContainer}
@@ -369,3 +337,92 @@ export class FormInputIcon extends React.Component {
   };
 };
 
+//#region --- Constants 
+/** enum property keys for iconmap prop
+* @readonly
+* @enum {string}
+*/
+export const ICON_KEYS = {
+  /** Icon when in focus */ active  : 'active'  ,
+  /** Icon when blurred  */ inactive: 'inactive',
+};
+
+/** state machine enums for input
+* @readonly
+* @enum {string}
+*/
+const INPUT_MODE = {
+  /** Input error/invalid */ ERROR  : 'ERROR'  ,
+  /** No Interactions yet */ INITIAL: 'INITIAL',
+  /** Input not in focus  */ BLURRED: 'BLURRED',
+  /** Input is focused    */ FOCUSED: 'FOCUSED',
+  /** The form is loading */ LOADING: 'LOADING',
+};
+
+// framer motion animation keyframes/state
+const VARIANTS = {
+  inputContainer: {
+    [INPUT_MODE.ERROR]: {
+      borderColor: Colors.RED[900],
+      backgroundColor: Colors.RED[50],
+    },
+    [INPUT_MODE.INITIAL]: {
+      borderColor: Colors.BLACK[400],
+      backgroundColor: 'white',
+    },
+    [INPUT_MODE.BLURRED]: {
+      borderColor: Colors.BLUE[500],
+      backgroundColor: Colors.BLUE[50],
+    },
+    [INPUT_MODE.FOCUSED]: {
+      borderColor: Colors.BLACK[900],
+      backgroundColor: 'white',
+    },
+    [INPUT_MODE.LOADING]: {
+      borderColor: Colors.BLACK[500],
+      backgroundColor: 'white',
+    },
+  },
+  labelContainer: {
+    hidden: {
+      height : 0,
+      opacity: 0,
+    },
+    [INPUT_MODE.ERROR]: {
+      color: Colors.RED[900],
+      // - when trans from hidden
+      height : 'auto',
+      opacity: 1,
+    },
+    [INPUT_MODE.INITIAL]: {
+      // - when trans from hidden
+      height : 'auto',
+      opacity: 1,
+    },
+    [INPUT_MODE.BLURRED]: {
+      color: Colors.BLUE[500],
+      // - when trans from hidden
+      height : 'auto',
+      opacity: 1,
+    },
+    [INPUT_MODE.FOCUSED]: {
+      color: Colors.BLACK[900]
+    },
+    [INPUT_MODE.LOADING]: {
+      opacity: 0.5
+    },
+  },
+  errorContainer: {
+    hidden: {
+      height : 0,
+      opacity: 0,
+      y      : 5,
+    },
+    visible: {
+      height : 'auto',
+      opacity: 1,
+      y      : 0,
+    },
+  },
+};
+//#endregion 
