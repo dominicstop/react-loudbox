@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
+import PropTypes from 'prop-types';
 
 import SVG from 'react-inlinesvg';
 import { motion, AnimationControls, AnimatePresence } from "framer-motion";
 import { Typography, Box, Button, CircularProgress, Link } from '@material-ui/core';
-import Scrollbar from 'react-scrollbars-custom';
 
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
@@ -26,6 +26,11 @@ import { YupSchemas } from 'constants/YupSchemas';
 
 
 export class SignUpForm extends React.Component {
+  static propTypes = {
+    onFormSubmit : PropTypes.func,
+    onClickSignIn: PropTypes.func,
+  };
+
   static styles = StyleSheet.create({
     form: {
       display: 'flex',
@@ -65,13 +70,14 @@ export class SignUpForm extends React.Component {
       SignUpFormHelpers.getFormDefaultValues();
   };
 
-  _renderForm(formikProps){
+  _renderForm = (formikProps) => {
     const { styles } = SignUpForm;
     const { getFieldProps } = SignUpFormHelpers;
+    const props = this.props;
 
     const groupTitleProps = {
       component   : "h3"   ,
-      variant     : "body1",
+      variant     : "h6",
       gutterBottom: true   ,
     };
 
@@ -97,18 +103,21 @@ export class SignUpForm extends React.Component {
               {'Personal Information'}
             </Typography>
             <FormInputIcon
+              label={'First Name'}
               placeholder={'First Name'}
               type={"text"}
               {...getFieldProps(SignUpFormKeys.firstName, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
+              label={'Middle Name'}
               placeholder={'Middle Name'}
               type={"text"}
               {...getFieldProps(SignUpFormKeys.middleName, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
+              label={'Last Name'}
               placeholder={'Last Name'}
               type={"text"}
               {...getFieldProps(SignUpFormKeys.lastName, formikProps)}
@@ -120,42 +129,49 @@ export class SignUpForm extends React.Component {
               {'Contact Information'}
             </Typography>
             <FormInputIcon
+              label={'Street'}
               placeholder={'Street'}
               type={"text"}
               {...getFieldProps(SignUpFormKeys.street, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
+              label={'Barangay'}
               placeholder={'Barangay'}
               type={"text"}
               {...getFieldProps(SignUpFormKeys.barangay, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
+              label={'City'}
               placeholder={'City'}
               type={"text"}
               {...getFieldProps(SignUpFormKeys.city, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
-              placeholder={'Postal Code'}
-              type={"text"}
+              label={'Postal Code'}
+              placeholder={'Postal Code (Ex: 1700)'}
+              type={"number"}
               {...getFieldProps(SignUpFormKeys.postalCode, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
-              placeholder={'Province'}
-              name={"lastname"}
+              label={'Province'}
+              placeholder={'Province (Ex: Metro Manila)'}
+              type={"text"}
               {...getFieldProps(SignUpFormKeys.province, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
+              label={'Phone Number 1'}
               placeholder={'Phone Number 1'}
               type={"text"}
               {...getFieldProps(SignUpFormKeys.phone1, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
+              label={'Phone Number 2'}
               placeholder={'Phone Number 2'}
               type={"text"}
               {...getFieldProps(SignUpFormKeys.phone2, formikProps)}
@@ -167,12 +183,14 @@ export class SignUpForm extends React.Component {
               {'Account Information'}
             </Typography>
             <FormInputIcon
+              label={'Email'}
               placeholder={'Email'}
               type={"text"}
               {...getFieldProps(SignUpFormKeys.email, formikProps)}
               {...inputProps}
             />
             <FormInputIcon
+              label={'Password'}
               placeholder={'Password'}
               type={"text"}
               {...getFieldProps(SignUpFormKeys.password, formikProps)}
@@ -187,6 +205,7 @@ export class SignUpForm extends React.Component {
             variant="contained"
             color="primary"
             disabled={formikProps.isSubmitting}
+            onClick={() => { this._handleOnClickSubmit(formikProps) }}
           >
             {formikProps.isSubmitting
               ? <CircularProgress size={30}/> 
@@ -194,8 +213,8 @@ export class SignUpForm extends React.Component {
             }
           </Button>
           <Link
-            href={'/signup'}
-            //onClick={this._handleOnClickCreateAccount}
+            href={'/signin'}
+            onClick={props.onClickSignIn}
           >
             {'Back to Sign In'}
           </Link>
@@ -303,7 +322,7 @@ const validationSchema = Yup.object().shape({
   [SignUpFormKeys.postalCode]: (
     Yup.number()
       .required("Required")
-      .max(100, "Too many characters")
+      .max(99999, "Invalid Postal Code")
   ),
   [SignUpFormKeys.email]: (
     Yup.string()
@@ -317,7 +336,7 @@ const validationSchema = Yup.object().shape({
   ),
 });
 
-export class SignUpFormHelpers {
+class SignUpFormHelpers {
   /** get the field props based on the key */
   static getFieldProps(key, props){
     return {
