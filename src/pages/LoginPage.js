@@ -284,6 +284,7 @@ export default class LoginPage extends React.Component {
           animate={this.animationContolsInputContainer}
         >
           <FormInputIcon
+            label={'Email'}
             iconmap={IconMap.email}
             placeholder={'Email'}
             id={'email'}
@@ -295,6 +296,7 @@ export default class LoginPage extends React.Component {
             onBlur={formikProps.handleBlur}
           />
           <FormInputIcon
+            label={'Password'}
             iconmap={IconMap.password}
             placeholder={'Password'}
             id={'password'}
@@ -472,7 +474,7 @@ const VARIANTS = {
 /** formik schema for login validation */
 const validationSchema = Yup.object().shape({
   email: Yup.string()
-    .email()
+    .email("Not a valid email address")
     .required("Required"),
   password: Yup.string()
     .required("No password provided.")
