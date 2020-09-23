@@ -290,48 +290,21 @@ const IconMap = {
 
 /** formik schema for signup validation */
 const validationSchema = Yup.object().shape({
-  [SignUpFormKeys.firstName]: (
-    Yup.string()
-      .required("Required")
-      .max(100, "Too many characters")
-  ),
-  [SignUpFormKeys.middleName]: (
-    Yup.string()
-      .required("Required")
-      .max(100, "Too many characters")
-  ),
-  [SignUpFormKeys.lastName]: (
-    Yup.string()
-      .required("Required")
-      .max(100, "Too many characters")
-  ),
-  [SignUpFormKeys.street]: (
-    Yup.string()
-      .required("Required")
-      .max(200, "Too many characters")
-  ),
-  [SignUpFormKeys.barangay]: (
-    Yup.string()
-      .required("Required")
-      .max(100, "Too many characters")
-  ),
-  [SignUpFormKeys.city]: (
-    Yup.string()
-      .required("Required")
-      .max(100, "Too many characters")
-  ),
+  [SignUpFormKeys.firstName ]: YupSchemas.shortStringRequired,
+  [SignUpFormKeys.middleName]: YupSchemas.shortStringRequired,
+  [SignUpFormKeys.lastName  ]: YupSchemas.shortStringRequired,
+  [SignUpFormKeys.street    ]: YupSchemas.shortStringRequired,
+  [SignUpFormKeys.barangay  ]: YupSchemas.shortStringRequired,
+  [SignUpFormKeys.city      ]: YupSchemas.shortStringRequired,
+  [SignUpFormKeys.province  ]: YupSchemas.shortStringRequired,
+  [SignUpFormKeys.phone1    ]: YupSchemas.phoneNumber,
+  [SignUpFormKeys.phone2    ]: YupSchemas.phoneNumber,
+  // custom schemas ------------
   [SignUpFormKeys.postalCode]: (
     Yup.number()
       .required("Required")
       .max(100, "Too many characters")
   ),
-  [SignUpFormKeys.province]: (
-    Yup.string()
-      .required("Required")
-      .max(100, "Too many characters")
-  ),
-  [SignUpFormKeys.phone1]: YupSchemas.phoneNumber,
-  [SignUpFormKeys.phone2]: YupSchemas.phoneNumber,
   [SignUpFormKeys.email]: (
     Yup.string()
       .email("Not a valid email address")
