@@ -42,9 +42,12 @@ export class FormInputIcon extends React.Component {
       padding: 2,
       outline: 'none',
       alignItems: 'center',
-      borderWidth: 2,
+      borderWidth: 1,
       borderRadius: 5,
       borderStyle: 'solid',
+    },
+    inputContainerFocused: {
+      borderWidth: 2,
     },
     labelContainer: {
       marginBottom: 5,
@@ -269,6 +272,7 @@ export class FormInputIcon extends React.Component {
   render(){
     const { styles } = FormInputIcon;
     const { isLoading, bottomSpace, ...props } = this.props;
+    const { isFocused } = this.state;
 
     const hasIcons   = this.hasIcons();
     const inputState = this.deriveModeFromProps();
@@ -307,7 +311,7 @@ export class FormInputIcon extends React.Component {
           </label>
         </motion.div>
         <motion.div 
-          className={css(styles.inputContainer)}
+          className={css(styles.inputContainer, isFocused && styles.inputContainerFocused)}
           variants={VARIANTS.inputContainer}
           animate={inputState}
           transition={{ ease: 'easeInOut', duration: 0.3 }}
