@@ -1,26 +1,20 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
-import SVG from 'react-inlinesvg';
 import { motion, AnimationControls } from "framer-motion";
-import { Typography, Box, Button, CircularProgress, Link } from '@material-ui/core';
-import { IoIosAlert } from "react-icons/io";
+import { Typography } from '@material-ui/core';
 
-import * as Yup from 'yup';
-import { Formik, Form } from 'formik';
+import { FadeInImage } from 'components/FadeInImage';
+import { portalRoot } from 'components/RootPortal';
+import { LoginForm } from 'forms/LoginForm';
 
 import { AuthLogin } from 'api/Auth';
-import { FadeInImage } from 'components/FadeInImage';
-import { FormInputIcon, ICON_KEYS } from 'components/FormInputIcon';
-import { portalRoot } from 'components/RootPortal';
-
-import { ROUTES } from 'constants/Routes';
 import { PreloadPages } from 'functions/PreloadPages';
 import { LoginPayload } from 'models/LoginPayload';
+import { ROUTES } from 'constants/Routes';
 
 import * as Helpers      from 'functions/helpers';
 import * as Colors       from 'constants/Colors';
-import * as FramerValues from 'constants/FramerValues';
 
 import loginBG     from 'assests/images/login-cover.jpg';
 import loudboxLogo from 'assests/svg/loudbox-logo.svg';
@@ -90,34 +84,6 @@ export default class LoginPage extends React.Component {
       textAlign: 'center',
       backgroundColor: 'white',
     },
-    form: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    formInput: {
-      borderRadius: 4,
-      marginBottom: 15,
-      padding: '10px 12px',
-    },
-    formButtonContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    formErrorContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      marginBottom: 10,
-    },
-    formErrorIcon: {
-      marginRight: 5,
-      color: Colors.RED[400],
-      fontSize: 17,
-    },
-    formError: {
-      flex: 1,
-      textAlign: 'left',
-      color: Colors.RED[900],
-    },
   });
 
   constructor(props){
@@ -133,14 +99,12 @@ export default class LoginPage extends React.Component {
     this.animationContolsRootContainer  = new AnimationControls();
     this.animationContolsFormContainer  = new AnimationControls();
     this.animationContolsImageContainer = new AnimationControls();
-    this.animationContolsInputContainer = new AnimationControls();
   };
 
   componentDidMount = async () => {
     this.animationContolsRootContainer .mount();
     this.animationContolsFormContainer .mount();
     this.animationContolsImageContainer.mount();
-    this.animationContolsInputContainer.mount();
 
     // start entrance animation for left form
     this.animationContolsFormContainer.start('visible');
@@ -154,14 +118,10 @@ export default class LoginPage extends React.Component {
     this.animationContolsRootContainer .unmount();
     this.animationContolsFormContainer .unmount();
     this.animationContolsImageContainer.unmount();
-    this.animationContolsInputContainer.unmount();
   };
 
-  _handleOnClickCreateAccount = async (event) => {
+  _handleOnClickCreateAccount = async () => {
     const { history, location } = this.props;
-
-    //disable href behaviour
-    event.preventDefault();
 
     //get window dimensions
     const windowWidth  = window.innerWidth;
@@ -201,27 +161,9 @@ export default class LoginPage extends React.Component {
     history.push('/signup', { fromPath: location.pathname });
   };
 
-  // gets called when the login button is pressed
-  _handleOnClickSubmit = (formikProps) => {
-    const errorCount = Object.keys(formikProps.errors).length;
-    const hasErrors  = (errorCount > 0);
-
-    if(hasErrors){
-      // shake form
-      this.animationContolsInputContainer.start('shake');
-    };
-  };
-
   // gets called when the login form is submitted
-  _handleFormikOnSubmit = async (values, actions) => {
+  _handleFormikOnSubmit = async (values, actions, formActions) => {
     const { history } = this.props;
-
-    // shakes + transitions form back to normal
-    const triggerErrorAnimation = () => {
-      actions.setSubmitting(false);
-      this.animationContolsInputContainer.start('visible');
-      this.animationContolsInputContainer.start('shake');
-    };
 
     try {
       // get the form values from formik
@@ -234,7 +176,7 @@ export default class LoginPage extends React.Component {
       // and POST to login api
       const [loginResult] = await Promise.all([
         AuthLogin.login(loginCredentials),
-        this.animationContolsInputContainer.start('loading'),
+        formActions.triggerFormLoading(),
       ]);
 
       if(loginResult.isSuccess){
@@ -250,7 +192,7 @@ export default class LoginPage extends React.Component {
 
       } else {
         // login failed, show error + shake form
-        triggerErrorAnimation();
+        formActions.triggerFormError();
         actions.setErrors({
           email    : true, 
           password : true,
@@ -260,91 +202,13 @@ export default class LoginPage extends React.Component {
 
     } catch (error) {
       console.log('login error', error);
-      triggerErrorAnimation();
+      formActions.triggerFormError();
       actions.setErrors({
         email    : true, 
         password : true,
         formError: 'An unexpected error has occured',
       });
     };
-  };
-
-  // render formik form contents
-  _renderForm = (formikProps) => {
-    const { values, errors, touched } = formikProps;
-    const { styles } = LoginPage;
-
-    return(
-      <Form 
-        className={css(styles.form)}
-        onSubmit={formikProps.handleSubmit}
-      >
-        <motion.div
-          variants={VARIANTS.inputContainer}
-          animate={this.animationContolsInputContainer}
-        >
-          <FormInputIcon
-            label={'Email'}
-            iconmap={IconMap.email}
-            placeholder={'Email'}
-            id={'email'}
-            type={"email"}
-            name={"email"}
-            value={values.email}
-            error={errors.email}
-            onChange={formikProps.handleChange}
-            onBlur={formikProps.handleBlur}
-          />
-          <FormInputIcon
-            label={'Password'}
-            iconmap={IconMap.password}
-            placeholder={'Password'}
-            id={'password'}
-            type={"password"}
-            name={"password"}
-            value={values.password}
-            error={errors.password}
-            isLoading={formikProps.isSubmitting}
-            onChange={formikProps.handleChange}
-            onBlur={formikProps.handleBlur}
-          />
-        </motion.div>
-        <motion.div
-          className={css(styles.formErrorContainer)}
-          animate={errors.formError? 'visible' : 'hidden'}
-          variants={VARIANTS.formError}
-          transition={{ ease: 'easeInOut', duration: 0.4 }}
-        >
-          <IoIosAlert className={css(styles.formErrorIcon)}/>
-          <label className={css(styles.formError)}>
-            {errors.formError}
-          </label>
-        </motion.div>
-        <Box className={css(styles.formButtonContainer)}>
-          <Button
-            type="submit"
-            size="large"
-            variant="contained"
-            color="primary"
-            disabled={formikProps.isSubmitting}
-            // workaround because submit isnt trigerred when there 
-            // are form errors
-            onClick={() => { this._handleOnClickSubmit(formikProps) }}
-          >
-            {formikProps.isSubmitting
-              ? <CircularProgress size={30}/> 
-              : 'LOGIN'
-            }
-          </Button>
-          <Link
-            href={'/signup'}
-            onClick={this._handleOnClickCreateAccount}
-          >
-            Create an account
-          </Link>
-        </Box>
-      </Form>
-    );
   };
 
   render(){
@@ -383,13 +247,10 @@ export default class LoginPage extends React.Component {
                 alt={"LoudBox Logo"}
               />
             </motion.div>
-            <Formik
-              initialValues={{ email: "", password: "" }}
-              onSubmit={this._handleFormikOnSubmit}
-              {...{validationSchema}}
-            >
-              {this._renderForm}
-            </Formik>
+            <LoginForm
+              onClickCreateAccount={this._handleOnClickCreateAccount}
+              onFormikFormSubmit={this._handleFormikOnSubmit}
+            />
           </motion.div>
         </div>
         <motion.div 
@@ -418,7 +279,6 @@ export default class LoginPage extends React.Component {
 };
 
 //#region - Constants + Helpers
-
 /** animation values */
 const VARIANTS = {
   formContainer: {
@@ -447,49 +307,6 @@ const VARIANTS = {
       WebkitFilter: 'blur(0px)',
       transition: { ease: "easeInOut", duration: 2, delay: 1.25 },
     },
-  },
-  inputContainer: {
-    visible: {
-      opacity: 1
-    },
-    loading: {
-      opacity: 0.5
-    },
-    shake: FramerValues.shake,
-  },
-  formError: {
-    hidden: {
-      height : 0,
-      opacity: 0,
-      y      : 5,
-    },
-    visible: {
-      height : 'auto',
-      opacity: 1,
-      y      : 0,
-    },
-  },
-};
-
-/** formik schema for login validation */
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Not a valid email address")
-    .required("Required"),
-  password: Yup.string()
-    .required("No password provided.")
-    .min(9, "Password is too short - should be 8 chars minimum.")
-});
-
-// icons used for the FormInputIcon comp
-const IconMap = {
-  email: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/mail.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/mail-outline.svg')}/>,
-  },
-  password: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/key.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/key-outline.svg')}/>,
   },
 };
 
