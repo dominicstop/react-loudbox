@@ -70,6 +70,20 @@ export class SignUpForm extends React.Component {
       SignUpFormHelpers.getFormDefaultValues();
   };
 
+  _handleOnClickSign = (event) => {
+    const { onClickSignIn } = this.props;
+
+    //disable href behaviour
+    event.preventDefault();
+
+    onClickSignIn && onClickSignIn(event);
+  };
+
+  _handleOnClickSubmit = (formikProps) => {
+    alert('to be implemented');
+    console.log({formikProps})
+  };
+
   _renderForm = (formikProps) => {
     const { styles } = SignUpForm;
     const { getFieldProps } = SignUpFormHelpers;
@@ -213,8 +227,8 @@ export class SignUpForm extends React.Component {
             }
           </Button>
           <Link
-            href={'/signin'}
-            onClick={props.onClickSignIn}
+            href={ROUTES.LOGIN}
+            onClick={this._handleOnClickSign}
           >
             {'Back to Sign In'}
           </Link>

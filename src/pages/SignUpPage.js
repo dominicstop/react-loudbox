@@ -148,7 +148,7 @@ export default class SignUpPage extends React.Component {
   };
 
   _handleFormikOnSubmit = () => {
-    
+    alert();
   };
 
   render(){
@@ -202,8 +202,7 @@ export default class SignUpPage extends React.Component {
                 className={css(styles.formContainer)}
               >
                 <SignUpForm
-                  //initialValues={{ email: "", password: "" }}
-                  onSubmit={this._handleFormikOnSubmit}
+                  onFormSubmit={this._handleFormikOnSubmit}
                   //{...{validationSchema}}
                 />
               </motion.div>
