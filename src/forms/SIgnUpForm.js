@@ -63,13 +63,6 @@ export class SignUpForm extends React.Component {
     },
   });
 
-  constructor(props){
-    super(props);
-
-    this.initialValues = 
-      SignUpFormHelpers.getFormDefaultValues();
-  };
-
   _handleOnClickSign = (event) => {
     const { onClickSignIn } = this.props;
 
@@ -242,8 +235,7 @@ export class SignUpForm extends React.Component {
 
     return(
       <Formik
-        initialValues={this.initialValues}
-        {...{validationSchema}}
+        {...{validationSchema, defaultValues}}
         {...props}
       >
         {this._renderForm}
@@ -322,6 +314,10 @@ const IconMap = {
   },
 };
 
+/** default values for formik signup form */
+const defaultValues = 
+  Helpers.createDictFromKeys(SignUpFormKeys, '');
+
 /** formik schema for signup validation */
 const validationSchema = Yup.object().shape({
   [SignUpFormKeys.firstName ]: YupSchemas.shortStringRequired,
@@ -361,15 +357,6 @@ class SignUpFormHelpers {
       value  : props.values?.[key],
       error  : props.errors?.[key],
     };
-  };
-
-  static getFormDefaultValues(){
-    const reducer = 
-      (acc = {}, curr) => ({[curr]: '', ...acc});
-
-    return Object
-      .keys(SignUpFormKeys)
-      .reduce(reducer, {});
   };
 };
 //#endregion

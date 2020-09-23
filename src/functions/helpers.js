@@ -220,3 +220,11 @@ export function preloadImage(require){
     return img;
   })
 };
+
+export function createDictFromKeys(keys, value = ''){
+  const reducer = 
+      (acc = {}, curr) => ({[curr]: value, ...acc});
+
+  return Object.keys(keys)
+    .reduce(reducer, {});
+};
