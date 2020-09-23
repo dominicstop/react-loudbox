@@ -14,6 +14,7 @@ export class FormInputIcon extends React.Component {
   static propTypes = {
     label          : PropTypes.string,
     alwaysShowLabel: PropTypes.bool  ,
+    isLoading      : PropTypes.bool  ,
     iconmap        : PropTypes.object,
     bottomSpace    : PropTypes.number,
     error          : PropTypes.oneOf([
@@ -24,7 +25,6 @@ export class FormInputIcon extends React.Component {
 
   static defaultProps = {
     bottomSpace: 30,
-    //alwaysShowLabel: true,
   };
 
   static styles = StyleSheet.create({
@@ -320,6 +320,7 @@ export class FormInputIcon extends React.Component {
           {this._renderFormIcon()}
           <Field {...props}
             className={css(styles.input, hasIcons && styles.inputIconSpace)}
+            disabled={isLoading}
             onFocus={this._handleFieldOnFocus}
             onBlur={this._handleFieldOnBlur}
           />
@@ -369,22 +370,27 @@ const VARIANTS = {
     [INPUT_MODE.ERROR]: {
       borderColor: Colors.RED[900],
       backgroundColor: Colors.RED[50],
+      scale: 1,
     },
     [INPUT_MODE.INITIAL]: {
       borderColor: Colors.BLACK[400],
-      backgroundColor: 'white',
+      backgroundColor: 'rgb(255,255,255)',
+      scale: 1,
     },
     [INPUT_MODE.BLURRED]: {
       borderColor: Colors.BLUE[500],
       backgroundColor: Colors.BLUE[50],
+      scale: 1,
     },
     [INPUT_MODE.FOCUSED]: {
       borderColor: Colors.BLACK[900],
-      backgroundColor: 'white',
+      backgroundColor: 'rgb(255,255,255)',
+      scale: 1,
     },
     [INPUT_MODE.LOADING]: {
       borderColor: Colors.BLACK[500],
-      backgroundColor: 'white',
+      backgroundColor: Colors.BLACK[500],
+      scale: 0.9,
     },
   },
   labelContainer: {

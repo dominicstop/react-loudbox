@@ -111,6 +111,14 @@ export class LoginForm extends React.Component {
     const { values, errors } = formikProps;
     const { styles } = LoginForm;
 
+    const inputProps = {
+      bottomSpace: 20,
+      // attach formik handlers ----------
+      onBlur   : formikProps.handleBlur  ,
+      onChange : formikProps.handleChange,
+      isLoading: formikProps.isSubmitting,
+    };
+
     return(
       <Form 
         className={css(styles.form)}
@@ -122,28 +130,25 @@ export class LoginForm extends React.Component {
         >
           <FormInputIcon
             label={'Email'}
-            iconmap={IconMap.email}
             placeholder={'Email'}
             id={'email'}
             type={"email"}
             name={"email"}
             value={values.email}
             error={errors.email}
-            onChange={formikProps.handleChange}
-            onBlur={formikProps.handleBlur}
+            iconmap={IconMap.email}
+            {...inputProps}
           />
           <FormInputIcon
             label={'Password'}
-            iconmap={IconMap.password}
             placeholder={'Password'}
             id={'password'}
             type={"password"}
             name={"password"}
             value={values.password}
             error={errors.password}
-            isLoading={formikProps.isSubmitting}
-            onChange={formikProps.handleChange}
-            onBlur={formikProps.handleBlur}
+            iconmap={IconMap.password}
+            {...inputProps}
           />
         </motion.div>
         <motion.div

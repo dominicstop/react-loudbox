@@ -217,11 +217,9 @@ const VARIANTS = {
   leftImage: {
     hiddenTrans: {
       opacity: 0,
-      WebkitFilter: 'blur(7px)',
     },
     visibleTrans: {
       opacity: 1,
-      WebkitFilter: 'blur(0px)',
       transition: { duration: 3 },
     },
     hidden: {
