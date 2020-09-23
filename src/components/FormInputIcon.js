@@ -384,8 +384,8 @@ const VARIANTS = {
     },
     [INPUT_MODE.LOADING]: {
       borderColor: Colors.BLACK[500],
-      backgroundColor: Colors.BLACK[500],
-      scale: 0.9,
+      backgroundColor: Colors.BLACK[100],
+      scale: 0.95,
     },
   },
   labelContainer: {
