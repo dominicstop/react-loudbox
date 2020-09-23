@@ -21,9 +21,10 @@ const LoginPage  = LazyPreload(() => import('pages/LoginPage' ));
 const SignUpPage = LazyPreload(() => import('pages/SignUpPage'));
 const HomePage   = LazyPreload(() => import('pages/HomePage'  ));
 
+
 //register pages to programtically preload later
 PreloadPages.registerPages([
-  { key: ROUTES.LOGIN  , pageComp: LoginPage  },
+  { key: ROUTES.LOGIN , pageComp: LoginPage  },
   { key: ROUTES.SIGNUP, pageComp: SignUpPage },
   { key: ROUTES.HOME  , pageComp: HomePage   },
 ]);
@@ -40,15 +41,15 @@ export default function App(){
           <Switch>
             <Route exact path="/">
               {isLoggedIn
-                ? <Redirect to={ROUTES.LOGIN} /> 
-                : <Redirect to={ROUTES.HOME}/>
+                ? <Redirect to={ROUTES.HOME} /> 
+                : <Redirect to={ROUTES.LOGIN}/>
               }
             </Route>
             <Route 
               path={ROUTES.LOGIN}
               component={(isLoggedIn
                 // expects comp so wrap redirect element
-                ? () => <Redirect to={ROUTES.LOGIN} /> 
+                ? () => <Redirect to={ROUTES.HOME} /> 
                 : LoginPage
               )}
             />

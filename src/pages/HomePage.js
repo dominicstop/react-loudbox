@@ -2,7 +2,7 @@ import React from 'react';
 
 import AuthStore from 'functions/AuthStore';
 
-export function HomePage(props){
+export default function HomePage(props){
   return(
     <div>
       <h1>Homepage</h1>

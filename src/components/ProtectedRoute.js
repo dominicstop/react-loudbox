@@ -4,7 +4,7 @@ import { Route, Redirect } from 'react-router-dom'
 
 import { AuthContext } from 'contexts/AuthContext';
 import { AuthStoreData } from 'functions/AuthStore';
-
+import { ROUTES } from 'constants/Routes';
 
 export function ProtectedRoute(props){
   const { children, ...routeProps } = props;
@@ -16,7 +16,7 @@ export function ProtectedRoute(props){
     <Route {...routeProps} 
       render={(props) => (isLoggedIn
         ? React.cloneElement(children, props)
-        : <Redirect to={props.redirectTo ?? '/login'} />
+        : <Redirect to={props.redirectTo ?? ROUTES.LOGIN} />
     )}/>
   );
 };
