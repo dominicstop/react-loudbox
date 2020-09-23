@@ -67,10 +67,13 @@ export default class SignUpPage extends React.Component {
       backgroundImage: `url(${loginBG})`,
     },
     logo: {
-      height: '48px',
+      height: 48,
       width: 'auto',
-      marginTop: 10,
-      marginBottom: '32px',
+    },
+    formTitle: {
+      fontWeight: 600,
+      fontSize: 28,
+      marginBottom: 40,
     },
     rightFormContainer: {
       flex: 1,
@@ -82,7 +85,7 @@ export default class SignUpPage extends React.Component {
       flexDirection: 'column',
       alignItems: 'center',
       paddingTop: 80,
-      paddingBottom: 80,
+      paddingBottom: 100,
     },
     formContainer: {
       width: '320px',
@@ -192,17 +195,12 @@ export default class SignUpPage extends React.Component {
                 src={loudboxLogo} 
                 alt={"LoudBox Logo"}
               />
+              <h1 className={css(styles.formTitle)}>
+                {'Create an Account'}
+              </h1>
               <motion.div 
                 className={css(styles.formContainer)}
               >
-                <Typography
-                  className={css(styles.formTitle)}
-                  component="h1"
-                  variant="h5"
-                  gutterBottom
-                >
-                  {'Create an account.'}
-                </Typography>
                 <SignUpForm
                   //initialValues={{ email: "", password: "" }}
                   onSubmit={this._handleFormikOnSubmit}
