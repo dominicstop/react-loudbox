@@ -6,7 +6,6 @@ import { motion, AnimationControls, AnimatePresence } from "framer-motion";
 import { Typography, Box, Button, CircularProgress, Link } from '@material-ui/core';
 import Scrollbar from 'react-scrollbars-custom';
 
-
 import * as Yup from 'yup';
 import { Formik, Form, withFormik } from 'formik';
 
@@ -23,72 +22,8 @@ import loudboxLogo from 'assests/svg/loudbox-logo.svg';
 import * as Helpers      from 'functions/helpers';
 import * as Colors       from 'constants/Colors';
 import * as FramerValues from 'constants/FramerValues';
+import { YupSchemas } from 'constants/YupSchemas';
 
-//#region - Constants
-
-const FieldKeys = {
-
-};
-
-/** formik schema for signup validation */
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email()
-    .required("Required"),
-  password: Yup.string()
-    .required("No password provided.")
-    .min(9, "Password is too short - should be 8 chars minimum.")
-});
-
-
-// icons used for the FormInputIcon comp
-const IconMap = {
-  firstName: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/person.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/person-outline.svg')}/>,
-  },
-  middleLastName: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/people.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/people-outline.svg')}/>,
-  },
-  middleLastName: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/people.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/people-outline.svg')}/>,
-  },
-  street: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/home.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/home-outline.svg')}/>,
-  },
-  barangay: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/location.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/location-outline.svg')}/>,
-  },
-  city: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/business.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/business-outline.svg')}/>,
-  },
-  postalCode: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/mail-open.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/mail-open-outline.svg')}/>,
-  },
-  province: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/map.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/map-outline.svg')}/>,
-  },
-  phone: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/call.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/call-outline.svg')}/>,
-  },
-  email: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/mail.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/mail-outline.svg')}/>,
-  },
-  password: {
-    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/key.svg'        )}/>,
-    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/key-outline.svg')}/>,
-  },
-};
-//#endregion
 
 class SignUpFormBase extends React.Component {
   static styles = StyleSheet.create({
@@ -125,6 +60,7 @@ class SignUpFormBase extends React.Component {
 
   render(){
     const { styles } = SignUpFormBase;
+    const { getFieldProps } = SignUpFormHelpers;
     const { values, errors, touched, ...props} = this.props;
 
     const groupTitleProps = {
@@ -141,7 +77,6 @@ class SignUpFormBase extends React.Component {
       isLoading: props.isSubmitting,
     };
     
-
     return(
       <Form 
         className={css(styles.form)}
@@ -156,35 +91,21 @@ class SignUpFormBase extends React.Component {
               {'Personal Information'}
             </Typography>
             <FormInputIcon
-              iconmap={IconMap.firstName}
               placeholder={'First Name'}
-              id={'firstname'}
               type={"text"}
-              name={"firstname"}
-              //value={values.email}
-              error={false}//errors.email}
+              {...getFieldProps(SignUpFormKeys.firstName, props)}
               {...inputProps}
             />
             <FormInputIcon
-              iconmap={IconMap.middleLastName}
               placeholder={'Middle Name'}
-              id={'middlename'}
               type={"text"}
-              name={"middlename"}
-              //value={values.password}
-              //error={errors.password}
-              error={false}//errors.email}
+              {...getFieldProps(SignUpFormKeys.middleName, props)}
               {...inputProps}
             />
             <FormInputIcon
-              iconmap={IconMap.middleLastName}
               placeholder={'Last Name'}
-              id={'lastname'}
               type={"text"}
-              name={"lastname"}
-              //value={values.password}
-              //error={errors.password}
-              error={false}//errors.email}
+              {...getFieldProps(SignUpFormKeys.lastName, props)}
               {...inputProps}
             />
           </div>
@@ -193,80 +114,45 @@ class SignUpFormBase extends React.Component {
               {'Contact Information'}
             </Typography>
             <FormInputIcon
-              iconmap={IconMap.street}
               placeholder={'Street'}
-              id={'lastname'}
               type={"text"}
-              name={"lastname"}
-              //value={values.password}
-              //error={errors.password}
-              error={false}//errors.email}
+              {...getFieldProps(SignUpFormKeys.street, props)}
               {...inputProps}
             />
             <FormInputIcon
-              iconmap={IconMap.barangay}
               placeholder={'Barangay'}
-              id={'lastname'}
               type={"text"}
-              name={"lastname"}
-              //value={values.password}
-              //error={errors.password}
-              error={false}//errors.email}
+              {...getFieldProps(SignUpFormKeys.barangay, props)}
               {...inputProps}
             />
             <FormInputIcon
-              iconmap={IconMap.city}
               placeholder={'City'}
-              id={'lastname'}
               type={"text"}
-              name={"lastname"}
-              //value={values.password}
-              //error={errors.password}
-              error={false}//errors.email}
+              {...getFieldProps(SignUpFormKeys.city, props)}
               {...inputProps}
             />
             <FormInputIcon
-              iconmap={IconMap.postalCode}
               placeholder={'Postal Code'}
-              id={'lastname'}
               type={"text"}
-              name={"lastname"}
-              //value={values.password}
-              //error={errors.password}
-              error={false}//errors.email}
+              {...getFieldProps(SignUpFormKeys.postalCode, props)}
               {...inputProps}
             />
             <FormInputIcon
-              iconmap={IconMap.province}
               placeholder={'Province'}
-              id={'lastname'}
-              type={"text"}
               name={"lastname"}
-              //value={values.password}
-              //error={errors.password}
-              error={false}//errors.email}
+              {...getFieldProps(SignUpFormKeys.province, props)}
               {...inputProps}
             />
             <FormInputIcon
-              iconmap={IconMap.phone}
               placeholder={'Phone Number 1'}
-              id={'lastname'}
               type={"text"}
-              name={"lastname"}
-              //value={values.password}
-              //error={errors.password}
-              error={false}//errors.email}
+              {...getFieldProps(SignUpFormKeys.phone1, props)}
               {...inputProps}
             />
             <FormInputIcon
-              iconmap={IconMap.phone}
               placeholder={'Phone Number 2'}
-              id={'lastname'}
               type={"text"}
-              name={"lastname"}
-              //value={values.password}
-              //error={errors.password}
-              error={false}//errors.email}
+              {...getFieldProps(SignUpFormKeys.phone2, props)}
               {...inputProps}
             />
           </div>
@@ -275,25 +161,15 @@ class SignUpFormBase extends React.Component {
               {'Account Information'}
             </Typography>
             <FormInputIcon
-              iconmap={IconMap.email}
               placeholder={'Email'}
-              id={'lastname'}
               type={"text"}
-              name={"lastname"}
-              //value={values.password}
-              //error={errors.password}
-              error={false}//errors.email}
+              {...getFieldProps(SignUpFormKeys.email, props)}
               {...inputProps}
             />
             <FormInputIcon
-              iconmap={IconMap.password}
               placeholder={'Password'}
-              id={'lastname'}
               type={"text"}
-              name={"lastname"}
-              //value={values.password}
-              //error={errors.password}
-              error={false}//errors.email}
+              {...getFieldProps(SignUpFormKeys.password, props)}
               {...inputProps}
             />
           </div>
@@ -323,9 +199,163 @@ class SignUpFormBase extends React.Component {
   };
 };
 
-export const SignUpForm = withFormik({
-  // default values
-  mapPropsToValues: () => ({ 
-  }),
-  validationSchema,
-})(SignUpFormBase);
+
+//#region - Constants
+/** keys representing each field in the `SignUpForm`  */
+export const SignUpFormKeys = {
+  firstName : 'firstName' ,
+  middleName: 'middleName',
+  lastName  : 'lastName'  ,
+  street    : 'street'    ,
+  barangay  : 'barangay'  ,
+  city      : 'city'      ,
+  postalCode: 'postalCode',
+  province  : 'province'  ,
+  phone1    : 'phone1'    ,
+  phone2    : 'phone2'    ,
+  email     : 'email'     ,
+  password  : 'password'  ,
+};
+
+/** icons used for the FormInputIcon comp */
+const IconMap = {
+  [SignUpFormKeys.firstName]: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/person.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/person-outline.svg')}/>,
+  },
+  [SignUpFormKeys.middleName]: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/people.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/people-outline.svg')}/>,
+  },
+  [SignUpFormKeys.lastName]: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/people.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/people-outline.svg')}/>,
+  },
+  [SignUpFormKeys.street]: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/home.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/home-outline.svg')}/>,
+  },
+  [SignUpFormKeys.barangay]: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/location.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/location-outline.svg')}/>,
+  },
+  [SignUpFormKeys.city]: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/business.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/business-outline.svg')}/>,
+  },
+  [SignUpFormKeys.postalCode]: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/mail-open.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/mail-open-outline.svg')}/>,
+  },
+  [SignUpFormKeys.province]: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/map.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/map-outline.svg')}/>,
+  },
+  [SignUpFormKeys.phone1]: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/call.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/call-outline.svg')}/>,
+  },
+  [SignUpFormKeys.phone2]: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/call.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/call-outline.svg')}/>,
+  },
+  [SignUpFormKeys.email]: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/mail.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/mail-outline.svg')}/>,
+  },
+  [SignUpFormKeys.password]: {
+    [ICON_KEYS.active  ]: <SVG src={require('assests/ionicons/key.svg'        )}/>,
+    [ICON_KEYS.inactive]: <SVG src={require('assests/ionicons/key-outline.svg')}/>,
+  },
+};
+
+/** formik schema for signup validation */
+const validationSchema = Yup.object().shape({
+  [SignUpFormKeys.firstName]: (
+    Yup.string()
+      .required("Required")
+      .max(100, "Too many characters")
+  ),
+  [SignUpFormKeys.middleName]: (
+    Yup.string()
+      .required("Required")
+      .max(100, "Too many characters")
+  ),
+  [SignUpFormKeys.lastName]: (
+    Yup.string()
+      .required("Required")
+      .max(100, "Too many characters")
+  ),
+  [SignUpFormKeys.street]: (
+    Yup.string()
+      .required("Required")
+      .max(200, "Too many characters")
+  ),
+  [SignUpFormKeys.barangay]: (
+    Yup.string()
+      .required("Required")
+      .max(100, "Too many characters")
+  ),
+  [SignUpFormKeys.city]: (
+    Yup.string()
+      .required("Required")
+      .max(100, "Too many characters")
+  ),
+  [SignUpFormKeys.postalCode]: (
+    Yup.number()
+      .required("Required")
+      .max(100, "Too many characters")
+  ),
+  [SignUpFormKeys.province]: (
+    Yup.string()
+      .required("Required")
+      .max(100, "Too many characters")
+  ),
+  [SignUpFormKeys.phone1]: YupSchemas.phoneNumber,
+  [SignUpFormKeys.phone2]: YupSchemas.phoneNumber,
+  [SignUpFormKeys.email]: (
+    Yup.string()
+      .email("Not a valid email address")
+      .required("Required")
+  ),
+  [SignUpFormKeys.password]: (
+    Yup.string()
+      .required("No password provided.")
+      .min(9, "Password is too short - should be 8 chars minimum.")
+  ),
+});
+
+
+class SignUpFormHelpers {
+  /** get the field props based on the key */
+  static getFieldProps(key, props){
+    return {
+      iconmap: IconMap[key],
+      id     : key,
+      name   : key,
+      value  : props.value?.[key] ?? ''   ,
+      error  : props.error?.[key] ?? false,
+    };
+  };
+
+  static getFormDefaultValues(){
+    const keys = Object.keys(SignUpFormKeys);
+    return keys.reduce((acc, curr) => { acc[curr] = '' }, {});
+  };
+
+  static getWrappedForm(){
+    const wrapper = withFormik({
+      // default values
+      mapPropsToValues: () => ({ 
+      }),
+      validationSchema,
+    });
+
+    return wrapper(SignUpFormBase);
+  };
+};
+//#endregion
+
+
+export const SignUpForm = 
+  SignUpFormHelpers.getWrappedForm();
