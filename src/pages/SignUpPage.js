@@ -12,6 +12,7 @@ import { ROUTES } from 'constants/Routes';
 import loginBG     from 'assests/images/login-cover.jpg';
 import signupBG    from 'assests/images/register-cover.jpg';
 import loudboxLogo from 'assests/svg/loudbox-logo.svg';
+import { Register } from 'api/Register';
 
 
 
@@ -136,7 +137,8 @@ export default class SignUpPage extends React.Component {
   };
 
   _handleFormikOnSubmit = () => {
-    alert();
+    alert('?');
+    Register.register();
   };
 
   render(){
