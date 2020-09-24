@@ -82,6 +82,11 @@ export class FormInputIcon extends React.Component {
       backgroundColor: 'transparent !important',
       fontSize: 16,
     },
+    inputError: {
+      "::placeholder": {
+        color: Colors.RED[300],
+      },
+    },
     inputIconSpace: {
       paddingLeft: 35,
     },
@@ -281,13 +286,22 @@ export class FormInputIcon extends React.Component {
     const hasError     = (inputState === INPUT_MODE.ERROR);
     const hasErrorText = (hasError && (typeof props.error === 'string'));
 
-    const showLabel = (
-      (props.label !=  null) && // has label
-      (props.value !== ''  ) && // has value
-      (inputState  !== INPUT_MODE.INITIAL) ||
-      (hasErrorText         ) ||
-      (props.alwaysShowLabel)
+    const showLabelAtMount = 
+      (hasErrorText || (inputState !== INPUT_MODE.INITIAL));
+
+    const enableLabel = (
+      (props.label !=  null ) && // has label
+      (props.value !== ''   ) && // has value
+      (showLabelAtMount     )    // show immediently
     );
+
+    const showLabel = 
+      (enableLabel || props.alwaysShowLabel);
+
+    const inputStyles = [
+      hasError && styles.inputError,
+      hasIcons && styles.inputIconSpace
+    ];
 
     return(
       <div 
@@ -314,7 +328,7 @@ export class FormInputIcon extends React.Component {
         >
           {this._renderFormIcon()}
           <Field {...props}
-            className={css(styles.input, hasIcons && styles.inputIconSpace)}
+            className={css(styles.input, inputStyles)}
             disabled={isLoading}
             onFocus={this._handleFieldOnFocus}
             onBlur={this._handleFieldOnBlur}

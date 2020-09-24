@@ -235,7 +235,8 @@ export class SignUpForm extends React.Component {
 
     return(
       <Formik
-        {...{validationSchema, defaultValues}}
+        //initialValues={SignUpFormHelpers.getFormDefaultValues()}
+        {...{validationSchema, initialValues}}
         {...props}
       >
         {this._renderForm}
@@ -315,7 +316,7 @@ const IconMap = {
 };
 
 /** default values for formik signup form */
-const defaultValues = 
+const initialValues = 
   Helpers.createDictFromKeys(SignUpFormKeys, '');
 
 /** formik schema for signup validation */

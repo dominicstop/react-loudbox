@@ -221,9 +221,9 @@ export function preloadImage(require){
   })
 };
 
-export function createDictFromKeys(keys, value = ''){
+export function createDictFromKeys(keys, value){
   const reducer = 
-      (acc = {}, curr) => ({[curr]: value, ...acc});
+    (acc = {}, curr) => ({[curr]: (value ?? ''), ...acc});
 
   return Object.keys(keys)
     .reduce(reducer, {});

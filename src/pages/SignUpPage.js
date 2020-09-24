@@ -191,7 +191,6 @@ export default class SignUpPage extends React.Component {
               >
                 <SignUpForm
                   onFormSubmit={this._handleFormikOnSubmit}
-                  //{...{validationSchema}}
                 />
               </motion.div>
             </motion.div>
