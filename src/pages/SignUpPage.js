@@ -101,11 +101,11 @@ export default class SignUpPage extends React.Component {
   };
 
   componentDidMount = async () => {
-    this.animationContolsImagePrev    .mount();
+    this.animationContolsImagePrev  .mount();
     this.animationContolsFormWrapper.mount();
 
     // start entrance animation for left form
-    this.animationContolsFormWrapper.start('visible');
+    await this.animationContolsFormWrapper.start('visible');
 
     const { location, history } = this.props;
     const { isLoginPrevPath   } = this.state;
@@ -211,13 +211,13 @@ const VARIANTS = {
       transition: { duration: 3 },
     },
     hidden: {
-      x: -100, 
+      translateX: -100, 
       opacity: 0,
       scale: 1.25,
       WebkitFilter: 'blur(7px)',
     },
     visible: {
-      x: 0,
+      translateX: 0,
       opacity: 1,
       scale: 1,
       WebkitFilter: 'blur(0px)',

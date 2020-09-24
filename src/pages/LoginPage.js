@@ -282,25 +282,25 @@ export default class LoginPage extends React.Component {
 const VARIANTS = {
   formContainer: {
     hidden: { 
-      y: 50,
+      translateY: 50,
       opacity: 0,
       transition: { ease: 'easeInOut', duration: 0.3 },
     },
     visible: {
-      y: 0,
+      translateY: 0,
       opacity: 1,
       transition: { ease: 'easeInOut', duration: 0.5, delay: 0.5 },
     },
   },
   rightImage: {
     hidden: {
-      x: 100, 
+      translateX: 100, 
       opacity: 0,
       scale: 1.25,
       WebkitFilter: 'blur(7px)',
     },
     visible: {
-      x: 0,
+      translateX: 0,
       opacity: 1,
       scale: 1,
       WebkitFilter: 'blur(0px)',

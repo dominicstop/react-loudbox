@@ -334,6 +334,7 @@ const validationSchema = Yup.object().shape({
   [SignUpFormKeys.postalCode]: (
     Yup.string()
       .required("Required")
+      .min(4, "Invalid Postal Code")
       .max(6, "Invalid Postal Code")
   ),
   [SignUpFormKeys.email]: (
