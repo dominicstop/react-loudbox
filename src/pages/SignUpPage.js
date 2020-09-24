@@ -105,17 +105,18 @@ export default class SignUpPage extends React.Component {
     this.animationContolsImagePrev  .mount();
     this.animationContolsFormWrapper.mount();
 
-    // start entrance animation for left form
-    await this.animationContolsFormWrapper.start('visible');
-
     const { location, history } = this.props;
     const { isLoginPrevPath   } = this.state;
 
     // clear fromPath from router so the animation does not trigger on reload
     history.replace(location.pathname, { fromPath: null });
 
-    // wait for the cover image to load first
-    await SignUpHelpers.preloadSignupBG();
+    await Promise.all([
+      // start entrance animation for left form
+      this.animationContolsFormWrapper.start('visible'),
+      // wait for the cover image to load first
+      SignUpHelpers.preloadSignupBG(),
+    ]);
     // then show the cover image
     this.setState({ mountLeftImage: true });
 
