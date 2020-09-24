@@ -113,6 +113,7 @@ export class LoginForm extends React.Component {
 
     const inputProps = {
       bottomSpace: 20,
+      showLabelWhenLoading: false,
       // attach formik handlers ----------
       onBlur   : formikProps.handleBlur  ,
       onChange : formikProps.handleChange,

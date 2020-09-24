@@ -12,12 +12,15 @@ import * as Colors from 'constants/Colors';
 /** component that renders formik field with an animated left svg icon.*/
 export class FormInputIcon extends React.Component {
   static propTypes = {
-    label          : PropTypes.string,
-    alwaysShowLabel: PropTypes.bool  ,
-    isLoading      : PropTypes.bool  ,
-    iconmap        : PropTypes.object,
-    bottomSpace    : PropTypes.number,
-    error          : PropTypes.oneOfType([
+    // label specific props ---------------
+    label               : PropTypes.string,
+    alwaysShowLabel     : PropTypes.bool  ,
+    showLabelWhenLoading: PropTypes.bool  ,
+    // other props ------------------------
+    isLoading  : PropTypes.bool  ,
+    iconmap    : PropTypes.object,
+    bottomSpace: PropTypes.number,
+    error      : PropTypes.oneOfType([
       PropTypes.bool  , // trigger error color only
       PropTypes.string, // trigger error color + message
     ]),
@@ -25,6 +28,7 @@ export class FormInputIcon extends React.Component {
 
   static defaultProps = {
     bottomSpace: 30,
+    showLabelWhenLoading: true,
   };
 
   static styles = StyleSheet.create({
@@ -288,11 +292,17 @@ export class FormInputIcon extends React.Component {
 
     const showLabelAtMount = 
       (hasErrorText || (inputState !== INPUT_MODE.INITIAL));
+    
+    const showLabelWhenLoading = (props.showLabelWhenLoading
+      ? false
+      : (inputState == INPUT_MODE.LOADING)
+    );
 
     const enableLabel = (
       (props.label !=  null ) && // has label
       (props.value !== ''   ) && // has value
-      (showLabelAtMount     )    // show immediently
+      (showLabelAtMount     ) && // show immediently
+      (!showLabelWhenLoading)    // hide label when loading
     );
 
     const showLabel = 
