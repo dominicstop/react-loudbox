@@ -1,6 +1,8 @@
 
 import { EventEmitter } from 'eventemitter3';
 import { LoginResponse } from 'models/LoginResponse';
+import Cookies from 'js-cookie';
+
 
 //#region - JSDOC Types
 /** 
@@ -20,30 +22,34 @@ export const AuthStoreEvents = {
 };
 
 class AuthStore {
-  static STORE_KEY = 'auth_storage';
-
-  /**
-   * check if the login response is valid value for logging in
-   * @param {LoginResponse.structure} loginResponse 
-   */
-  static verifyLoginResponse(loginResponse){
-    // todo: add code to check if loginResponse is valid for logging in
-    return loginResponse != null;
-  };
+  static KEY_COOKIE = 'auth_cookie_token';
+  static KEY_STORE  = 'auth_storage';
 
   constructor(){
     this.emitter = new EventEmitter();
   };
 
-  /** set/update the stored auth value */
-  setAuth(loginResponse = LoginResponse.structure){
+  isLoggedIn(){
+    const token = Cookies.get(AuthStore.KEY_COOKIE);
+    return (token != null);
+  };
+
+  /** set/update the stored auth value
+   * @param {LoginResponse.structure} loginResponse 
+   */
+  setAuth(loginResponse){
     // save and persist the loginResponse object
-    localStorage.setItem(AuthStore.STORE_KEY, loginResponse);
+    localStorage.setItem(AuthStore.KEY_STORE, loginResponse);
+
+    // set the auth cookie
+    Cookies.set(AuthStore.KEY_COOKIE, loginResponse.token, {
+      expires: new Date(loginResponse.expirationDate),
+    });
 
     // notify the subscribers that auth has been updated
     this.emitter.emit(AuthStoreEvents.onAuthChange, 
       /** @type {AuthStoreData} */ {
-      isLoggedIn: AuthStore.verifyLoginResponse(loginResponse),
+      isLoggedIn: true,
       loginResponse,
     });
   };
@@ -53,10 +59,10 @@ class AuthStore {
    */
   getAuth(){
     // get the last saved loginResponse object
-    const loginResponse = localStorage.getItem(AuthStore.STORE_KEY);
+    const loginResponse = localStorage.getItem(AuthStore.KEY_STORE);
 
     return {
-      isLoggedIn: AuthStore.verifyLoginResponse(loginResponse),
+      isLoggedIn: this.isLoggedIn(),
       loginResponse,
     };
   };
@@ -64,7 +70,8 @@ class AuthStore {
   /** remove the stored auth value  */
   resetAuth(){
     // clear the stored loginResponse object
-    localStorage.removeItem(AuthStore.STORE_KEY);
+    localStorage.removeItem(AuthStore.KEY_STORE);
+    Cookies.remove(AuthStore.KEY_COOKIE);
 
     // notify the subscribers that auth has cleared
     this.emitter.emit(AuthStoreEvents.onAuthChange, 
