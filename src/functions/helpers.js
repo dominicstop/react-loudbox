@@ -152,6 +152,12 @@ export function capitalize(string = '') {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+/**
+ * Linear Interpolation Between Two Points
+ * @param {number} start
+ * @param {number} end
+ * @param {} current
+ */
 export function lerp(a, b, n) {
   return (1 - n) * a + n * b;
 };

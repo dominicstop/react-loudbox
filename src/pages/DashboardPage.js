@@ -1,9 +1,14 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
+import { Drawer } from '@material-ui/core';
+
 import AuthStore from 'functions/AuthStore';
 
 import * as Colors from 'constants/Colors';
+import { ROUTES_HOME } from 'constants/Routes';
+import { HomePageSideBar } from 'components/HomePage/HomePageSidebar';
+
 
 
 export default class DashboardPage extends React.Component {
@@ -13,25 +18,11 @@ export default class DashboardPage extends React.Component {
       flexDirection: 'row',
       flex: 1,
     },
-
-    sideBarContainer: {
-      backgroundColor: Colors.BLACK[900],
-      padding: 15,
-    },
     contentContainer: {
       flex: 1,
       backgroundColor: 'blue'
     },
   });
-
-  _renderSidebar(){
-    const { styles } = DashboardPage;
-    return(
-      <nav className={css(styles.sideBarContainer)}>
-
-      </nav>
-    );
-  };
 
   render(){
     const { styles } = DashboardPage;
@@ -39,7 +30,7 @@ export default class DashboardPage extends React.Component {
 
     return(
       <div className={css(styles.rootContainer)}>
-        {this._renderSidebar()}
+        <HomePageSideBar/>
         <div className={css(styles.contentContainer)}>
           <h1>Homepage</h1>
           <button onClick={() => {
