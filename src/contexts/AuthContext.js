@@ -36,9 +36,6 @@ export class AuthProvider extends React.Component {
    * @param {AuthStoreData} authStoreData 
    */
   _handleOnChangeAuth = (authStoreData) => {
-    // todo - remove
-    alert(JSON.stringify(authStoreData));
-
     this.setState({
       isLoggedIn   : authStoreData.isLoggedIn   ,
       loginResponse: authStoreData.loginResponse,

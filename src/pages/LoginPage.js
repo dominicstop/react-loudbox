@@ -187,7 +187,7 @@ export default class LoginPage extends React.Component {
         });
 
         // go to home page
-        history.push('/home');
+        history.push(ROUTES.HOME);
 
       } else {
         // login failed, show error + shake form
