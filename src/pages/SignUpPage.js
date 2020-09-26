@@ -127,7 +127,7 @@ export default class SignUpPage extends React.Component {
       // since login was the prev path, we are trans. so hide the prev image 
       this.animationContolsImagePrev.start({
         opacity: 0,
-        transition: { duration: 3 },
+        transition: { duration: 2 },
       });
     };
   };
@@ -211,7 +211,7 @@ const VARIANTS = {
     },
     visibleTrans: {
       opacity: 1,
-      transition: { duration: 3 },
+      transition: { duration: 0 },
     },
     hidden: {
       translateX: -100, 
