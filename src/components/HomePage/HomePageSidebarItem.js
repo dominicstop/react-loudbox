@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { Fragment, useContext } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
 
 import { motion, AnimationControls } from "framer-motion";
 import * as Helpers from 'functions/helpers';
 
-import AuthStore from 'functions/AuthStore';
+import { AuthStoreData } from 'functions/AuthStore';
 
 import * as Colors from 'constants/Colors';
 import { ROUTES_HOME } from 'constants/Routes';
 import { HomePageConstants } from './HomePageConstants';
+import { AuthContext } from 'contexts/AuthContext';
 
 
 /** Sidebar Item in the `HomepageSidebar`
@@ -34,7 +35,7 @@ export class HomePageSidebarItem extends React.PureComponent {
     rootContainer: {
       display: 'flex',
       flexDirection: 'row',
-      marginTop: 20,
+      height: HomePageConstants.drawerItemHeight,
     },
     leftIconContainer: {
       display: 'flex',
@@ -49,7 +50,6 @@ export class HomePageSidebarItem extends React.PureComponent {
       position: 'absolute',
       alignItems: 'center',
       justifyContent: 'center',
-      width: 25,
     },
     iconMotion: {
       display: 'flex',
@@ -57,7 +57,6 @@ export class HomePageSidebarItem extends React.PureComponent {
     },
     icon: {
       display: 'flex',
-      height: 'auto',
       width : HomePageConstants.drawerIconSize,
       height: HomePageConstants.drawerIconSize,
     },
@@ -75,20 +74,33 @@ export class HomePageSidebarItem extends React.PureComponent {
       fontWeight: 700,
       fontSize: 12,
       color: 'white',
-      marginLeft: 2,
-      marginBottom: 2,
+      marginLeft: 1,
+      marginBottom: 1,
     },
     rightContainer: {
-      flex: 1,
       display: 'flex',
+      flex: 1,
+      flexDirection: 'column',
       whiteSpace: 'nowrap',
-      alignItems: 'center',
-      padding: 10,
+      justifyContent: 'center',
+      paddingLeft : 12,
+      paddingRight: 17,
       zIndex: 99,
     },
     label: {
       color: 'white',
-      marginRight: 10,
+      fontSize: 15,
+    },
+    labelProfile: {
+      maxWidth: 175,
+      color: 'white',
+      fontWeight: '700',
+      fontSize: 16,
+    },
+    labelProfileSubtitle: {
+      color: 'white',
+      fontSize: 14,
+      marginTop: 3,
     },
   });
 
@@ -131,7 +143,7 @@ export class HomePageSidebarItem extends React.PureComponent {
     return this.rootContainerRef.getBoundingClientRect();
   };
 
-  _renderProfile(){
+  _renderProfileIcon(){
     const { styles } = HomePageSidebarItem;
 
     return(
@@ -222,26 +234,61 @@ export class HomePageSidebarItem extends React.PureComponent {
       >
         <motion.div className={css(styles.leftIconContainer)}>
           {isProfile
-            ? this._renderProfile()
+            ? this._renderProfileIcon()
             : this._renderIcon()
           }
         </motion.div>
-        <div className={css(styles.rightContainer)}>
-          <motion.label
-            className={css(styles.label)}
-            initial={'hidden'}
-            animate={props.isSidebarOpen? 'visible' : 'hidden'}
-            variants={VARIANTS.label}
-            transition={{ duration, delay: 0.1 }}
-          >
-            {props.label}
-          </motion.label>
-        </div>
+        <motion.div 
+          className={css(styles.rightContainer)}
+          initial={'hidden'}
+          animate={props.isSidebarOpen? 'visible' : 'hidden'}
+          variants={VARIANTS.label}
+          transition={{ duration, delay: 0.1 }}
+        >
+          {isProfile? (
+            <ProfileItem/>
+          ):(
+            <label className={css(styles.label)}>
+              {props.label}
+            </label>
+          )}
+        </motion.div>
       </motion.div>
     );
   };
 };
 
+//#region - Compoenents
+/** Shows the Profile Name */
+function ProfileItem(props){
+  const { styles } = HomePageSidebarItem;
+
+  /** @type {AuthStoreData}*/
+  const { loginResponse } = React.useContext(AuthContext);
+
+  const { firstName = 'N/A', lastName = 'N/A', middleName } = loginResponse?.user;
+  const middleLetter = middleName?.charAt(0)?.toUpperCase();
+
+  // construct full name
+  const fullName = ((middleName != null)
+    ? `${firstName} ${middleLetter}. ${lastName}`
+    : `${firstName} ${lastName}`
+  );
+
+  return(
+    <Fragment>
+      <label className={css(styles.labelProfile)}>
+        {fullName}
+      </label>
+      <label className={css(styles.labelProfileSubtitle)}>
+        {'Admin'}
+      </label>
+    </Fragment>
+  );
+};
+//#endregion
+
+//#region - Constants
 const VARIANTS = {
   label: {
     hidden: {
@@ -287,3 +334,4 @@ const VARIANTS = {
     },
   },
 };
+//#endregion

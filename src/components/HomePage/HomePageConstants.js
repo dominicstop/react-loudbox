@@ -1,5 +1,6 @@
 
 export const HomePageConstants = {
-  drawerClosedWidth: 40,
+  drawerClosedWidth: 50,
+  drawerItemHeight : 65,
   drawerIconSize   : 25,
 };

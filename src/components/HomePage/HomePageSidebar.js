@@ -54,28 +54,6 @@ const SidebarItems = [{
   },
 ];
 
-
-const VARIANTS = {
-  sidebar: {
-    hidden: {
-      width: HomePageConstants.drawerClosedWidth,
-      translateX: -HomePageConstants.drawerClosedWidth,
-      opacity: 0,
-      transition: { duration: 0.4, ease: 'easeInOut' }
-    },
-    closed: {
-      translateX: 0,
-      opacity: 1,
-      width: HomePageConstants.drawerClosedWidth,
-    },
-    open: {
-      width: 'auto',
-      transition: { duration: 0.25, ease: 'easeInOut' }
-    },
-  },
-};
-
-
 export class HomePageSideBar extends React.Component {
   static styles = StyleSheet.create({
     sideBarContainer: {
@@ -87,8 +65,8 @@ export class HomePageSideBar extends React.Component {
       position: 'absolute',
       top: 0,
       width: '100%',
-      height: HomePageConstants.drawerClosedWidth,
-      backgroundColor: Colors.BLUE[900],
+      height: HomePageConstants.drawerItemHeight,
+      backgroundColor: Helpers.hexToRGBA(Colors.ORANGE[900], 0.5),
     },
   });
 
@@ -205,11 +183,31 @@ export class HomePageSideBar extends React.Component {
         />
         <motion.div
           className={css(styles.sidebarIndicator)}
-          initial={{translateY: -HomePageConstants.drawerClosedWidth}}
+          initial={{translateY: -HomePageConstants.drawerItemHeight}}
           animate={this.animationContolsDrawerIndicator}
         />
         {this._renderSidebarItems()}
       </motion.nav>
     );
   };
+};
+
+const VARIANTS = {
+  sidebar: {
+    hidden: {
+      width: HomePageConstants.drawerClosedWidth,
+      translateX: -HomePageConstants.drawerClosedWidth,
+      opacity: 0,
+      transition: { duration: 0.4, ease: 'easeInOut' }
+    },
+    closed: {
+      translateX: 0,
+      opacity: 1,
+      width: HomePageConstants.drawerClosedWidth,
+    },
+    open: {
+      width: 'auto',
+      transition: { duration: 0.25, ease: 'easeInOut' }
+    },
+  },
 };
