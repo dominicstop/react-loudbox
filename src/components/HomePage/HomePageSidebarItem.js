@@ -17,18 +17,24 @@ import { HomePageConstants } from './HomePageConstants';
  */
 export class HomePageSidebarItem extends React.PureComponent {
   static propTypes = {
-    label        : PropTypes.string,
-    index        : PropTypes.number,
-    itemsTotal   : PropTypes.number,
-    isSidebarOpen: PropTypes.bool  ,
+    route        : PropTypes.string ,
+    label        : PropTypes.string ,
+    index        : PropTypes.number ,
+    itemsTotal   : PropTypes.number ,
+    isSidebarOpen: PropTypes.bool   ,
+    selectedIndex: PropTypes.number ,
+    selectedRoute: PropTypes.string ,
+    iconActive   : PropTypes.element,
+    iconInactive : PropTypes.element,
+    //
+    onItemSelected: PropTypes.func
   };
 
   static styles = StyleSheet.create({
     rootContainer: {
       display: 'flex',
       flexDirection: 'row',
-      paddingTop: 12,
-      paddingBottom: 12,
+      marginTop: 20,
     },
     leftIconContainer: {
       display: 'flex',
@@ -36,38 +42,168 @@ export class HomePageSidebarItem extends React.PureComponent {
       minHeight: HomePageConstants.drawerIconSize,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: 'red',
+      //backgroundColor: 'red',
+    },
+    iconContainer: {
+      display: 'flex',
+      position: 'absolute',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 25,
+    },
+    iconMotion: {
+      display: 'flex',
+      position: 'absolute',
     },
     icon: {
+      display: 'flex',
+      height: 'auto',
+
       width: 30,
       height: 30,
-      backgroundColor: 'green',
-      borderRadius: '100%',
     },
     rightContainer: {
       flex: 1,
       display: 'flex',
       whiteSpace: 'nowrap',
-      backgroundColor: 'pink',
       alignItems: 'center',
       padding: 10,
     },
+    label: {
+      color: 'white',
+      marginRight: 10,
+    },
   });
+
+  constructor(props){
+    super(props);
+
+    this.state = {
+      iconLoadedActive  : false,
+      iconLoadedInactive: false,
+    };
+  };
+
+  _handleOnClickButton = () => {
+    const { onItemSelected, ...props } = this.props;
+    onItemSelected && onItemSelected({
+      selectedIndex: props.index,
+      selectedRoute: props.route,
+    });
+  };
+
+  /** check props if it has icons */
+  hasIcon(){
+    const props = this.props;
+    return(
+      (props.iconActive   != null) &&
+      (props.iconInactive != null)
+    );
+  };
+
+  /** check if this is the one selected */
+  isSelected(){
+    const props = this.props;
+    return(
+      (props.selectedIndex == props.index) &&
+      (props.selectedRoute == props.route)
+    );
+  };
+
+  _renderProfile(){
+    return(null);
+  };
+
+  _renderIcon(){
+    const { styles } = HomePageSidebarItem;
+    const props = this.props;
+    const state = this.state;
+
+    // guard: no icon
+    if(!this.hasIcon()) return null;
+  
+    const sharedIconProps = {
+      className: css(styles.icon),
+      fill     : 'white',//iconColor,
+      stroke   : 'white'//iconColor,
+    };
+
+    const iconsLoaded = (
+      state.iconLoadedInactive &&
+      state.iconLoadedActive
+    );
+
+    const isSelected = this.isSelected();
+
+    const animations = {
+      inactive: {
+        opacity: (
+          !iconsLoaded? 0 : 
+          isSelected  ? 0 : 1
+        ),
+      },
+      active: {
+        opacity: (
+          !iconsLoaded? 0 : 
+          isSelected  ? 1 : 0
+        ),
+      },
+    };
+
+    const activeIcon = React.cloneElement(props.iconActive, {
+      ...sharedIconProps,
+      onLoad: () => { this.setState({ iconLoadedActive: true }) }
+    });
+
+    const inactiveIcon = React.cloneElement(props.iconInactive, {
+      ...sharedIconProps,
+      onLoad: () => { this.setState({ iconLoadedInactive: true }) }
+    });
+
+    return(
+      <div className={css(styles.iconContainer)}>
+        <motion.div
+          className={css(styles.iconMotion)}
+          animate={animations.active}
+          initial={false}
+        >
+          {activeIcon}
+        </motion.div>
+        <motion.div
+          className={css(styles.iconMotion)}
+          animate={animations.inactive}
+          initial={{ opacity: 0 }}
+        >
+          {inactiveIcon}
+        </motion.div>
+      </div>
+    );
+  };
 
   render(){
     const { styles } = HomePageSidebarItem;
     const props = this.props;
 
     const percentage = ((props.index + 1) / props.itemsTotal);
-    const duration = Helpers.lerp(0.15, 0.7, percentage);
+    const duration = Helpers.lerp(0.1, 0.6, percentage);
+
+    const isProfile = (props.route === ROUTES_HOME.PROFILE);
 
     return (
-      <div className={css(styles.rootContainer)}>
-        <div className={css(styles.leftIconContainer)}>
-          <div className={css(styles.icon)}/>
-        </div>
+      <motion.div
+        className={css(styles.rootContainer)}
+        onClick={this._handleOnClickButton}
+        whileHover={{ scale: 1.07, backgroundColor: 'rgba(255,255,255,0.1)' }}
+      >
+        <motion.div className={css(styles.leftIconContainer)}>
+          {isProfile
+            ? this._renderProfile()
+            : this._renderIcon()
+          }
+        </motion.div>
         <div className={css(styles.rightContainer)}>
           <motion.label
+            className={css(styles.label)}
             initial={'hidden'}
             animate={props.isSidebarOpen? 'visible' : 'hidden'}
             variants={VARIANTS.label}
@@ -76,7 +212,7 @@ export class HomePageSidebarItem extends React.PureComponent {
             {props.label}
           </motion.label>
         </div>
-      </div>
+      </motion.div>
     );
   };
 };
