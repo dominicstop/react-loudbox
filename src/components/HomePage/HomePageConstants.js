@@ -1,4 +1,4 @@
 
 export const HomePageConstants = {
-  drawerIconSize: 50,
+  drawerClosedWidth: 40,
 };

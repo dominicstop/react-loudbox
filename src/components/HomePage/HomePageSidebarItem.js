@@ -38,8 +38,8 @@ export class HomePageSidebarItem extends React.PureComponent {
     },
     leftIconContainer: {
       display: 'flex',
-      minWidth : HomePageConstants.drawerIconSize,
-      minHeight: HomePageConstants.drawerIconSize,
+      minWidth : HomePageConstants.drawerClosedWidth,
+      minHeight: HomePageConstants.drawerClosedWidth,
       alignItems: 'center',
       justifyContent: 'center',
       //backgroundColor: 'red',
