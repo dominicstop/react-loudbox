@@ -39,7 +39,9 @@ class AuthStore {
    */
   setAuth(loginResponse){
     // save and persist the loginResponse object
-    localStorage.setItem(AuthStore.KEY_STORE, loginResponse);
+    localStorage.setItem(AuthStore.KEY_STORE,
+      JSON.stringify(loginResponse)
+    );
 
     // set the auth cookie
     Cookies.set(AuthStore.KEY_COOKIE, loginResponse.token, {
@@ -59,11 +61,24 @@ class AuthStore {
    */
   getAuth(){
     // get the last saved loginResponse object
-    const loginResponse = localStorage.getItem(AuthStore.KEY_STORE);
+    const storeItem  = localStorage.getItem(AuthStore.KEY_STORE);
+    const isLoggedIn = this.isLoggedIn();
 
-    return {
-      isLoggedIn: this.isLoggedIn(),
-      loginResponse,
+    try {
+      return {
+        isLoggedIn,
+        // try parsing the string saved in the auth store
+        loginResponse: JSON.parse(storeItem),
+      };
+
+    } catch(error) {
+      // JSON parse failed, return null
+      console.log('getAuth Error: ', error);
+
+      return {
+        isLoggedIn,
+        loginResponse: null,
+      };
     };
   };
 
