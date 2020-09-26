@@ -69,11 +69,14 @@ export class HomePageSidebarItem extends React.PureComponent {
       borderRadius: '100%',
       alignItems: 'center',
       justifyContent: 'center',
+      zIndex: 99,
     },
     iconProfileInitials: {
       fontWeight: 700,
       fontSize: 14,
       color: 'white',
+      marginLeft: 2,
+      marginBottom: 2,
     },
     rightContainer: {
       flex: 1,
@@ -81,6 +84,7 @@ export class HomePageSidebarItem extends React.PureComponent {
       whiteSpace: 'nowrap',
       alignItems: 'center',
       padding: 10,
+      zIndex: 99,
     },
     label: {
       color: 'white',
@@ -121,6 +125,10 @@ export class HomePageSidebarItem extends React.PureComponent {
       (props.selectedIndex == props.index) &&
       (props.selectedRoute == props.route)
     );
+  };
+
+  measure(){
+    return this.rootContainerRef.getBoundingClientRect();
   };
 
   _renderProfile(){
@@ -207,9 +215,10 @@ export class HomePageSidebarItem extends React.PureComponent {
 
     return (
       <motion.div
+        ref={r => this.rootContainerRef = r}
         className={css(styles.rootContainer)}
         onClick={this._handleOnClickButton}
-        whileHover={{ scale: 1.07, backgroundColor: 'rgba(255,255,255,0.1)' }}
+        whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.1)' }}
       >
         <motion.div className={css(styles.leftIconContainer)}>
           {isProfile

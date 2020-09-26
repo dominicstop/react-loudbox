@@ -60,10 +60,12 @@ const VARIANTS = {
     hidden: {
       width: HomePageConstants.drawerIconSize,
       translateX: -HomePageConstants.drawerIconSize,
-      transition: { duration: 0.3, ease: 'easeInOut' }
+      opacity: 0,
+      transition: { duration: 0.4, ease: 'easeInOut' }
     },
     closed: {
       translateX: 0,
+      opacity: 1,
       width: HomePageConstants.drawerIconSize,
     },
     open: {
@@ -77,8 +79,16 @@ const VARIANTS = {
 export class HomePageSideBar extends React.Component {
   static styles = StyleSheet.create({
     sideBarContainer: {
+      position: 'relative',
       backgroundColor: Colors.BLACK[900],
       overflow: 'hidden',
+    },
+    sidebarIndicator: {
+      position: 'absolute',
+      top: 0,
+      width: '100%',
+      height: HomePageConstants.drawerIconSize,
+      backgroundColor: Colors.BLUE[900],
     },
   });
 
@@ -86,24 +96,46 @@ export class HomePageSideBar extends React.Component {
     super(props);
 
     this.state = {
-      isSidebarOpen: false,
-      selectedIndex: null,
-      selectedRoute: null,
+      isSidebarOpen   : false,
+      selectedIndex   : 1    ,
+      selectedRoute   : ROUTES_HOME.HOME,
       mountDrawerItems: false,
     };
 
     this.animationContolsDrawer = new AnimationControls();
+    this.animationContolsDrawerIndicator = new AnimationControls();
   };
 
   async componentDidMount(){
     this.animationContolsDrawer.mount();
+    this.animationContolsDrawerIndicator.mount();
 
+    // animate in the sidebar
     await this.animationContolsDrawer.start('closed');
+    // show sidebar items
     this.setState({mountDrawerItems: true});
+
+    await Helpers.timeout(1500);
+    this.showSidebarIndicator();
+  };
+
+  showSidebarIndicator = () => {
+    const { selectedRoute } = this.state;
+    const ref = this[`${selectedRoute}-SidebarItem`];
+
+    // guard: early exit if ref is null 
+    // or if there isnt a selected route
+    if(!ref || !ref.measure || !selectedRoute) return;
+
+    const { y } = ref.measure();
+    this.animationContolsDrawerIndicator.start({
+      translateY: y
+    });
   };
 
   componentWillUnmount(){
     this.animationContolsDrawer.unmount();
+    this.animationContolsDrawerIndicator.unmount();
   };
 
   _handleOnSidebarItemSelected = (params) => {
@@ -111,12 +143,39 @@ export class HomePageSideBar extends React.Component {
       selectedIndex: params.selectedIndex,
       selectedRoute: params.selectedRoute,
     });
+
+    const ref = this[`${params.selectedRoute}-SidebarItem`];
+    const { y } = ref.measure();
+
+    this.animationContolsDrawerIndicator.start({
+      translateY: y
+    });
+  };
+
+  /** render the sidebar items */
+  _renderSidebarItems(){
+    const { isSidebarOpen, ...state } = this.state;
+
+    // guard: dont render until state change
+    if(!state.mountDrawerItems) return null;
+     
+    return SidebarItems.map((item, index) => (
+      <HomePageSidebarItem
+        key={`${item.route}-sidebarItem`}
+        ref={r => this[`${item.route}-SidebarItem`] = r}
+        selectedIndex={state.selectedIndex}
+        selectedRoute={state.selectedRoute}
+        onItemSelected={this._handleOnSidebarItemSelected}
+        itemsTotal={SidebarItems.length}
+        {...{index, isSidebarOpen}}
+        {...item}
+      />
+    ));
   };
 
   render(){
     const { styles } = HomePageSideBar;
-    const { isSidebarOpen, ...state } = this.state;
-
+    const { isSidebarOpen } = this.state;
 
     return(
       <motion.nav
@@ -144,16 +203,12 @@ export class HomePageSideBar extends React.Component {
             };
           }}
         />
-        {state.mountDrawerItems && SidebarItems.map((item, index) => (
-          <HomePageSidebarItem
-            selectedIndex={state.selectedIndex}
-            selectedRoute={state.selectedRoute}
-            onItemSelected={this._handleOnSidebarItemSelected}
-            itemsTotal={SidebarItems.length}
-            {...{index, isSidebarOpen}}
-            {...item}
-          />
-        ))}
+        <motion.div
+          className={css(styles.sidebarIndicator)}
+          initial={{translateY: -HomePageConstants.drawerIconSize}}
+          animate={this.animationContolsDrawerIndicator}
+        />
+        {this._renderSidebarItems()}
       </motion.nav>
     );
   };
