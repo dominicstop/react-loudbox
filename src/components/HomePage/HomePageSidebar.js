@@ -57,7 +57,13 @@ const SidebarItems = [{
 
 const VARIANTS = {
   sidebar: {
+    hidden: {
+      width: HomePageConstants.drawerIconSize,
+      translateX: -HomePageConstants.drawerIconSize,
+      transition: { duration: 0.3, ease: 'easeInOut' }
+    },
     closed: {
+      translateX: 0,
       width: HomePageConstants.drawerIconSize,
     },
     open: {
@@ -83,13 +89,17 @@ export class HomePageSideBar extends React.Component {
       isSidebarOpen: false,
       selectedIndex: null,
       selectedRoute: null,
+      mountDrawerItems: false,
     };
 
     this.animationContolsDrawer = new AnimationControls();
   };
 
-  componentDidMount(){
+  async componentDidMount(){
     this.animationContolsDrawer.mount();
+
+    await this.animationContolsDrawer.start('closed');
+    this.setState({mountDrawerItems: true});
   };
 
   componentWillUnmount(){
@@ -111,7 +121,7 @@ export class HomePageSideBar extends React.Component {
     return(
       <motion.nav
         className={css(styles.sideBarContainer)}
-        initial={'closed'}
+        initial={'hidden'}
         animate={this.animationContolsDrawer}
         variants={VARIANTS.sidebar}
       >
@@ -134,7 +144,7 @@ export class HomePageSideBar extends React.Component {
             };
           }}
         />
-        {SidebarItems.map((item, index) => (
+        {state.mountDrawerItems && SidebarItems.map((item, index) => (
           <HomePageSidebarItem
             selectedIndex={state.selectedIndex}
             selectedRoute={state.selectedRoute}

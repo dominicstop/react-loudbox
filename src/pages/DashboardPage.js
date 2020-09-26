@@ -20,7 +20,7 @@ export default class DashboardPage extends React.Component {
     },
     contentContainer: {
       flex: 1,
-      backgroundColor: 'blue'
+      //backgroundColor: 'blue'
     },
   });
 

@@ -58,9 +58,22 @@ export class HomePageSidebarItem extends React.PureComponent {
     icon: {
       display: 'flex',
       height: 'auto',
-
       width: 30,
       height: 30,
+    },
+    iconProfileContainer: {
+      display: 'flex',
+      width: 35,
+      height: 35,
+      backgroundColor: Colors.ORANGE[900],
+      borderRadius: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    iconProfileInitials: {
+      fontWeight: 700,
+      fontSize: 14,
+      color: 'white',
     },
     rightContainer: {
       flex: 1,
@@ -111,7 +124,19 @@ export class HomePageSidebarItem extends React.PureComponent {
   };
 
   _renderProfile(){
-    return(null);
+    const { styles } = HomePageSidebarItem;
+
+    return(
+      <motion.div 
+        className={css(styles.iconProfileContainer)}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <label className={css(styles.iconProfileInitials)}>
+          {'DG'}
+        </label>
+      </motion.div>
+    );
   };
 
   _renderIcon(){
@@ -134,21 +159,10 @@ export class HomePageSidebarItem extends React.PureComponent {
     );
 
     const isSelected = this.isSelected();
-
-    const animations = {
-      inactive: {
-        opacity: (
-          !iconsLoaded? 0 : 
-          isSelected  ? 0 : 1
-        ),
-      },
-      active: {
-        opacity: (
-          !iconsLoaded? 0 : 
-          isSelected  ? 1 : 0
-        ),
-      },
-    };
+    const animate = (
+      !iconsLoaded? 'hidden'  : 
+      isSelected  ? 'selected': 'visible'
+    );
 
     const activeIcon = React.cloneElement(props.iconActive, {
       ...sharedIconProps,
@@ -164,14 +178,16 @@ export class HomePageSidebarItem extends React.PureComponent {
       <div className={css(styles.iconContainer)}>
         <motion.div
           className={css(styles.iconMotion)}
-          animate={animations.active}
+          variants={VARIANTS.iconActive}
           initial={false}
+          {...{animate}}
         >
           {activeIcon}
         </motion.div>
         <motion.div
           className={css(styles.iconMotion)}
-          animate={animations.inactive}
+          variants={VARIANTS.iconInactive}
+          {...{animate}}
           initial={{ opacity: 0 }}
         >
           {inactiveIcon}
@@ -227,6 +243,38 @@ const VARIANTS = {
     visible: {
       opacity: 1,
       translateY: 0,
+    },
+  },
+  iconActive: {
+    hidden: {
+      opacity: 0,
+      translateX: -15,
+    },
+    visible: {
+      opacity: 0,
+      translateX: 0,
+      scale: 0.90,
+    },
+    selected: {
+      opacity: 1,
+      translateX: 0,
+      scale: 1.05,
+    },
+  },
+  iconInactive: {
+    hidden: {
+      opacity: 0,
+      translateX: -15,
+    },
+    visible: {
+      opacity: 1,
+      translateX: 0,
+      scale: 0.90,
+    },
+    selected: {
+      opacity: 0,
+      translateX: 0,
+      scale: 1.05,
     },
   },
 };
