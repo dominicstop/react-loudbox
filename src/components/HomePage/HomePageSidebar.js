@@ -3,9 +3,8 @@ import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
 
 import SVG from 'react-inlinesvg';
-import { motion, AnimationControls } from "framer-motion"
-
-import AuthStore from 'functions/AuthStore';
+import IconButton from '@material-ui/core/IconButton';
+import { motion, AnimationControls } from "framer-motion";
 
 import * as Colors from 'constants/Colors';
 import * as Helpers from 'functions/helpers';
@@ -14,6 +13,8 @@ import { ROUTES_HOME } from 'constants/Routes';
 
 import { HomePageSidebarItem } from './HomePageSidebarItem';
 import { HomePageConstants } from './HomePageConstants';
+
+import { FiMenu } from 'react-icons/fi';
 
 
 const SidebarItems = [{
@@ -60,6 +61,13 @@ export class HomePageSideBar extends React.Component {
       position: 'relative',
       backgroundColor: Colors.BLACK[900],
       overflow: 'hidden',
+    },
+    drawerContainer: {
+      outline: 'none',
+      width: HomePageConstants.drawerClosedWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'transparent',
     },
     sidebarIndicator: {
       position: 'absolute',
@@ -162,8 +170,11 @@ export class HomePageSideBar extends React.Component {
         animate={this.animationContolsDrawer}
         variants={VARIANTS.sidebar}
       >
-        <button 
-          style={{ backgroundColor: 'orange', padding: 20 }}
+
+        <IconButton
+          className={css(styles.drawerContainer)}
+          aria-label="toggle drawer" 
+          color="primary"
           onClick={async () => {
             this.setState({isSidebarOpen: !isSidebarOpen});
             await this.animationContolsDrawer.start(isSidebarOpen? 'closed' : 'open');
@@ -180,7 +191,12 @@ export class HomePageSideBar extends React.Component {
               this.setState({isSidebarOpen: true});
             };
           }}
-        />
+        >
+          <FiMenu
+            color={'white'}
+            size={'20px'}
+          />
+        </IconButton>
         <motion.div
           className={css(styles.sidebarIndicator)}
           initial={{translateY: -HomePageConstants.drawerItemHeight}}
