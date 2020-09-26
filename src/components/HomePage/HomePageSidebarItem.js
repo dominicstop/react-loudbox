@@ -58,13 +58,13 @@ export class HomePageSidebarItem extends React.PureComponent {
     icon: {
       display: 'flex',
       height: 'auto',
-      width: 30,
-      height: 30,
+      width : HomePageConstants.drawerIconSize,
+      height: HomePageConstants.drawerIconSize,
     },
     iconProfileContainer: {
       display: 'flex',
-      width: 35,
-      height: 35,
+      width : HomePageConstants.drawerIconSize + 5,
+      height: HomePageConstants.drawerIconSize + 5,
       backgroundColor: Colors.ORANGE[900],
       borderRadius: '100%',
       alignItems: 'center',
@@ -73,7 +73,7 @@ export class HomePageSidebarItem extends React.PureComponent {
     },
     iconProfileInitials: {
       fontWeight: 700,
-      fontSize: 14,
+      fontSize: 12,
       color: 'white',
       marginLeft: 2,
       marginBottom: 2,
