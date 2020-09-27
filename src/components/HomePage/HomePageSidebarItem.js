@@ -246,6 +246,7 @@ export class HomePageSidebarItem extends React.PureComponent {
           transition={{ duration, delay: 0.1 }}
         >
           {isProfile? (
+            // shows the user name
             <ProfileItem/>
           ):(
             <label className={css(styles.label)}>

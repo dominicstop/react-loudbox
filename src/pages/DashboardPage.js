@@ -1,18 +1,15 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
-import { HomePageSideBar } from 'components/HomePage/HomePageSidebar';
-
-import { LazyPreload   } from 'functions/LazyPreload';
-import { PreloadPages  } from 'functions/PreloadPages';
-
-import { ROUTES_HOME } from 'constants/Routes';
-
-import AuthStore from 'functions/AuthStore';
-import * as Colors from 'constants/Colors';
+import { HomePageSideBar      } from 'components/HomePage/HomePageSidebar';
 import { HomePageSidebarItems } from 'components/HomePage/HomePageConstants';
+
+import { LazyPreload  } from 'functions/LazyPreload';
+import { PreloadPages } from 'functions/PreloadPages';
+
+import { ROUTES, ROUTES_HOME } from 'constants/Routes';
 
 
 // lazy import pages -----------------------------------------------------
@@ -26,6 +23,7 @@ const CalendarPage    = LazyPreload(() => import('pages/CalendarPage'   ));
 
 // register pages to programtically preload later
 PreloadPages.registerPages([
+  { key: ROUTES_HOME.ProfilePage , pageComp: ProfilePage     },
   { key: ROUTES_HOME.HOME        , pageComp: HomePage        },
   { key: ROUTES_HOME.GROUPS      , pageComp: GroupsPage      },
   { key: ROUTES_HOME.JOBS        , pageComp: JobsPage        },
@@ -48,10 +46,6 @@ export default class DashboardPage extends React.Component {
     },
   });
 
-  componentDidMount(){
-    alert(JSON.stringify(this.props.location));
-  };
-
   _handleOnClickSidebarItem = async (params) => {
     const { selectedIndex, selectedRoute } = params;
     const { history } = this.props;
@@ -66,14 +60,19 @@ export default class DashboardPage extends React.Component {
 
   render(){
     const { styles } = DashboardPage;
-    const props = this.props;
+    const { location } = this.props;
 
-    return(
+
+    return((location?.pathname === ROUTES.DASHBOARD)?(
+      // redirect to default selected sidebar item
+      // so something is selected on the sidebar
+      <Redirect to={ROUTES_HOME.HOME}/>
+    ):(
       <div className={css(styles.rootContainer)}>
         <HomePageSideBar
-          location={props.location}
           sidebarItems={HomePageSidebarItems}
           onClickSidebarItem={this._handleOnClickSidebarItem}
+          {...{location}}
         />
         <div className={css(styles.contentContainer)}>
           <Switch>
@@ -108,6 +107,6 @@ export default class DashboardPage extends React.Component {
           </Switch>
         </div>
       </div>
-    );
+    ));
   };
 };

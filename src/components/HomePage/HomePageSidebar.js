@@ -8,8 +8,6 @@ import { motion, AnimationControls } from "framer-motion";
 import * as Colors from 'constants/Colors';
 import * as Helpers from 'functions/helpers';
 
-import { ROUTES, ROUTES_HOME } from 'constants/Routes';
-
 import { HomePageSidebarItem } from './HomePageSidebarItem';
 import { HomePageConstants, HomePageSidebarItems } from './HomePageConstants';
 
@@ -73,7 +71,9 @@ export class HomePageSideBar extends React.Component {
       (prevProps.location?.pathname != nextProps.location?.pathname);
 
     if(didPathnameChange){
-
+      // do something when the route changes
+      // logic for route matching i.e if a deeper route `a/b/c`
+      // is a subroute of `a/b` or `a/`
     };
 
     return(
@@ -96,7 +96,9 @@ export class HomePageSideBar extends React.Component {
     this.setState({mountDrawerItems: true});
 
     await Helpers.timeout(1500);
-    this.showSidebarIndicator();
+    this.setSidebarIndicator(
+      this.state.selectedRoute
+    );
   };
 
   componentWillUnmount(){
@@ -104,26 +106,12 @@ export class HomePageSideBar extends React.Component {
     this.animationContolsDrawerIndicator.unmount();
   };
 
-  showSidebarIndicator = () => {
-    const { selectedRoute } = this.state;
-    const ref = this[`${selectedRoute}-SidebarItem`];
-
-    // guard: early exit if ref is null 
-    // or if there isnt a selected route
-    if(!ref || !ref.measure || !selectedRoute) return;
-
-    const { y } = ref.measure();
-    this.animationContolsDrawerIndicator.start({
-      translateY: y
-    });
-  };
-
   /** animate side bar indicator position based on route */
   setSidebarIndicator = async (route) => {
     const ref = this[`${route}-SidebarItem`];
 
     // guard: early exit if ref is null
-    if(!ref && !ref.measure) return;
+    if(!ref && !ref?.measure) return;
 
     const { y } = ref.measure();
     await this.animationContolsDrawerIndicator.start({
@@ -159,6 +147,14 @@ export class HomePageSideBar extends React.Component {
       // set the side bar pos
       await this.setSidebarIndicator(route);
     };
+  };
+
+  /** sidebar drawer button clicked */
+  _handleOnClickSidebarDrawer = async () => {
+    const { isSidebarOpen } = this.state;
+
+    this.setState({isSidebarOpen: !isSidebarOpen});
+    await this.animationContolsDrawer.start(isSidebarOpen? 'closed' : 'open');
   };
   
   _handleOnSidebarItemSelected = (params) => {
@@ -206,7 +202,6 @@ export class HomePageSideBar extends React.Component {
 
   render(){
     const { styles } = HomePageSideBar;
-    const { isSidebarOpen } = this.state;
 
     return(
       <motion.nav
@@ -215,27 +210,11 @@ export class HomePageSideBar extends React.Component {
         animate={this.animationContolsDrawer}
         variants={VARIANTS.sidebar}
       >
-
         <IconButton
           className={css(styles.drawerContainer)}
           aria-label="toggle drawer" 
           color="primary"
-          onClick={async () => {
-            this.setState({isSidebarOpen: !isSidebarOpen});
-            await this.animationContolsDrawer.start(isSidebarOpen? 'closed' : 'open');
-            return;
-            if(isSidebarOpen){
-              await Promise.all([
-                Helpers.timeout(500),
-                Helpers.setStateAsync(this, {isSidebarOpen: false}),
-              ]);
-
-              await this.animationContolsDrawer.start('closed');
-            } else {
-              await this.animationContolsDrawer.start('open');
-              this.setState({isSidebarOpen: true});
-            };
-          }}
+          onClick={this._handleOnClickSidebarDrawer}
         >
           <FiMenu
             color={'white'}
@@ -279,17 +258,14 @@ class HomePageSidebarHelpers {
     const itemIndex = sidebarItems
       ?.findIndex(item => item?.route === pathname);
 
-    const isDefaultRoute = (
-      (!itemIndex      ) ||
-      (itemIndex ==  -1) ||
-      (pathname  === ROUTES.DASHBOARD)
+    const isInvalidRoute = (
+      (!itemIndex     ) ||
+      (itemIndex == -1) 
     );
 
-    console.log({pathname, itemIndex, isDefaultRoute});
-
-    return(isDefaultRoute? {
-      selectedIndex: ROUTES_HOME.HOME,
-      selectedRoute: 1,
+    return(isInvalidRoute? {
+      selectedIndex: null,
+      selectedRoute: null,
     }:{
       selectedIndex: itemIndex,
       selectedRoute: pathname ,
