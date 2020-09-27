@@ -45,5 +45,10 @@ export const HomePageSidebarItems = [{
     label: 'Calendar',
     iconActive  : <SVG src={require('assests/ionicons/calendar.svg'        )}/>,
     iconInactive: <SVG src={require('assests/ionicons/calendar-outline.svg')}/>,
+  }, {
+    route: ROUTES_HOME.SETTINGS,
+    label: 'Settings',
+    iconActive  : <SVG src={require('assests/ionicons/settings.svg'        )}/>,
+    iconInactive: <SVG src={require('assests/ionicons/settings-outline.svg')}/>,
   },
 ];

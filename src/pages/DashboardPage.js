@@ -22,16 +22,18 @@ const JobsPage        = LazyPreload(() => import('pages/JobsPage'       ));
 const BidsPage        = LazyPreload(() => import('pages/BidsPage'       ));
 const FileManagerPage = LazyPreload(() => import('pages/FileManagerPage'));
 const CalendarPage    = LazyPreload(() => import('pages/CalendarPage'   ));
+const SettingsPage    = LazyPreload(() => import('pages/SettingsPage'   ));
 
 // register pages to programtically preload later
 PreloadPages.registerPages([
-  { key: ROUTES_HOME.ProfilePage , pageComp: ProfilePage     },
+  { key: ROUTES_HOME.PROFILE     , pageComp: ProfilePage     },
   { key: ROUTES_HOME.HOME        , pageComp: HomePage        },
   { key: ROUTES_HOME.GROUPS      , pageComp: GroupsPage      },
   { key: ROUTES_HOME.JOBS        , pageComp: JobsPage        },
   { key: ROUTES_HOME.BIDS        , pageComp: BidsPage        },
   { key: ROUTES_HOME.FILE_MANAGER, pageComp: FileManagerPage },
   { key: ROUTES_HOME.CALENDAR    , pageComp: CalendarPage    },
+  { key: ROUTES_HOME.SETTINGS    , pageComp: SettingsPage    },
 ]);
 
 
@@ -90,6 +92,10 @@ export default class DashboardPage extends React.Component {
         <Route 
           path={ROUTES_HOME.CALENDAR}
           component={CalendarPage}
+        />
+        <Route 
+          path={ROUTES_HOME.SETTINGS}
+          component={SettingsPage}
         />
       </Switch>
     );

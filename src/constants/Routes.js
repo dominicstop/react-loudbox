@@ -14,4 +14,5 @@ export const ROUTES_HOME = {
   BIDS        : `${ROUTES.DASHBOARD}/bids`        ,
   FILE_MANAGER: `${ROUTES.DASHBOARD}/file-manager`,
   CALENDAR    : `${ROUTES.DASHBOARD}/calendar`    ,
+  SETTINGS    : `${ROUTES.DASHBOARD}/settings`    ,
 };
