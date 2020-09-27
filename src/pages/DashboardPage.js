@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
+import PropTypes from 'prop-types';
 
 import { Switch, Route, Redirect } from "react-router-dom";
 
@@ -10,6 +11,7 @@ import { LazyPreload  } from 'functions/LazyPreload';
 import { PreloadPages } from 'functions/PreloadPages';
 
 import { ROUTES, ROUTES_HOME } from 'constants/Routes';
+import { LoadingPage } from './LoadingPage';
 
 
 // lazy import pages -----------------------------------------------------
@@ -58,6 +60,41 @@ export default class DashboardPage extends React.Component {
     history.push(selectedRoute, {});
   };
 
+  _renderRoutes(){
+    return (
+      <Switch>
+        <Route 
+          path={ROUTES_HOME.PROFILE}
+          component={ProfilePage}
+        />
+        <Route 
+          path={ROUTES_HOME.HOME}
+          component={HomePage}
+        />
+        <Route 
+          path={ROUTES_HOME.GROUPS}
+          component={GroupsPage}
+        />
+        <Route 
+          path={ROUTES_HOME.JOBS}
+          component={JobsPage}
+        />
+        <Route 
+          path={ROUTES_HOME.BIDS}
+          component={BidsPage}
+        />
+        <Route 
+          path={ROUTES_HOME.FILE_MANAGER}
+          component={FileManagerPage}
+        />
+        <Route 
+          path={ROUTES_HOME.CALENDAR}
+          component={CalendarPage}
+        />
+      </Switch>
+    );
+  };
+
   render(){
     const { styles } = DashboardPage;
     const { location } = this.props;
@@ -75,36 +112,9 @@ export default class DashboardPage extends React.Component {
           {...{location}}
         />
         <div className={css(styles.contentContainer)}>
-          <Switch>
-            <Route 
-              path={ROUTES_HOME.PROFILE}
-              component={ProfilePage}
-            />
-            <Route 
-              path={ROUTES_HOME.HOME}
-              component={HomePage}
-            />
-            <Route 
-              path={ROUTES_HOME.GROUPS}
-              component={GroupsPage}
-            />
-            <Route 
-              path={ROUTES_HOME.JOBS}
-              component={JobsPage}
-            />
-            <Route 
-              path={ROUTES_HOME.BIDS}
-              component={BidsPage}
-            />
-            <Route 
-              path={ROUTES_HOME.FILE_MANAGER}
-              component={FileManagerPage}
-            />
-            <Route 
-              path={ROUTES_HOME.CALENDAR}
-              component={CalendarPage}
-            />
-          </Switch>
+          <React.Suspense fallback={<LoadingPage/>}>
+            {this._renderRoutes()}
+          </React.Suspense>
         </div>
       </div>
     ));

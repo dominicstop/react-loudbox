@@ -147,22 +147,6 @@ export class HomePageSidebarItem extends React.PureComponent {
     return this.rootContainerRef.getBoundingClientRect();
   };
 
-  _renderProfileIcon(){
-    const { styles } = HomePageSidebarItem;
-
-    return(
-      <motion.div 
-        className={css(styles.iconProfileContainer)}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        <label className={css(styles.iconProfileInitials)}>
-          {'DG'}
-        </label>
-      </motion.div>
-    );
-  };
-
   _renderIcon(){
     const { styles } = HomePageSidebarItem;
     const props = this.props;
@@ -241,7 +225,7 @@ export class HomePageSidebarItem extends React.PureComponent {
       >
         <motion.div className={css(styles.leftIconContainer)}>
           {isProfile
-            ? this._renderProfileIcon()
+            ? <ProfileIcon/>
             : this._renderIcon()
           }
         </motion.div>
@@ -292,6 +276,31 @@ function ProfileItem(props){
         {'Admin'}
       </label>
     </Fragment>
+  );
+};
+
+function ProfileIcon(props){
+  const { styles } = HomePageSidebarItem;
+
+  /** @type {AuthStoreData}*/
+  const { loginResponse } = React.useContext(AuthContext);
+  const { firstName, lastName } = loginResponse?.user;
+
+  const letterFirstName      = firstName?.charAt(0)?.toUpperCase() ?? "";
+  const letterLastNameLetter = lastName ?.charAt(0)?.toUpperCase() ?? "";
+
+  const initials = (letterFirstName + letterLastNameLetter);
+
+  return(
+    <motion.div 
+      className={css(styles.iconProfileContainer)}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
+      <label className={css(styles.iconProfileInitials)}>
+        {initials}
+      </label>
+    </motion.div>
   );
 };
 //#endregion
