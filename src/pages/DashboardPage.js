@@ -4,13 +4,15 @@ import { StyleSheet, css } from 'aphrodite';
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import { HomePageSideBar      } from 'components/HomePage/HomePageSidebar';
-import { HomePageSidebarItems } from 'components/HomePage/HomePageConstants';
+import { HomePageSidebarItems, HomePageSidebarItemsAdmin } from 'components/HomePage/HomePageConstants';
 
-import { LazyPreload  } from 'functions/LazyPreload';
-import { PreloadPages } from 'functions/PreloadPages';
+import { LoadingPage } from './LoadingPage';
+
+import { AuthStoreData } from 'functions/AuthStore';
+import { LazyPreload   } from 'functions/LazyPreload';
+import { PreloadPages  } from 'functions/PreloadPages';
 
 import { ROUTES, ROUTES_HOME } from 'constants/Routes';
-import { LoadingPage } from './LoadingPage';
 
 
 // lazy import pages -----------------------------------------------------

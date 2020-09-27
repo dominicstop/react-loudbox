@@ -4,13 +4,14 @@ import { StyleSheet, css } from 'aphrodite';
 import { motion, AnimationControls } from "framer-motion";
 import Typography from '@material-ui/core/Typography';
 
+import { portalRoot  } from 'components/RootPortal';
 import { FadeInImage } from 'components/FadeInImage';
-import { portalRoot } from 'components/RootPortal';
-import { LoginForm } from 'forms/LoginForm';
+import { LoginForm   } from 'forms/LoginForm';
 
 import { AuthLogin } from 'api/Auth';
 import { PreloadPages } from 'functions/PreloadPages';
 import { LoginPayload } from 'models/LoginPayload';
+import { withAuthRedirect } from 'hoc/withAuthRedirect';
 import { ROUTES } from 'constants/Routes';
 
 import * as Helpers from 'functions/helpers';
@@ -19,7 +20,7 @@ import loginBG     from 'assests/images/login-cover.jpg';
 import loudboxLogo from 'assests/svg/loudbox-logo.svg';
 
 
-export default class LoginPage extends React.Component {
+class LoginPage extends React.Component {
   static styles = StyleSheet.create({
     rootContainer: {
       flex: 1,
@@ -342,3 +343,5 @@ class LoginPageHelpers {
   };
 };
 //#endregion
+
+export default withAuthRedirect(LoginPage, 'OnlyLoggedOut');

@@ -8,10 +8,11 @@ import { LazyPreload   } from 'functions/LazyPreload';
 import { PreloadPages  } from 'functions/PreloadPages';
 import { AuthStoreData } from 'functions/AuthStore';
 
-import { LoadingPage    } from 'pages/LoadingPage';
-import { ProtectedRoute } from 'components/ProtectedRoute';
+import { LoadingPage       } from 'pages/LoadingPage';
+import { ProtectedRoute    } from 'components/ProtectedRoute';
+import { ProtectedRedirect } from 'components/ProtectedRedirect';
 
-import { ROUTES } from 'constants/Routes';
+import { ROUTES, ROUTES_HOME } from 'constants/Routes';
 
 
 // lazy import pages
@@ -38,10 +39,11 @@ export default function App(){
         <Router>
           <Switch>
             <Route exact path="/">
-              {isLoggedIn
-                ? <Redirect to={ROUTES.DASHBOARD}/> 
-                : <Redirect to={ROUTES.LOGIN}/>
-              }
+              <ProtectedRedirect
+                routeLoggedIn     ={ROUTES_HOME.HOME}
+                routeLoggedInAdmin={ROUTES_HOME.HOME}
+                routeLoggedOut    ={ROUTES.LOGIN}
+              />
             </Route>
             <Route 
               path={ROUTES.LOGIN}

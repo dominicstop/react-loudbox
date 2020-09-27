@@ -7,16 +7,18 @@ import Scrollbar from 'react-scrollbars-custom';
 import { FadeInImage } from 'components/FadeInImage';
 import { SignUpForm } from 'forms/SignUpForm';
 
+import { Register } from 'api/Register';
+import { withAuthRedirect } from 'hoc/withAuthRedirect';
+
 import { ROUTES } from 'constants/Routes';
 
 import loginBG     from 'assests/images/login-cover.jpg';
 import signupBG    from 'assests/images/register-cover.jpg';
 import loudboxLogo from 'assests/svg/loudbox-logo.svg';
-import { Register } from 'api/Register';
 
 
 
-export default class SignUpPage extends React.Component {
+class SignUpPage extends React.Component {
   static styles = StyleSheet.create({
     rootContainer: {
       flex: 1,
@@ -258,3 +260,5 @@ class SignUpHelpers {
   };
 };
 //#endregion
+
+export default withAuthRedirect(SignUpPage, 'OnlyLoggedOut');
