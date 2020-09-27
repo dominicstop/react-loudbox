@@ -25,7 +25,9 @@ export class HomePageSideBar extends React.Component {
   
   static styles = StyleSheet.create({
     sideBarContainer: {
+      display: 'flex',
       position: 'relative',
+      flexDirection: 'column',
       backgroundColor: Colors.BLACK[900],
       overflow: 'hidden',
     },
@@ -199,6 +201,7 @@ export class HomePageSideBar extends React.Component {
       <HomePageSidebarItem
         key={`${item.route}-sidebarItem`}
         ref={r => this[`${item.route}-SidebarItem`] = r}
+        anchorLastToBottom={true}
         selectedIndex={state.selectedIndex}
         selectedRoute={state.selectedRoute}
         onItemSelected={this._handleOnSidebarItemSelected}

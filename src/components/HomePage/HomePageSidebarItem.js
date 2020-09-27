@@ -20,15 +20,16 @@ import * as Helpers from 'functions/helpers';
  */
 export class HomePageSidebarItem extends React.PureComponent {
   static propTypes = {
-    route        : PropTypes.string ,
-    label        : PropTypes.string ,
-    index        : PropTypes.number ,
-    itemsTotal   : PropTypes.number ,
-    isSidebarOpen: PropTypes.bool   ,
-    selectedIndex: PropTypes.number ,
-    selectedRoute: PropTypes.string ,
-    iconActive   : PropTypes.element,
-    iconInactive : PropTypes.element,
+    route             : PropTypes.string ,
+    label             : PropTypes.string ,
+    index             : PropTypes.number ,
+    itemsTotal        : PropTypes.number ,
+    selectedIndex     : PropTypes.number ,
+    selectedRoute     : PropTypes.string ,
+    iconActive        : PropTypes.element,
+    iconInactive      : PropTypes.element,
+    isSidebarOpen     : PropTypes.bool   ,
+    anchorLastToBottom: PropTypes.bool   ,
     //
     onItemSelected: PropTypes.func
   };
@@ -105,6 +106,9 @@ export class HomePageSidebarItem extends React.PureComponent {
       color: 'white',
       fontSize: 14,
       marginTop: 3,
+    },
+    anchorBottom: {
+      marginTop: 'auto'
     },
   });
 
@@ -211,12 +215,14 @@ export class HomePageSidebarItem extends React.PureComponent {
     const percentage = ((props.index + 1) / props.itemsTotal);
     const duration = Helpers.lerp(0.1, 0.6, percentage);
 
-    const isProfile = (props.route === ROUTES_HOME.PROFILE);
+    const isProfile      = (props.route === ROUTES_HOME.PROFILE);
+    const isLast         = ((props.index + 1) >= props.itemsTotal);
+    const anchorToBottom = (props.anchorLastToBottom && isLast);
 
     return (
       <motion.div
         ref={r => this.rootContainerRef = r}
-        className={css(styles.rootContainer)}
+        className={css(styles.rootContainer, anchorToBottom && styles.anchorBottom)}
         data-tip={props.label}
         data-for={"sidebar"}
         data-offset="{'right': 20}"
