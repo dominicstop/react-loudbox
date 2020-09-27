@@ -20,6 +20,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "react-scrollbars-custom": "^4.0.25",
+    "react-tooltip": "^4.2.10",
     "yup": "^0.29.3"
   },
   "scripts": {
