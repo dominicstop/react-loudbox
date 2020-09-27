@@ -2,60 +2,27 @@ import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
 
-import SVG from 'react-inlinesvg';
 import IconButton from '@material-ui/core/IconButton';
 import { motion, AnimationControls } from "framer-motion";
 
 import * as Colors from 'constants/Colors';
 import * as Helpers from 'functions/helpers';
 
-import { ROUTES_HOME } from 'constants/Routes';
+import { ROUTES, ROUTES_HOME } from 'constants/Routes';
 
 import { HomePageSidebarItem } from './HomePageSidebarItem';
-import { HomePageConstants } from './HomePageConstants';
+import { HomePageConstants, HomePageSidebarItems } from './HomePageConstants';
 
 import { FiMenu } from 'react-icons/fi';
 
 
-const SidebarItems = [{
-    route: ROUTES_HOME.PROFILE,
-    label: 'Profile',
-    iconActive  : null,
-    iconInactive: null,
-  }, {
-    route: ROUTES_HOME.HOME,
-    label: 'Home',
-    iconActive  : <SVG src={require('assests/ionicons/home.svg'        )}/>,
-    iconInactive: <SVG src={require('assests/ionicons/home-outline.svg')}/>,
-  }, {
-    route: ROUTES_HOME.GROUPS,
-    label: 'Groups',
-    iconActive  : <SVG src={require('assests/ionicons/people.svg'        )}/>,
-    iconInactive: <SVG src={require('assests/ionicons/people-outline.svg')}/>,
-  }, {
-    route: ROUTES_HOME.JOBS,
-    label: 'Jobs',
-    iconActive  : <SVG src={require('assests/ionicons/briefcase.svg'        )}/>,
-    iconInactive: <SVG src={require('assests/ionicons/briefcase-outline.svg')}/>,
-  }, {
-    route: ROUTES_HOME.BIDS,
-    label: 'Bids',
-    iconActive  : <SVG src={require('assests/ionicons/pricetag.svg'        )}/>,
-    iconInactive: <SVG src={require('assests/ionicons/pricetag-outline.svg')}/>,
-  }, {
-    route: ROUTES_HOME.FILE_MANAGER,
-    label: 'File Manager',
-    iconActive  : <SVG src={require('assests/ionicons/folder.svg'        )}/>,
-    iconInactive: <SVG src={require('assests/ionicons/folder-outline.svg')}/>,
-  }, {
-    route: ROUTES_HOME.CALENDAR,
-    label: 'Calendar',
-    iconActive  : <SVG src={require('assests/ionicons/calendar.svg'        )}/>,
-    iconInactive: <SVG src={require('assests/ionicons/calendar-outline.svg')}/>,
-  },
-];
-
 export class HomePageSideBar extends React.Component {
+  static propTypes = {
+    location: PropTypes.object,
+    sidebarItems: PropTypes.array,
+    onClickSidebarItem: PropTypes.func,
+  };
+  
   static styles = StyleSheet.create({
     sideBarContainer: {
       position: 'relative',
@@ -81,15 +48,42 @@ export class HomePageSideBar extends React.Component {
   constructor(props){
     super(props);
 
+    const intialSelected = HomePageSidebarHelpers.getInitialSelected(
+      props.location?.pathname,
+      props.sidebarItems
+    );
+
     this.state = {
       isSidebarOpen   : false,
-      selectedIndex   : 1    ,
-      selectedRoute   : ROUTES_HOME.HOME,
       mountDrawerItems: false,
+      // pass down -------------------------------
+      selectedIndex: intialSelected.selectedIndex,
+      selectedRoute: intialSelected.selectedRoute,
     };
 
     this.animationContolsDrawer = new AnimationControls();
     this.animationContolsDrawerIndicator = new AnimationControls();
+  };
+
+  shouldComponentUpdate(nextProps, nextState){
+    const prevProps = this.props;
+    const prevState = this.state;
+
+    const didPathnameChange = 
+      (prevProps.location?.pathname != nextProps.location?.pathname);
+
+    if(didPathnameChange){
+
+    };
+
+    return(
+      didPathnameChange ||
+      // compare state ----------------------------------------------
+      (prevState.isSidebarOpen    !== nextState.isSidebarOpen    ) ||
+      (prevState.selectedIndex    !== nextState.selectedIndex    ) ||
+      (prevState.selectedRoute    !== nextState.selectedRoute    ) ||
+      (prevState.mountDrawerItems !== nextState.mountDrawerItems )
+    );
   };
 
   async componentDidMount(){
@@ -103,6 +97,11 @@ export class HomePageSideBar extends React.Component {
 
     await Helpers.timeout(1500);
     this.showSidebarIndicator();
+  };
+
+  componentWillUnmount(){
+    this.animationContolsDrawer.unmount();
+    this.animationContolsDrawerIndicator.unmount();
   };
 
   showSidebarIndicator = () => {
@@ -119,12 +118,52 @@ export class HomePageSideBar extends React.Component {
     });
   };
 
-  componentWillUnmount(){
-    this.animationContolsDrawer.unmount();
-    this.animationContolsDrawerIndicator.unmount();
+  /** animate side bar indicator position based on route */
+  setSidebarIndicator = async (route) => {
+    const ref = this[`${route}-SidebarItem`];
+
+    // guard: early exit if ref is null
+    if(!ref && !ref.measure) return;
+
+    const { y } = ref.measure();
+    await this.animationContolsDrawerIndicator.start({
+      translateY: y
+    });
   };
 
+  /** set the currently selected route */
+  setSelectedRoute = async (route, index) => {
+    const { sidebarItems } = this.props;
+
+    if(index){
+      this.setState({
+        selectedIndex: index,
+        selectedRoute: route,
+      });
+
+      // set the side bar pos
+      await this.setSidebarIndicator(route);
+
+    } else {
+      const itemIndex = sidebarItems
+        ?.findIndex(item => item.route === route);
+
+      // guard: early exit if no matching item
+      if((itemIndex == -1) || !sidebarItems) return;
+
+      this.setState({
+        selectedIndex: itemIndex,
+        selectedRoute: route    ,
+      });
+
+      // set the side bar pos
+      await this.setSidebarIndicator(route);
+    };
+  };
+  
   _handleOnSidebarItemSelected = (params) => {
+    const { onClickSidebarItem } = this.props;
+
     this.setState({
       selectedIndex: params.selectedIndex,
       selectedRoute: params.selectedRoute,
@@ -136,23 +175,29 @@ export class HomePageSideBar extends React.Component {
     this.animationContolsDrawerIndicator.start({
       translateY: y
     });
+
+    onClickSidebarItem && onClickSidebarItem({
+      selectedIndex: params.selectedIndex,
+      selectedRoute: params.selectedRoute,
+    });
   };
 
   /** render the sidebar items */
   _renderSidebarItems(){
+    const { sidebarItems } = this.props;
     const { isSidebarOpen, ...state } = this.state;
 
     // guard: dont render until state change
     if(!state.mountDrawerItems) return null;
      
-    return SidebarItems.map((item, index) => (
+    return sidebarItems.map((item, index) => (
       <HomePageSidebarItem
         key={`${item.route}-sidebarItem`}
         ref={r => this[`${item.route}-SidebarItem`] = r}
         selectedIndex={state.selectedIndex}
         selectedRoute={state.selectedRoute}
         onItemSelected={this._handleOnSidebarItemSelected}
-        itemsTotal={SidebarItems.length}
+        itemsTotal={sidebarItems.length}
         {...{index, isSidebarOpen}}
         {...item}
       />
@@ -208,6 +253,7 @@ export class HomePageSideBar extends React.Component {
   };
 };
 
+//#region - Constants + Helpers
 const VARIANTS = {
   sidebar: {
     hidden: {
@@ -227,3 +273,27 @@ const VARIANTS = {
     },
   },
 };
+
+class HomePageSidebarHelpers {
+  static getInitialSelected(pathname, sidebarItems){
+    const itemIndex = sidebarItems
+      ?.findIndex(item => item?.route === pathname);
+
+    const isDefaultRoute = (
+      (!itemIndex      ) ||
+      (itemIndex ==  -1) ||
+      (pathname  === ROUTES.DASHBOARD)
+    );
+
+    console.log({pathname, itemIndex, isDefaultRoute});
+
+    return(isDefaultRoute? {
+      selectedIndex: ROUTES_HOME.HOME,
+      selectedRoute: 1,
+    }:{
+      selectedIndex: itemIndex,
+      selectedRoute: pathname ,
+    });
+  };
+};
+//#endregion

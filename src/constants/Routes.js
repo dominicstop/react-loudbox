@@ -7,11 +7,11 @@ export const ROUTES = {
 
 /** Routes under `ROUTES.DASHBOARD` */
 export const ROUTES_HOME = {
-  PROFILE     : '/profile'     ,
-  HOME        : '/home'        ,
-  GROUPS      : '/groups'      ,
-  JOBS        : '/jobs'        ,
-  BIDS        : '/bids'        ,
-  FILE_MANAGER: '/file-manager',
-  CALENDAR    : '/calendar'    ,
+  PROFILE     : `${ROUTES.DASHBOARD}/profile`     ,
+  HOME        : `${ROUTES.DASHBOARD}/home`        ,
+  GROUPS      : `${ROUTES.DASHBOARD}/groups`      ,
+  JOBS        : `${ROUTES.DASHBOARD}/jobs`        ,
+  BIDS        : `${ROUTES.DASHBOARD}/bids`        ,
+  FILE_MANAGER: `${ROUTES.DASHBOARD}/file-manager`,
+  CALENDAR    : `${ROUTES.DASHBOARD}/calendar`    ,
 };
