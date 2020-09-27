@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
 import { motion, AnimationControls } from "framer-motion";
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 
 import { FadeInImage } from 'components/FadeInImage';
 import { portalRoot } from 'components/RootPortal';
