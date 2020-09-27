@@ -2,7 +2,9 @@ import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
 
-import IconButton from '@material-ui/core/IconButton';
+import IconButton   from '@material-ui/core/IconButton';
+import ReactTooltip from 'react-tooltip';
+
 import { motion, AnimationControls } from "framer-motion";
 
 import * as Colors from 'constants/Colors';
@@ -40,6 +42,8 @@ export class HomePageSideBar extends React.Component {
       width: '100%',
       height: HomePageConstants.drawerItemHeight,
       backgroundColor: Helpers.hexToRGBA(Colors.ORANGE[900], 0.5),
+      // disable tooltip
+      pointerEvents: 'none',
     },
   });
 
@@ -99,6 +103,8 @@ export class HomePageSideBar extends React.Component {
     this.setSidebarIndicator(
       this.state.selectedRoute
     );
+
+    ReactTooltip.rebuild();
   };
 
   componentWillUnmount(){
@@ -202,6 +208,8 @@ export class HomePageSideBar extends React.Component {
 
   render(){
     const { styles } = HomePageSideBar;
+    const state = this.state;
+
 
     return(
       <motion.nav
@@ -227,6 +235,12 @@ export class HomePageSideBar extends React.Component {
           animate={this.animationContolsDrawerIndicator}
         />
         {this._renderSidebarItems()}
+        <ReactTooltip 
+          id={'sidebar'}
+          place={'right'}
+          delayShow={500}
+          disable={state.isSidebarOpen}
+        />
       </motion.nav>
     );
   };

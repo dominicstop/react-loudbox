@@ -2,15 +2,17 @@ import React, { Fragment, useContext } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
 
-import { motion, AnimationControls } from "framer-motion";
-import * as Helpers from 'functions/helpers';
+import { motion } from "framer-motion";
 
+import { ROUTES_HOME } from 'constants/Routes';
 import { AuthStoreData } from 'functions/AuthStore';
+import { AuthContext } from 'contexts/AuthContext';
+
+import { HomePageConstants } from './HomePageConstants';
 
 import * as Colors from 'constants/Colors';
-import { ROUTES_HOME } from 'constants/Routes';
-import { HomePageConstants } from './HomePageConstants';
-import { AuthContext } from 'contexts/AuthContext';
+import * as Helpers from 'functions/helpers';
+
 
 
 /** Sidebar Item in the `HomepageSidebar`
@@ -54,6 +56,8 @@ export class HomePageSidebarItem extends React.PureComponent {
     iconMotion: {
       display: 'flex',
       position: 'absolute',
+      // disable tooltip
+      pointerEvents: 'none',
     },
     icon: {
       display: 'flex',
@@ -229,6 +233,9 @@ export class HomePageSidebarItem extends React.PureComponent {
       <motion.div
         ref={r => this.rootContainerRef = r}
         className={css(styles.rootContainer)}
+        data-tip={props.label}
+        data-for={"sidebar"}
+        data-offset="{'right': 20}"
         onClick={this._handleOnClickButton}
         whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.1)' }}
       >
