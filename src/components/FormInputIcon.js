@@ -88,7 +88,7 @@ export class FormInputIcon extends React.Component {
     },
     inputError: {
       "::placeholder": {
-        color: Colors.RED[300],
+        color: Colors.RED[500],
       },
     },
     inputIconSpace: {
