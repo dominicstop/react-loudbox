@@ -30,11 +30,14 @@ export class HomePageSideBar extends React.Component {
       overflow: 'hidden',
     },
     drawerContainer: {
-      outline: 'none',
-      width: HomePageConstants.drawerClosedWidth,
+      display: 'flex',
+      width : HomePageConstants.drawerClosedWidth,
+      height: HomePageConstants.drawerIconSize,
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: 'transparent',
+      marginTop: 15,
+      marginBottom: 15,
     },
     sidebarIndicator: {
       position: 'absolute',
