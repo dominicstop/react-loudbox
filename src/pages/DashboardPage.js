@@ -6,8 +6,9 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { HomePageSideBar      } from 'components/HomePage/HomePageSidebar';
 import { HomePageSidebarItems, HomePageSidebarItemsAdmin } from 'components/HomePage/HomePageConstants';
 
-import { AuthContext } from 'contexts/AuthContext';
-import { LoadingPage } from './LoadingPage';
+import { AuthContext  } from 'contexts/AuthContext';
+import { LoadingPage  } from './LoadingPage';
+import   NotFoundPage   from './NotFoundPage';
 
 import { AuthStoreData } from 'functions/AuthStore';
 import { LazyPreload   } from 'functions/LazyPreload';
@@ -25,6 +26,7 @@ const BidsPage        = LazyPreload(() => import('pages/BidsPage'       ));
 const FileManagerPage = LazyPreload(() => import('pages/FileManagerPage'));
 const CalendarPage    = LazyPreload(() => import('pages/CalendarPage'   ));
 const SettingsPage    = LazyPreload(() => import('pages/SettingsPage'   ));
+
 
 // register pages to programtically preload later
 PreloadPages.registerPages([
@@ -101,6 +103,9 @@ export default class DashboardPage extends React.Component {
           path={ROUTES_HOME.SETTINGS}
           component={SettingsPage}
         />
+        <Route component={NotFoundPage}>
+          <Redirect to={'/'}/>
+        </Route>
       </Switch>
     );
   };

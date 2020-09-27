@@ -19,6 +19,7 @@ import { ROUTES, ROUTES_HOME } from 'constants/Routes';
 const LoginPage     = LazyPreload(() => import('pages/LoginPage'    ));
 const SignUpPage    = LazyPreload(() => import('pages/SignUpPage'   ));
 const DashboardPage = LazyPreload(() => import('pages/DashboardPage'));
+const NotFoundPage  = LazyPreload(() => import('pages/NotFoundPage' ));
 
 
 //register pages to programtically preload later
@@ -60,6 +61,7 @@ export default function App(){
             <ProtectedRoute path={ROUTES.DASHBOARD}>
               <DashboardPage/>
             </ProtectedRoute>
+            <Route component={NotFoundPage}/>
           </Switch>
         </Router>
       </React.Suspense>
