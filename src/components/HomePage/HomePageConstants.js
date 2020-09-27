@@ -52,3 +52,36 @@ export const HomePageSidebarItems = [{
     iconInactive: <SVG src={require('assests/ionicons/settings-outline.svg')}/>,
   },
 ];
+
+export const HomePageSidebarItemsAdmin = [{
+    route: ROUTES_HOME.PROFILE,
+    label: 'Profile',
+    iconActive  : null,
+    iconInactive: null,
+  }, {
+    route: ROUTES_HOME.HOME,
+    label: 'Home',
+    iconActive  : <SVG src={require('assests/ionicons/home.svg'        )}/>,
+    iconInactive: <SVG src={require('assests/ionicons/home-outline.svg')}/>,
+  }, {
+    route: ROUTES_HOME.GROUPS,
+    label: 'Users',
+    iconActive  : <SVG src={require('assests/ionicons/people.svg'        )}/>,
+    iconInactive: <SVG src={require('assests/ionicons/people-outline.svg')}/>,
+  }, {
+    route: ROUTES_HOME.JOBS,
+    label: 'Jobs',
+    iconActive  : <SVG src={require('assests/ionicons/briefcase.svg'        )}/>,
+    iconInactive: <SVG src={require('assests/ionicons/briefcase-outline.svg')}/>,
+  }, {
+    route: ROUTES_HOME.FILE_MANAGER,
+    label: 'File Manager',
+    iconActive  : <SVG src={require('assests/ionicons/folder.svg'        )}/>,
+    iconInactive: <SVG src={require('assests/ionicons/folder-outline.svg')}/>,
+  }, {
+    route: ROUTES_HOME.SETTINGS,
+    label: 'Settings',
+    iconActive  : <SVG src={require('assests/ionicons/settings.svg'        )}/>,
+    iconInactive: <SVG src={require('assests/ionicons/settings-outline.svg')}/>,
+  },
+];

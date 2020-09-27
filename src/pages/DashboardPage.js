@@ -6,6 +6,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { HomePageSideBar      } from 'components/HomePage/HomePageSidebar';
 import { HomePageSidebarItems, HomePageSidebarItemsAdmin } from 'components/HomePage/HomePageConstants';
 
+import { AuthContext } from 'contexts/AuthContext';
 import { LoadingPage } from './LoadingPage';
 
 import { AuthStoreData } from 'functions/AuthStore';
@@ -39,6 +40,8 @@ PreloadPages.registerPages([
 
 
 export default class DashboardPage extends React.Component {
+  static contextType = AuthContext;
+
   static styles = StyleSheet.create({
     rootContainer: {
       display: 'flex',
@@ -106,6 +109,13 @@ export default class DashboardPage extends React.Component {
     const { styles } = DashboardPage;
     const { location } = this.props;
 
+    /** @type {AuthStoreData} */
+    const { loginResponse: { user }} = this.context;
+
+    const sidebarItems = (user?.isAdmin
+      ? HomePageSidebarItemsAdmin
+      : HomePageSidebarItems
+    );
 
     return((location?.pathname === ROUTES.DASHBOARD)?(
       // redirect to default selected sidebar item
@@ -114,9 +124,8 @@ export default class DashboardPage extends React.Component {
     ):(
       <div className={css(styles.rootContainer)}>
         <HomePageSideBar
-          sidebarItems={HomePageSidebarItems}
           onClickSidebarItem={this._handleOnClickSidebarItem}
-          {...{location}}
+          {...{location, sidebarItems}}
         />
         <div className={css(styles.contentContainer)}>
           <React.Suspense fallback={<LoadingPage/>}>
