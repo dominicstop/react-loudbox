@@ -226,8 +226,10 @@ export class HomePageSideBar extends React.Component {
       >
         <IconButton
           className={css(styles.drawerContainer)}
-          aria-label="toggle drawer" 
-          color="primary"
+          aria-label={"toggle drawer"} 
+          color={"primary"}
+          data-tip={"Toggle Drawer"}
+          data-for={"sidebar"}
           onClick={this._handleOnClickSidebarDrawer}
         >
           <FiMenu
