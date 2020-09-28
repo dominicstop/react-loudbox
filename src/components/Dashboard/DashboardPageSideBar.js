@@ -10,7 +10,7 @@ import { motion, AnimationControls } from "framer-motion";
 import * as Colors from 'constants/Colors';
 import * as Helpers from 'functions/helpers';
 
-import { HomePageSidebarItem } from './HomePageSidebarItem';
+import { DashboardPageSidebarItem } from './DashboardPageSidebarItem';
 import { DashboardConstants, DashboardSidebarItems } from './DashboardConstants';
 
 import { FiMenu } from 'react-icons/fi';
@@ -198,7 +198,7 @@ export class DashboardPageSideBar extends React.Component {
     if(!state.mountDrawerItems) return null;
      
     return sidebarItems.map((item, index) => (
-      <HomePageSidebarItem
+      <DashboardPageSidebarItem
         key={`${item.route}-sidebarItem`}
         ref={r => this[`${item.route}-SidebarItem`] = r}
         anchorLastToBottom={true}

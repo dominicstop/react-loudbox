@@ -18,7 +18,7 @@ import * as Helpers from 'functions/helpers';
 /** Sidebar Item in the `HomepageSidebar`
  * - Displays an Icon + Label
  */
-export class HomePageSidebarItem extends React.PureComponent {
+export class DashboardPageSidebarItem extends React.PureComponent {
   static propTypes = {
     route             : PropTypes.string ,
     label             : PropTypes.string ,
@@ -152,7 +152,7 @@ export class HomePageSidebarItem extends React.PureComponent {
   };
 
   _renderIcon(){
-    const { styles } = HomePageSidebarItem;
+    const { styles } = DashboardPageSidebarItem;
     const props = this.props;
     const state = this.state;
 
@@ -209,7 +209,7 @@ export class HomePageSidebarItem extends React.PureComponent {
   };
 
   render(){
-    const { styles } = HomePageSidebarItem;
+    const { styles } = DashboardPageSidebarItem;
     const props = this.props;
 
     const percentage = ((props.index + 1) / props.itemsTotal);
@@ -263,7 +263,7 @@ export class HomePageSidebarItem extends React.PureComponent {
 //#region - Compoenents
 /** Shows the Profile Name */
 function ProfileItem(props){
-  const { styles } = HomePageSidebarItem;
+  const { styles } = DashboardPageSidebarItem;
 
   /** @type {AuthStoreData}*/
   const { loginResponse } = React.useContext(AuthContext);
@@ -290,7 +290,7 @@ function ProfileItem(props){
 };
 
 function ProfileIcon(props){
-  const { styles } = HomePageSidebarItem;
+  const { styles } = DashboardPageSidebarItem;
 
   /** @type {AuthStoreData}*/
   const { loginResponse } = React.useContext(AuthContext);
