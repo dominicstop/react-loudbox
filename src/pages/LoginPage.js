@@ -134,30 +134,31 @@ class LoginPage extends React.Component {
       this.rightImageContainerRef.getBoundingClientRect();
 
     await Promise.all([
-       PreloadPages.preloadPage(ROUTES.SIGNUP),
-       this.animationContolsFormContainer.start({
-         translateX: -formWidth,
-         opacity: 0,
-         scale: 1.2,
-         transition: { ease: 'easeInOut', duration: 0.6 },
-       }),
-       this.animationContolsImageContainer.start({
-         // move the image to the left
-         translateX: -(windowWidth - imageWidth),
-         transition: { ease: 'easeInOut', duration: 0.75 },
+      // hide login form
+      this.animationContolsFormContainer.start({
+        translateX: -formWidth,
+        opacity: 0,
+        scale: 1.2,
+        transition: { ease: 'easeInOut', duration: 0.6 },
+      }),
+      // move the image to the left
+      this.animationContolsImageContainer.start({
+        translateX: -(windowWidth - imageWidth),
+        transition: { ease: 'easeInOut', duration: 0.75 },
        }),
        // wait if the right image is still animating in
-       this.isRightImageAnimatingIn && Helpers.promiseWithTimeout({
-         ms: 1500, shouldReject: false, 
-         promise: new Promise(resolve => {
+      this.isRightImageAnimatingIn && Helpers.promiseWithTimeout({
+        ms: 1500, shouldReject: false, 
+        promise: new Promise(resolve => {
           this.onAnimationCompleteRightImage = resolve;
         })
-       }) 
+      }) 
     ]);
 
+    await PreloadPages.preloadPage(ROUTES.SIGNUP);
+    
     // fix for the flickering
     LoginPageHelpers.appendSharedElementImage(this.rightImageContainerRef);
-
     history.push('/signup', { fromPath: location.pathname });
   };
 

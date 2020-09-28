@@ -15,7 +15,6 @@ import { LazyPreload   } from 'functions/LazyPreload';
 import { PreloadPages  } from 'functions/PreloadPages';
 
 import { ROUTES, ROUTES_HOME, ROUTES_HOME_ADMIN } from 'constants/Routes';
-import { withAuthRedirect } from 'hoc/withAuthRedirect';
 
 
 // lazy import pages: User -----------------------------------------------
