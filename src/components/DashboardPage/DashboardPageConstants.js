@@ -8,6 +8,7 @@ export const DashboardConstants = {
   drawerClosedWidth: 50,
   drawerItemHeight : 65,
   drawerIconSize   : 25,
+  navBarHeight     : 20,
 };
 
 export const DashboardSidebarItems = [{

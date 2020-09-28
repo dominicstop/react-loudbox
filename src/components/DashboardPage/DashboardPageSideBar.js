@@ -55,7 +55,7 @@ export class DashboardPageSideBar extends React.Component {
   constructor(props){
     super(props);
 
-    const intialSelected = HomePageSidebarHelpers.getInitialSelected(
+    const intialSelected = DashboardSidebarHelpers.getInitialSelected(
       props.location?.pathname,
       props.sidebarItems
     );
@@ -115,6 +115,12 @@ export class DashboardPageSideBar extends React.Component {
   componentWillUnmount(){
     this.animationContolsDrawer.unmount();
     this.animationContolsDrawerIndicator.unmount();
+  };
+
+  /** get the current selected route and index */
+  getSelectedItem = () => {
+    const { selectedIndex, selectedRoute } = this.state;
+    return { selectedIndex, selectedRoute };
   };
 
   /** animate side bar indicator position based on route */
@@ -275,7 +281,7 @@ const VARIANTS = {
   },
 };
 
-class HomePageSidebarHelpers {
+class DashboardSidebarHelpers {
   static getInitialSelected(pathname, sidebarItems){
     const itemIndex = sidebarItems
       ?.findIndex(item => item?.route === pathname);

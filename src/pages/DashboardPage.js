@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
 import { Switch, Route, Redirect } from "react-router-dom";
+import { motion, AnimationControls } from "framer-motion";
 
 import { DashboardPageSideBar } from 'components/DashboardPage/DashboardPageSideBar';
 import { DashboardSidebarItems, DashboardSidebarItemsAdmin } from 'components/DashboardPage/DashboardPageConstants';
@@ -15,6 +16,7 @@ import { LazyPreload   } from 'functions/LazyPreload';
 import { PreloadPages  } from 'functions/PreloadPages';
 
 import { ROUTES, ROUTES_DASHBOARD, ROUTES_DASHBOARD_ADMIN } from 'constants/Routes';
+import { DashboardNavBar } from 'components/DashboardNavBar';
 
 
 // lazy import pages: User -----------------------------------------------
@@ -37,7 +39,7 @@ const AdminSettingsPage   = LazyPreload(() => import('pages/AdminSettingsPage'  
 
 // register pages to programtically preload later
 PreloadPages.registerPages([
-  // user routes ---------------------------------------------
+  // user routes --------------------------------------------------
   { key: ROUTES_DASHBOARD.PROFILE     , pageComp: ProfilePage     },
   { key: ROUTES_DASHBOARD.HOME        , pageComp: HomePage        },
   { key: ROUTES_DASHBOARD.GROUPS      , pageComp: GroupsPage      },
@@ -45,7 +47,7 @@ PreloadPages.registerPages([
   { key: ROUTES_DASHBOARD.BIDS        , pageComp: BidsPage        },
   { key: ROUTES_DASHBOARD.FILE_MANAGER, pageComp: FileManagerPage },
   { key: ROUTES_DASHBOARD.CALENDAR    , pageComp: CalendarPage    },
-  // admin routes ------------------------------------------------------
+  // admin routes -----------------------------------------------------------
   { key: ROUTES_DASHBOARD_ADMIN.HOME        , pageComp: AdminHomePage       },
   { key: ROUTES_DASHBOARD_ADMIN.USERS       , pageComp: AdminUserManagePage },
   { key: ROUTES_DASHBOARD_ADMIN.JOBS        , pageComp: AdminJobManagePage  },
@@ -63,22 +65,55 @@ export default class DashboardPage extends React.Component {
       flexDirection: 'row',
       flex: 1,
     },
-    contentContainer: {
+    rightContainer: {
+      display: 'flex',
       flex: 1,
-      //backgroundColor: 'blue'
+      flexDirection: 'column',
+      overflow: 'hidden',
+    },
+    contentContainer: {
+      maxHeight: 'inherit',
+      maxWidth: 'inherit',
+      overflow: 'hidden',
     },
   });
+
+  constructor(props){
+    super(props);
+
+    this.animationContolsContentContainer = new AnimationControls();
+  };
+
+  componentDidMount(){
+    this.animationContolsContentContainer.mount();
+  };
+
+  componentWillUnmount(){
+    this.animationContolsContentContainer.unmount();
+  };
 
   _handleOnClickSidebarItem = async (params) => {
     const { selectedIndex, selectedRoute } = params;
     const { history } = this.props;
 
+    // get the prev selected route + index
+    const prevSelected = this.sidebarRef.getSelectedItem();
+
+    // guard: early exit if the same route
+    if(prevSelected.selectedRoute == selectedRoute) return;
+
+    const [entrance, exit] = ((prevSelected.selectedIndex > selectedIndex)
+      ? ['transUpEntrance'  , 'transUpExit'  ]
+      : ['transDownEntrance', 'transDownExit']
+    );
 
     await Promise.all([
-      PreloadPages.preloadPage(selectedRoute)
+      PreloadPages.preloadPage(selectedRoute),
+      this.animationContolsContentContainer.start(exit),
     ]);
 
-    history.push(selectedRoute, {});
+    await history.push(selectedRoute, {});
+    this.animationContolsContentContainer.start(entrance);
   };
 
   _renderRoutes(){
@@ -166,19 +201,54 @@ export default class DashboardPage extends React.Component {
       case ROUTES.DASHBOARD_ADMIN: return(
         <Redirect to={ROUTES_DASHBOARD_ADMIN.HOME}/>
       ); 
-      default: return (
+      default: return(
         <div className={css(styles.rootContainer)}>
           <DashboardPageSideBar
+            ref={r => this.sidebarRef = r}
             onClickSidebarItem={this._handleOnClickSidebarItem}
             {...{location, sidebarItems}}
           />
-          <div className={css(styles.contentContainer)}>
+          <div className={css(styles.rightContainer)}>
+            <DashboardNavBar/>
             <React.Suspense fallback={<LoadingPage/>}>
-              {this._renderRoutes()}
+              <motion.div 
+                className={css(styles.contentContainer)}
+                variants={VARIANTS.contentContainer}
+                animate={this.animationContolsContentContainer}
+              >
+                {this._renderRoutes()}
+              </motion.div>
             </React.Suspense>
           </div>
         </div>
       );
     };
   };
+};
+
+const TRANS_DISTANCE = 20;
+
+const VARIANTS = {
+  contentContainer: {
+    transUpEntrance: {
+      opacity: 1,
+      translateY: [TRANS_DISTANCE, 0],
+      transition: { duration: 0.3, ease: 'easeOut' },
+    },
+    transUpExit: {
+      opacity: 0,
+      translateY: [0, -TRANS_DISTANCE],
+      transition: { duration: 0.2, ease: 'easeIn' },
+    },
+    transDownEntrance: {
+      opacity: 1,
+      translateY: [-TRANS_DISTANCE, 0],
+      transition: { duration: 0.3, ease: 'easeOut' },
+    },
+    transDownExit: {
+      opacity: 0,
+      translateY: [0, TRANS_DISTANCE],
+      transition: { duration: 0.2, ease: 'easeIn' },
+    },
+  },
 };
