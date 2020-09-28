@@ -12,7 +12,7 @@ import { LoadingPage       } from 'pages/LoadingPage';
 import { ProtectedRoute    } from 'components/ProtectedRoute';
 import { ProtectedRedirect } from 'components/ProtectedRedirect';
 
-import { ROUTES, ROUTES_HOME, ROUTES_HOME_ADMIN } from 'constants/Routes';
+import { ROUTES, ROUTES_DASHBOARD, ROUTES_DASHBOARD_ADMIN } from 'constants/Routes';
 import { withAuthRedirect } from 'hoc/withAuthRedirect';
 
 
@@ -43,8 +43,8 @@ export default function App(){
           <Switch>
             <Route exact path="/">
               <ProtectedRedirect
-                routeLoggedIn     ={ROUTES_HOME      .HOME}
-                routeLoggedInAdmin={ROUTES_HOME_ADMIN.HOME}
+                routeLoggedIn     ={ROUTES_DASHBOARD      .HOME}
+                routeLoggedInAdmin={ROUTES_DASHBOARD_ADMIN.HOME}
                 routeLoggedOut    ={ROUTES.LOGIN}
               />
             </Route>

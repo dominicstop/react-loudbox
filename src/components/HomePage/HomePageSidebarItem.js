@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { motion } from "framer-motion";
 
-import { ROUTES_HOME, ROUTES_HOME_ADMIN } from 'constants/Routes';
+import { ROUTES_DASHBOARD, ROUTES_DASHBOARD_ADMIN } from 'constants/Routes';
 import { AuthStoreData } from 'functions/AuthStore';
 import { AuthContext } from 'contexts/AuthContext';
 
@@ -219,8 +219,8 @@ export class HomePageSidebarItem extends React.PureComponent {
     const anchorToBottom = (props.anchorLastToBottom && isLast);
 
     const isProfile = (
-      (props.route === ROUTES_HOME      .PROFILE) ||
-      (props.route === ROUTES_HOME_ADMIN.PROFILE) 
+      (props.route === ROUTES_DASHBOARD      .PROFILE) ||
+      (props.route === ROUTES_DASHBOARD_ADMIN.PROFILE) 
     );
 
     return (

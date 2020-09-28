@@ -7,7 +7,7 @@ export const ROUTES = {
 };
 
 /** Routes under `ROUTES.DASHBOARD` for user */
-export const ROUTES_HOME = {
+export const ROUTES_DASHBOARD = {
   PROFILE     : `${ROUTES.DASHBOARD}/profile`     ,
   HOME        : `${ROUTES.DASHBOARD}/home`        ,
   GROUPS      : `${ROUTES.DASHBOARD}/groups`      ,
@@ -19,7 +19,7 @@ export const ROUTES_HOME = {
 };
 
 /** Routes under `ROUTES.DASHBOARD_ADMIN` */
-export const ROUTES_HOME_ADMIN = {
+export const ROUTES_DASHBOARD_ADMIN = {
   PROFILE     : `${ROUTES.DASHBOARD_ADMIN}/profile`     ,
   HOME        : `${ROUTES.DASHBOARD_ADMIN}/home`        ,
   USERS       : `${ROUTES.DASHBOARD_ADMIN}/users`       ,

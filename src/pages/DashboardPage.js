@@ -14,7 +14,7 @@ import { AuthStoreData } from 'functions/AuthStore';
 import { LazyPreload   } from 'functions/LazyPreload';
 import { PreloadPages  } from 'functions/PreloadPages';
 
-import { ROUTES, ROUTES_HOME, ROUTES_HOME_ADMIN } from 'constants/Routes';
+import { ROUTES, ROUTES_DASHBOARD, ROUTES_DASHBOARD_ADMIN } from 'constants/Routes';
 
 
 // lazy import pages: User -----------------------------------------------
@@ -38,19 +38,19 @@ const AdminSettingsPage   = LazyPreload(() => import('pages/AdminSettingsPage'  
 // register pages to programtically preload later
 PreloadPages.registerPages([
   // user routes ---------------------------------------------
-  { key: ROUTES_HOME.PROFILE     , pageComp: ProfilePage     },
-  { key: ROUTES_HOME.HOME        , pageComp: HomePage        },
-  { key: ROUTES_HOME.GROUPS      , pageComp: GroupsPage      },
-  { key: ROUTES_HOME.JOBS        , pageComp: JobsPage        },
-  { key: ROUTES_HOME.BIDS        , pageComp: BidsPage        },
-  { key: ROUTES_HOME.FILE_MANAGER, pageComp: FileManagerPage },
-  { key: ROUTES_HOME.CALENDAR    , pageComp: CalendarPage    },
+  { key: ROUTES_DASHBOARD.PROFILE     , pageComp: ProfilePage     },
+  { key: ROUTES_DASHBOARD.HOME        , pageComp: HomePage        },
+  { key: ROUTES_DASHBOARD.GROUPS      , pageComp: GroupsPage      },
+  { key: ROUTES_DASHBOARD.JOBS        , pageComp: JobsPage        },
+  { key: ROUTES_DASHBOARD.BIDS        , pageComp: BidsPage        },
+  { key: ROUTES_DASHBOARD.FILE_MANAGER, pageComp: FileManagerPage },
+  { key: ROUTES_DASHBOARD.CALENDAR    , pageComp: CalendarPage    },
   // admin routes ------------------------------------------------------
-  { key: ROUTES_HOME_ADMIN.HOME        , pageComp: AdminHomePage       },
-  { key: ROUTES_HOME_ADMIN.USERS       , pageComp: AdminUserManagePage },
-  { key: ROUTES_HOME_ADMIN.JOBS        , pageComp: AdminJobManagePage  },
-  { key: ROUTES_HOME_ADMIN.FILE_MANAGER, pageComp: AdminFileManagePage },
-  { key: ROUTES_HOME_ADMIN.SETTINGS    , pageComp: AdminSettingsPage   },
+  { key: ROUTES_DASHBOARD_ADMIN.HOME        , pageComp: AdminHomePage       },
+  { key: ROUTES_DASHBOARD_ADMIN.USERS       , pageComp: AdminUserManagePage },
+  { key: ROUTES_DASHBOARD_ADMIN.JOBS        , pageComp: AdminJobManagePage  },
+  { key: ROUTES_DASHBOARD_ADMIN.FILE_MANAGER, pageComp: AdminFileManagePage },
+  { key: ROUTES_DASHBOARD_ADMIN.SETTINGS    , pageComp: AdminSettingsPage   },
 ]);
 
 
@@ -85,59 +85,59 @@ export default class DashboardPage extends React.Component {
     return(
       <Switch>
         <Route 
-          path={ROUTES_HOME_ADMIN.PROFILE}
+          path={ROUTES_DASHBOARD_ADMIN.PROFILE}
           component={ProfilePage}
         />
         <Route 
-          path={ROUTES_HOME_ADMIN.HOME}
+          path={ROUTES_DASHBOARD_ADMIN.HOME}
           component={AdminHomePage}
         />
         <Route 
-          path={ROUTES_HOME_ADMIN.USERS}
+          path={ROUTES_DASHBOARD_ADMIN.USERS}
           component={AdminUserManagePage}
         />
         <Route 
-          path={ROUTES_HOME_ADMIN.JOBS}
+          path={ROUTES_DASHBOARD_ADMIN.JOBS}
           component={AdminJobManagePage}
         />
         <Route 
-          path={ROUTES_HOME_ADMIN.FILE_MANAGER}
+          path={ROUTES_DASHBOARD_ADMIN.FILE_MANAGER}
           component={AdminFileManagePage}
         />
         <Route 
-          path={ROUTES_HOME_ADMIN.SETTINGS}
+          path={ROUTES_DASHBOARD_ADMIN.SETTINGS}
           component={AdminSettingsPage}
         />
         <Route 
-          path={ROUTES_HOME.PROFILE}
+          path={ROUTES_DASHBOARD.PROFILE}
           component={ProfilePage}
         />
         <Route 
-          path={ROUTES_HOME.HOME}
+          path={ROUTES_DASHBOARD.HOME}
           component={HomePage}
         />
         <Route 
-          path={ROUTES_HOME.GROUPS}
+          path={ROUTES_DASHBOARD.GROUPS}
           component={GroupsPage}
         />
         <Route 
-          path={ROUTES_HOME.JOBS}
+          path={ROUTES_DASHBOARD.JOBS}
           component={JobsPage}
         />
         <Route 
-          path={ROUTES_HOME.BIDS}
+          path={ROUTES_DASHBOARD.BIDS}
           component={BidsPage}
         />
         <Route 
-          path={ROUTES_HOME.FILE_MANAGER}
+          path={ROUTES_DASHBOARD.FILE_MANAGER}
           component={FileManagerPage}
         />
         <Route 
-          path={ROUTES_HOME.CALENDAR}
+          path={ROUTES_DASHBOARD.CALENDAR}
           component={CalendarPage}
         />
         <Route 
-          path={ROUTES_HOME.SETTINGS}
+          path={ROUTES_DASHBOARD.SETTINGS}
           component={SettingsPage}
         />
         <Route component={NotFoundPage}/>
@@ -161,10 +161,10 @@ export default class DashboardPage extends React.Component {
     // so something is selected on the sidebar
     switch (location?.pathname) {
       case ROUTES.DASHBOARD: return (
-        <Redirect to={ROUTES_HOME.HOME}/>
+        <Redirect to={ROUTES_DASHBOARD.HOME}/>
       ); 
       case ROUTES.DASHBOARD_ADMIN: return(
-        <Redirect to={ROUTES_HOME_ADMIN.HOME}/>
+        <Redirect to={ROUTES_DASHBOARD_ADMIN.HOME}/>
       ); 
       default: return (
         <div className={css(styles.rootContainer)}>
