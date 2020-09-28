@@ -3,12 +3,12 @@ import { StyleSheet, css } from 'aphrodite';
 import { withAuthRedirect } from 'hoc/withAuthRedirect';
 
 
-function AdminUserManageScreen(props){
+function AdminHomePage(props){
   return(
     <div>
-      <h1>AdminUserManageScreen</h1>
+      <h1>AdminHomePage</h1>
     </div>
   );
 };
 
-export default withAuthRedirect(AdminUserManageScreen, 'OnlyAdmin');
+export default withAuthRedirect(AdminHomePage, 'OnlyAdmin');
