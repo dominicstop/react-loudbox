@@ -18,4 +18,4 @@ function HomePage(props){
   );
 };
 
-export default withAuthRedirect(HomePage, 'OnlyLoggedIn');
+export default withAuthRedirect(HomePage, 'OnlyUser');

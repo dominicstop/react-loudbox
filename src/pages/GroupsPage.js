@@ -11,4 +11,4 @@ function GroupsPage(props){
   );
 };
 
-export default withAuthRedirect(GroupsPage, 'OnlyLoggedIn');
+export default withAuthRedirect(GroupsPage, 'OnlyUser');

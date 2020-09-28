@@ -11,4 +11,4 @@ function CalendarPage(props){
   );
 };
 
-export default withAuthRedirect(CalendarPage, 'OnlyLoggedIn');
+export default withAuthRedirect(CalendarPage, 'OnlyUser');

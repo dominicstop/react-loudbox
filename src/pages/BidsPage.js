@@ -11,4 +11,4 @@ function BidsPage(props){
   );
 };
 
-export default withAuthRedirect(BidsPage, 'OnlyLoggedIn');
+export default withAuthRedirect(BidsPage, 'OnlyUser');

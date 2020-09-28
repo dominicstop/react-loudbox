@@ -11,4 +11,4 @@ function JobsPage(props){
   );
 };
 
-export default withAuthRedirect(JobsPage, 'OnlyLoggedIn');
+export default withAuthRedirect(JobsPage, 'OnlyUser');

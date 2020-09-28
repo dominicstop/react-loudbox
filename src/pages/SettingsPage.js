@@ -11,4 +11,4 @@ function SettingsPage(props){
   );
 };
 
-export default withAuthRedirect(SettingsPage, 'OnlyLoggedIn');
+export default withAuthRedirect(SettingsPage, 'OnlyUser');

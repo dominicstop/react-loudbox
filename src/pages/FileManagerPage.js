@@ -11,4 +11,4 @@ function FileManagerPage(props){
   );
 };
 
-export default withAuthRedirect(FileManagerPage, 'OnlyLoggedIn');
+export default withAuthRedirect(FileManagerPage, 'OnlyUser');

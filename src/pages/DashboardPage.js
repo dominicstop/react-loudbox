@@ -3,7 +3,7 @@ import { StyleSheet, css } from 'aphrodite';
 
 import { Switch, Route, Redirect } from "react-router-dom";
 
-import { HomePageSideBar      } from 'components/HomePage/HomePageSidebar';
+import { HomePageSideBar } from 'components/HomePage/HomePageSidebar';
 import { HomePageSidebarItems, HomePageSidebarItemsAdmin } from 'components/HomePage/HomePageConstants';
 
 import { AuthContext  } from 'contexts/AuthContext';
@@ -123,7 +123,7 @@ export default class DashboardPage extends React.Component {
     );
 
     return((location?.pathname === ROUTES.DASHBOARD)?(
-      // redirect to default selected sidebar item
+      // redirect to a default selected sidebar item
       // so something is selected on the sidebar
       <Redirect to={ROUTES_HOME.HOME}/>
     ):(
