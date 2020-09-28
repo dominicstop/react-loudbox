@@ -4,7 +4,7 @@ import { StyleSheet, css } from 'aphrodite';
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import { DashboardPageSideBar } from 'components/Dashboard/DashboardPageSideBar';
-import { DashboardSidebarItems, DashboardSidebarItemsAdmin } from 'components/Dashboard/DashboardConstants';
+import { DashboardSidebarItems, DashboardSidebarItemsAdmin } from 'components/Dashboard/DashboardPageConstants';
 
 import { AuthContext  } from 'contexts/AuthContext';
 import { LoadingPage  } from './LoadingPage';

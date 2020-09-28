@@ -8,7 +8,7 @@ import { ROUTES_DASHBOARD, ROUTES_DASHBOARD_ADMIN } from 'constants/Routes';
 import { AuthStoreData } from 'functions/AuthStore';
 import { AuthContext } from 'contexts/AuthContext';
 
-import { DashboardConstants } from './DashboardConstants';
+import { DashboardConstants } from './DashboardPageConstants';
 
 import * as Colors from 'constants/Colors';
 import * as Helpers from 'functions/helpers';

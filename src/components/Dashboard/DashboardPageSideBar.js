@@ -11,7 +11,7 @@ import * as Colors from 'constants/Colors';
 import * as Helpers from 'functions/helpers';
 
 import { DashboardPageSidebarItem } from './DashboardPageSidebarItem';
-import { DashboardConstants, DashboardSidebarItems } from './DashboardConstants';
+import { DashboardConstants, DashboardSidebarItems } from './DashboardPageConstants';
 
 import { FiMenu } from 'react-icons/fi';
 
