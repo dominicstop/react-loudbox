@@ -1,7 +1,7 @@
 import React from 'react';
 
 import SVG from 'react-inlinesvg';
-import { ROUTES_HOME } from 'constants/Routes';
+import { ROUTES_HOME, ROUTES_HOME_ADMIN } from 'constants/Routes';
 
 
 export const HomePageConstants = {
@@ -54,32 +54,32 @@ export const HomePageSidebarItems = [{
 ];
 
 export const HomePageSidebarItemsAdmin = [{
-    route: ROUTES_HOME.PROFILE,
+    route: ROUTES_HOME_ADMIN.PROFILE,
     label: 'Profile',
     iconActive  : null,
     iconInactive: null,
   }, {
-    route: ROUTES_HOME.HOME,
+    route: ROUTES_HOME_ADMIN.HOME,
     label: 'Home',
     iconActive  : <SVG src={require('assests/ionicons/home.svg'        )}/>,
     iconInactive: <SVG src={require('assests/ionicons/home-outline.svg')}/>,
   }, {
-    route: ROUTES_HOME.GROUPS,
+    route: ROUTES_HOME_ADMIN.USERS,
     label: 'Users',
     iconActive  : <SVG src={require('assests/ionicons/people.svg'        )}/>,
     iconInactive: <SVG src={require('assests/ionicons/people-outline.svg')}/>,
   }, {
-    route: ROUTES_HOME.JOBS,
+    route: ROUTES_HOME_ADMIN.JOBS,
     label: 'Jobs',
     iconActive  : <SVG src={require('assests/ionicons/briefcase.svg'        )}/>,
     iconInactive: <SVG src={require('assests/ionicons/briefcase-outline.svg')}/>,
   }, {
-    route: ROUTES_HOME.FILE_MANAGER,
+    route: ROUTES_HOME_ADMIN.FILE_MANAGER,
     label: 'File Manager',
     iconActive  : <SVG src={require('assests/ionicons/folder.svg'        )}/>,
     iconInactive: <SVG src={require('assests/ionicons/folder-outline.svg')}/>,
   }, {
-    route: ROUTES_HOME.SETTINGS,
+    route: ROUTES_HOME_ADMIN.SETTINGS,
     label: 'Settings',
     iconActive  : <SVG src={require('assests/ionicons/settings.svg'        )}/>,
     iconInactive: <SVG src={require('assests/ionicons/settings-outline.svg')}/>,

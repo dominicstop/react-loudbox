@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { motion } from "framer-motion";
 
-import { ROUTES_HOME } from 'constants/Routes';
+import { ROUTES_HOME, ROUTES_HOME_ADMIN } from 'constants/Routes';
 import { AuthStoreData } from 'functions/AuthStore';
 import { AuthContext } from 'contexts/AuthContext';
 
@@ -213,11 +213,15 @@ export class HomePageSidebarItem extends React.PureComponent {
     const props = this.props;
 
     const percentage = ((props.index + 1) / props.itemsTotal);
-    const duration = Helpers.lerp(0.1, 0.6, percentage);
-
-    const isProfile      = (props.route === ROUTES_HOME.PROFILE);
+    const duration   = Helpers.lerp(0.1, 0.6, percentage);
+    
     const isLast         = ((props.index + 1) >= props.itemsTotal);
     const anchorToBottom = (props.anchorLastToBottom && isLast);
+
+    const isProfile = (
+      (props.route === ROUTES_HOME      .PROFILE) ||
+      (props.route === ROUTES_HOME_ADMIN.PROFILE) 
+    );
 
     return (
       <motion.div

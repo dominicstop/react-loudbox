@@ -12,7 +12,7 @@ import { LoadingPage       } from 'pages/LoadingPage';
 import { ProtectedRoute    } from 'components/ProtectedRoute';
 import { ProtectedRedirect } from 'components/ProtectedRedirect';
 
-import { ROUTES, ROUTES_HOME } from 'constants/Routes';
+import { ROUTES, ROUTES_HOME, ROUTES_HOME_ADMIN } from 'constants/Routes';
 
 
 // lazy import pages
@@ -42,25 +42,26 @@ export default function App(){
             <Route exact path="/">
               <ProtectedRedirect
                 routeLoggedIn     ={ROUTES_HOME.HOME}
-                routeLoggedInAdmin={ROUTES_HOME.HOME}
+                routeLoggedInAdmin={ROUTES_HOME_ADMIN.HOME}
                 routeLoggedOut    ={ROUTES.LOGIN}
               />
             </Route>
             <Route 
               path={ROUTES.LOGIN}
-              component={(isLoggedIn
-                // expects comp so wrap redirect element
-                ? () => <Redirect to={ROUTES.DASHBOARD} /> 
-                : LoginPage
-              )}
+              component={LoginPage}
             />
             <Route 
               path={ROUTES.SIGNUP}
               component={SignUpPage}
             />
-            <ProtectedRoute path={ROUTES.DASHBOARD}>
-              <DashboardPage/>
-            </ProtectedRoute>
+            <Route 
+              path={ROUTES.DASHBOARD}
+              component={DashboardPage}
+            />
+            <Route 
+              path={ROUTES.DASHBOARD_ADMIN}
+              component={DashboardPage}
+            />
             <Route component={NotFoundPage}/>
           </Switch>
         </Router>
