@@ -3,8 +3,8 @@ import { StyleSheet, css } from 'aphrodite';
 
 import { Switch, Route, Redirect } from "react-router-dom";
 
-import { HomePageSideBar } from 'components/HomePage/HomePageSidebar';
-import { HomePageSidebarItems, HomePageSidebarItemsAdmin } from 'components/HomePage/HomePageConstants';
+import { HomePageSideBar } from 'components/Dashboard/HomePageSidebar';
+import { DashboardSidebarItems, DashboardSidebarItemsAdmin } from 'components/Dashboard/DashboardConstants';
 
 import { AuthContext  } from 'contexts/AuthContext';
 import { LoadingPage  } from './LoadingPage';
@@ -153,8 +153,8 @@ export default class DashboardPage extends React.Component {
     const { loginResponse } = this.context;
 
     const sidebarItems = (loginResponse?.user?.isAdmin
-      ? HomePageSidebarItemsAdmin
-      : HomePageSidebarItems
+      ? DashboardSidebarItemsAdmin
+      : DashboardSidebarItems
     );
 
     // redirect to a default selected sidebar item

@@ -4,13 +4,13 @@ import SVG from 'react-inlinesvg';
 import { ROUTES_DASHBOARD, ROUTES_DASHBOARD_ADMIN } from 'constants/Routes';
 
 
-export const HomePageConstants = {
+export const DashboardConstants = {
   drawerClosedWidth: 50,
   drawerItemHeight : 65,
   drawerIconSize   : 25,
 };
 
-export const HomePageSidebarItems = [{
+export const DashboardSidebarItems = [{
     route: ROUTES_DASHBOARD.PROFILE,
     label: 'Profile',
     iconActive  : null,
@@ -53,7 +53,7 @@ export const HomePageSidebarItems = [{
   },
 ];
 
-export const HomePageSidebarItemsAdmin = [{
+export const DashboardSidebarItemsAdmin = [{
     route: ROUTES_DASHBOARD_ADMIN.PROFILE,
     label: 'Profile',
     iconActive  : null,

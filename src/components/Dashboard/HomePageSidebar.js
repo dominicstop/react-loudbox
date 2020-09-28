@@ -11,7 +11,7 @@ import * as Colors from 'constants/Colors';
 import * as Helpers from 'functions/helpers';
 
 import { HomePageSidebarItem } from './HomePageSidebarItem';
-import { HomePageConstants, HomePageSidebarItems } from './HomePageConstants';
+import { DashboardConstants, DashboardSidebarItems } from './DashboardConstants';
 
 import { FiMenu } from 'react-icons/fi';
 
@@ -33,8 +33,8 @@ export class HomePageSideBar extends React.Component {
     },
     drawerContainer: {
       display: 'flex',
-      width : HomePageConstants.drawerClosedWidth,
-      height: HomePageConstants.drawerIconSize,
+      width : DashboardConstants.drawerClosedWidth,
+      height: DashboardConstants.drawerIconSize,
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: 'transparent',
@@ -45,7 +45,7 @@ export class HomePageSideBar extends React.Component {
       position: 'absolute',
       top: 0,
       width: '100%',
-      height: HomePageConstants.drawerItemHeight,
+      height: DashboardConstants.drawerItemHeight,
       backgroundColor: Helpers.hexToRGBA(Colors.ORANGE[900], 0.5),
       // disable tooltip
       pointerEvents: 'none',
@@ -239,7 +239,7 @@ export class HomePageSideBar extends React.Component {
         </IconButton>
         <motion.div
           className={css(styles.sidebarIndicator)}
-          initial={{translateY: -HomePageConstants.drawerItemHeight}}
+          initial={{translateY: -DashboardConstants.drawerItemHeight}}
           animate={this.animationContolsDrawerIndicator}
         />
         {this._renderSidebarItems()}
@@ -258,15 +258,15 @@ export class HomePageSideBar extends React.Component {
 const VARIANTS = {
   sidebar: {
     hidden: {
-      width: HomePageConstants.drawerClosedWidth,
-      translateX: -HomePageConstants.drawerClosedWidth,
+      width: DashboardConstants.drawerClosedWidth,
+      translateX: -DashboardConstants.drawerClosedWidth,
       opacity: 0,
       transition: { duration: 0.4, ease: 'easeInOut' }
     },
     closed: {
       translateX: 0,
       opacity: 1,
-      width: HomePageConstants.drawerClosedWidth,
+      width: DashboardConstants.drawerClosedWidth,
     },
     open: {
       width: 'auto',

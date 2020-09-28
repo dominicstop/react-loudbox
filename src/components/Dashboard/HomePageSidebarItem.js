@@ -8,7 +8,7 @@ import { ROUTES_DASHBOARD, ROUTES_DASHBOARD_ADMIN } from 'constants/Routes';
 import { AuthStoreData } from 'functions/AuthStore';
 import { AuthContext } from 'contexts/AuthContext';
 
-import { HomePageConstants } from './HomePageConstants';
+import { DashboardConstants } from './DashboardConstants';
 
 import * as Colors from 'constants/Colors';
 import * as Helpers from 'functions/helpers';
@@ -38,12 +38,12 @@ export class HomePageSidebarItem extends React.PureComponent {
     rootContainer: {
       display: 'flex',
       flexDirection: 'row',
-      height: HomePageConstants.drawerItemHeight,
+      height: DashboardConstants.drawerItemHeight,
     },
     leftIconContainer: {
       display: 'flex',
-      minWidth : HomePageConstants.drawerClosedWidth,
-      minHeight: HomePageConstants.drawerClosedWidth,
+      minWidth : DashboardConstants.drawerClosedWidth,
+      minHeight: DashboardConstants.drawerClosedWidth,
       alignItems: 'center',
       justifyContent: 'center',
       //backgroundColor: 'red',
@@ -62,13 +62,13 @@ export class HomePageSidebarItem extends React.PureComponent {
     },
     icon: {
       display: 'flex',
-      width : HomePageConstants.drawerIconSize,
-      height: HomePageConstants.drawerIconSize,
+      width : DashboardConstants.drawerIconSize,
+      height: DashboardConstants.drawerIconSize,
     },
     iconProfileContainer: {
       display: 'flex',
-      width : HomePageConstants.drawerIconSize + 5,
-      height: HomePageConstants.drawerIconSize + 5,
+      width : DashboardConstants.drawerIconSize + 5,
+      height: DashboardConstants.drawerIconSize + 5,
       backgroundColor: Colors.ORANGE[900],
       borderRadius: '100%',
       alignItems: 'center',
