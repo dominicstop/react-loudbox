@@ -3,6 +3,8 @@ import { Redirect } from 'react-router-dom';
 
 import { AuthContext } from 'contexts/AuthContext';
 import { AuthStoreData } from 'functions/AuthStore';
+import AccessDeniedPage from 'pages/AccessDeniedPage';
+import { ROUTES } from 'constants/Routes';
 
 
 /**
@@ -31,17 +33,21 @@ export function withAuthRedirect(WrappedComponent, mode){
     const isAdmin = loginResponse?.user?.isAdmin;
 
     switch (mode) {
-      case AuthRedirectMode.OnlyAdmin: return((isLoggedIn && isAdmin)
-        ? <WrappedComponent {...props}/>
-        : <Redirect to={'/'}/>
+      case AuthRedirectMode.OnlyAdmin: return(
+        (isLoggedIn && isAdmin)? <WrappedComponent {...props}/> :
+        (isLoggedIn           )? <AccessDeniedPage/>            :
+        // default: not logged in ---
+        <Redirect to={ROUTES.LOGIN}/>
       );
-      case AuthRedirectMode.OnlyUser: return((isLoggedIn && !isAdmin)
-        ? <WrappedComponent {...props}/>
-        : <Redirect to={'/'}/>
+      case AuthRedirectMode.OnlyUser: return(
+        (isLoggedIn && !isAdmin)? <WrappedComponent {...props}/> :
+        (isLoggedIn &&  isAdmin)? <AccessDeniedPage/>            :
+        // default: not logged in ---
+        <Redirect to={ROUTES.LOGIN}/>
       );
       case AuthRedirectMode.OnlyLoggedIn: return(isLoggedIn
         ? <WrappedComponent {...props}/>
-        : <Redirect to={'/'}/>
+        : <Redirect to={ROUTES.LOGIN}/>
       );
       case AuthRedirectMode.OnlyLoggedOut: return(!isLoggedIn
         ? <WrappedComponent {...props}/>

@@ -15,6 +15,7 @@ import { LazyPreload   } from 'functions/LazyPreload';
 import { PreloadPages  } from 'functions/PreloadPages';
 
 import { ROUTES, ROUTES_HOME, ROUTES_HOME_ADMIN } from 'constants/Routes';
+import { withAuthRedirect } from 'hoc/withAuthRedirect';
 
 
 // lazy import pages: User -----------------------------------------------
@@ -82,10 +83,7 @@ export default class DashboardPage extends React.Component {
   };
 
   _renderRoutes(){
-    /** @type {AuthStoreData} */
-    const { loginResponse: { user }} = this.context;
-
-    return user.isAdmin?(
+    return(
       <Switch>
         <Route 
           path={ROUTES_HOME_ADMIN.PROFILE}
@@ -111,10 +109,6 @@ export default class DashboardPage extends React.Component {
           path={ROUTES_HOME_ADMIN.SETTINGS}
           component={AdminSettingsPage}
         />
-        <Route component={NotFoundPage}/>
-      </Switch>
-    ):(
-      <Switch>
         <Route 
           path={ROUTES_HOME.PROFILE}
           component={ProfilePage}
@@ -157,9 +151,9 @@ export default class DashboardPage extends React.Component {
     const { location } = this.props;
 
     /** @type {AuthStoreData} */
-    const { loginResponse: { user }} = this.context;
+    const { loginResponse } = this.context;
 
-    const sidebarItems = (user?.isAdmin
+    const sidebarItems = (loginResponse?.user?.isAdmin
       ? HomePageSidebarItemsAdmin
       : HomePageSidebarItems
     );

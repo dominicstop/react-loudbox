@@ -20,10 +20,10 @@ export const ROUTES_HOME = {
 
 /** Routes under `ROUTES.DASHBOARD_ADMIN` */
 export const ROUTES_HOME_ADMIN = {
-  PROFILE     : `${ROUTES.DASHBOARD_ADMIN}/Profile`     ,
-  HOME        : `${ROUTES.DASHBOARD_ADMIN}/Home`        ,
-  USERS       : `${ROUTES.DASHBOARD_ADMIN}/Users`       ,
-  JOBS        : `${ROUTES.DASHBOARD_ADMIN}/Jobs`        ,
-  FILE_MANAGER: `${ROUTES.DASHBOARD_ADMIN}/File-Manager`,
-  SETTINGS    : `${ROUTES.DASHBOARD_ADMIN}/Settings`    ,
+  PROFILE     : `${ROUTES.DASHBOARD_ADMIN}/profile`     ,
+  HOME        : `${ROUTES.DASHBOARD_ADMIN}/home`        ,
+  USERS       : `${ROUTES.DASHBOARD_ADMIN}/users`       ,
+  JOBS        : `${ROUTES.DASHBOARD_ADMIN}/jobs`        ,
+  FILE_MANAGER: `${ROUTES.DASHBOARD_ADMIN}/file-manager`,
+  SETTINGS    : `${ROUTES.DASHBOARD_ADMIN}/settings`    ,
 };

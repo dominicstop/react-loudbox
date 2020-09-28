@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
+
 import AuthStore from 'functions/AuthStore';
 import { withAuthRedirect } from 'hoc/withAuthRedirect';
 

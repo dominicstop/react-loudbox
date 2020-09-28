@@ -13,6 +13,7 @@ import { ProtectedRoute    } from 'components/ProtectedRoute';
 import { ProtectedRedirect } from 'components/ProtectedRedirect';
 
 import { ROUTES, ROUTES_HOME, ROUTES_HOME_ADMIN } from 'constants/Routes';
+import { withAuthRedirect } from 'hoc/withAuthRedirect';
 
 
 // lazy import pages
@@ -24,15 +25,16 @@ const NotFoundPage  = LazyPreload(() => import('pages/NotFoundPage' ));
 
 //register pages to programtically preload later
 PreloadPages.registerPages([
-  { key: ROUTES.LOGIN    , pageComp: LoginPage    },
-  { key: ROUTES.SIGNUP   , pageComp: SignUpPage   },
-  { key: ROUTES.DASHBOARD, pageComp: DashboardPage},
+  { key: ROUTES.LOGIN    , pageComp: LoginPage     },
+  { key: ROUTES.SIGNUP   , pageComp: SignUpPage    },
+  { key: ROUTES.DASHBOARD, pageComp: DashboardPage },
 ]);
 
 
 export default function App(){
   /** @type {AuthStoreData} */
-  const { isLoggedIn } = React.useContext(AuthContext);
+  const { loginResponse } = React.useContext(AuthContext);
+  const isAdmin = loginResponse?.user?.isAdmin;
 
   return (
     <div className={"app-root-container"}>
@@ -41,7 +43,7 @@ export default function App(){
           <Switch>
             <Route exact path="/">
               <ProtectedRedirect
-                routeLoggedIn     ={ROUTES_HOME.HOME}
+                routeLoggedIn     ={ROUTES_HOME      .HOME}
                 routeLoggedInAdmin={ROUTES_HOME_ADMIN.HOME}
                 routeLoggedOut    ={ROUTES.LOGIN}
               />
@@ -54,13 +56,13 @@ export default function App(){
               path={ROUTES.SIGNUP}
               component={SignUpPage}
             />
-            <Route 
+            <Route
               path={ROUTES.DASHBOARD}
-              component={DashboardPage}
+              component={withAuthRedirect(DashboardPage, 'OnlyUser')}
             />
-            <Route 
+            <Route
               path={ROUTES.DASHBOARD_ADMIN}
-              component={DashboardPage}
+              component={withAuthRedirect(DashboardPage, 'OnlyAdmin')}
             />
             <Route component={NotFoundPage}/>
           </Switch>
