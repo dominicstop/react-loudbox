@@ -334,7 +334,7 @@ export class FormInputIcon extends React.Component {
           variants={VARIANTS.inputContainer}
           animate={inputState}
           transition={{ ease: 'easeInOut', duration: 0.3 }}
-          whileHover={{ scale: 1.02 }}
+          whileHover={!isLoading && { scale: 1.02 }}
         >
           {this._renderFormIcon()}
           <Field {...props}
