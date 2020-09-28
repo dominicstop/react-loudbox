@@ -3,7 +3,7 @@ import { StyleSheet, css } from 'aphrodite';
 
 import { Switch, Route, Redirect } from "react-router-dom";
 
-import { HomePageSideBar } from 'components/Dashboard/HomePageSidebar';
+import { DashboardPageSideBar } from 'components/Dashboard/DashboardPageSideBar';
 import { DashboardSidebarItems, DashboardSidebarItemsAdmin } from 'components/Dashboard/DashboardConstants';
 
 import { AuthContext  } from 'contexts/AuthContext';
@@ -168,7 +168,7 @@ export default class DashboardPage extends React.Component {
       ); 
       default: return (
         <div className={css(styles.rootContainer)}>
-          <HomePageSideBar
+          <DashboardPageSideBar
             onClickSidebarItem={this._handleOnClickSidebarItem}
             {...{location, sidebarItems}}
           />

@@ -16,7 +16,7 @@ import { DashboardConstants, DashboardSidebarItems } from './DashboardConstants'
 import { FiMenu } from 'react-icons/fi';
 
 
-export class HomePageSideBar extends React.Component {
+export class DashboardPageSideBar extends React.Component {
   static propTypes = {
     location: PropTypes.object,
     sidebarItems: PropTypes.array,
@@ -213,7 +213,7 @@ export class HomePageSideBar extends React.Component {
   };
 
   render(){
-    const { styles } = HomePageSideBar;
+    const { styles } = DashboardPageSideBar;
     const state = this.state;
 
 
