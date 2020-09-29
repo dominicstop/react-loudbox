@@ -212,6 +212,12 @@ export class FormInputIcon extends React.Component {
     onBlur && onBlur(params)
   };
 
+  _handleOnKeyPress = (event) => {
+    if (event.key === "Enter") {
+      event.target.blur(); 
+    };
+  };
+
   // the animated icon on the left of the input
   _renderFormIcon(){
     const { styles } = FormInputIcon;
@@ -342,6 +348,7 @@ export class FormInputIcon extends React.Component {
             disabled={isLoading}
             onFocus={this._handleFieldOnFocus}
             onBlur={this._handleFieldOnBlur}
+            onKeyPress={this._handleOnKeyPress}
           />
         </motion.div>
         <motion.div
