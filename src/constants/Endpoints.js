@@ -1,10 +1,13 @@
 
-export const baseURL = 'https://abstract-user-dot-heroic-climber-277222.df.r.appspot.com';
 
-export const API_PATHS = {
-  login   : 'login',
-  register: 'register'
+export const BaseURLS = {
+  ContactGroups : 'https://abstract-user-dot-heroic-climber-277222.df.r.appspot.com'  ,
+  FileManagement: 'https://file-management-dot-heroic-climber-277222.df.r.appspot.com',
 };
 
-export const loginURL    = `${baseURL}/${API_PATHS.login   }/`;
-export const registerURL = `${baseURL}/${API_PATHS.register}/`;
+
+export const loginURL    = `${BaseURLS.ContactGroups}/login/`;
+export const registerURL = `${BaseURLS.ContactGroups}/register`;
+
+
+export const fileManagementURL = `${BaseURLS.FileManagement}/api/file_management/`;
