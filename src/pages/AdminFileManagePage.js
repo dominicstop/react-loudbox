@@ -18,7 +18,7 @@ class AdminFileManagePage extends React.Component {
     return(
       <div>
         <h1>AdminFileManagePage</h1>
-        <p>{`fetchData count : ${fetchData?.length}`}</p>
+        <p>{`fetchData files count : ${fetchData?.length}`}</p>
         <p>{`fetchLoadingMode: ${fetchLoadingMode }`}</p>
         <p>{`fetchTimestamp  : ${fetchTimestamp   }`}</p>
         <button onClick={() => {
@@ -31,8 +31,10 @@ class AdminFileManagePage extends React.Component {
   };
 };
 
+
 const pageWithAPI = withFetchAPI(AdminFileManagePage, {
-  fetchAPI: FileManagement
+  fetchAPI    : FileManagement,
+  fetchOnMount: true,
 });
 
 export default withAuthRedirect(pageWithAPI, 'OnlyAdmin');

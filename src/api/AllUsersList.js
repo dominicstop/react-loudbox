@@ -1,47 +1,48 @@
 import * as Endpoints from 'constants/Endpoints';
 import { ErrorModel } from 'models/ErrorModel';
-import { FileManagementResponse } from 'models/FileManagementResponse';
 
 
 /** @type {CacheItem}*/
-let cachedFiles = {
+let cachedUsersList = {
   data     : []   ,
   hasCache : false,
   timestamp: null ,
 };
 
-export class FileManagement {
-  static KEY_STORE = 'file_management_items';
+export class AllUsersList {
+  static KEY_STORE = 'all_users_list';
 
   /** persist + cache files for later
    * @param {CacheItem} cacheItem 
    */
   static save(cacheItem){
     // update the files cache
-    cachedFiles = cacheItem;
+    cachedUsersList = cacheItem;
 
     // save and persist the cache storage
-    localStorage.setItem(FileManagement.KEY_STORE,
+    localStorage.setItem(AllUsersList.KEY_STORE,
       JSON.stringify(cacheItem)
     );
   };
-
+  
   static async fetch(){
     try {
-      const response = await fetch(Endpoints.fileManagementURL, {
+      const response = await fetch(Endpoints.userListURL, {
         method: 'GET',
         mode: 'cors',
         headers: { 'Content-Type': 'application/json' },
       });
 
-      /** @type {FileManagementResponse.structure[]} */
+      /** @type {*[]} */
       const data = await response.json() ?? [];
+
+      console.log('AllUsersList', data);
 
       const date      = new Date();
       const timestamp = date.getTime();
 
       // cache + save files for later
-      FileManagement.save({
+      AllUsersList.save({
         hasCache: true, data, timestamp,
       });
 
@@ -52,7 +53,7 @@ export class FileManagement {
       };
 
     } catch(error){
-      console.log('FileManagement - getFiles error', error);
+      console.log('AllUsersList - fetch error', error);
       const date = new Date();
 
       return { 
@@ -60,7 +61,7 @@ export class FileManagement {
         data: [], 
         timestamp: date.getTime(),
         error: ErrorModel.factory({
-          errorMessage: 'Unable to get files',
+          errorMessage: 'Unable to get users list',
           error,
         }),
       };
@@ -68,7 +69,7 @@ export class FileManagement {
   };
 
   /** 
-   * get the files from the cache or localStorage
+   * get the data from the cache or localStorage
    * @param   {boolean} readStore - if local cache is empty, read from store
    * @returns {CacheItem} */
   static getCached(readStore = true){
@@ -78,8 +79,8 @@ export class FileManagement {
       timestamp: null,
     };
 
-    if(cachedFiles.hasCache){
-      return cachedFiles;
+    if(cachedUsersList.hasCache){
+      return cachedUsersList;
 
     } else if(!readStore){
       return emptyCache;
@@ -88,7 +89,7 @@ export class FileManagement {
     try {
       /** @type {CacheItem} */
       const cacheItem = JSON.parse(
-        localStorage.getItem(FileManagement.KEY_STORE)
+        localStorage.getItem(AllUsersList.KEY_STORE)
       );
 
       const hasCache = (
@@ -99,20 +100,20 @@ export class FileManagement {
       // guard: early exit - no cache
       if(!hasCache) return emptyCache;
 
-      cachedFiles = cacheItem;
+      cachedUsersList = cacheItem;
       return cacheItem;
       
     } catch(error){
-      console.log('FileManagement - getCached error', error);
+      console.log('AllUsersList - getCached error', error);
       return emptyCache;
     };
   };
 
   static clearStore(){
-    cachedFiles.hasCache = false;
-    cachedFiles.timestamp = null;
-    cachedFiles.data = [];
+    cachedUsersList.hasCache = false;
+    cachedUsersList.timestamp = null;
+    cachedUsersList.data = [];
 
-    localStorage.removeItem(FileManagement.KEY_STORE);
+    localStorage.removeItem(AllUsersList.KEY_STORE);
   };
 };

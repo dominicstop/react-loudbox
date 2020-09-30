@@ -1,6 +1,11 @@
 import React, { ReactElement } from 'react';
 import * as Helpers from 'functions/helpers';
 
+/**
+ * @typedef  {Object} withFetchAPIConfig
+ * @property {*} fetchAPI
+ * @property {boolean} fetchOnMount
+ */
 
 const LOADING_MODE = {
   IDLE   : 'IDLE'   ,
@@ -8,6 +13,11 @@ const LOADING_MODE = {
   ERROR  : 'ERROR'  ,
 };
 
+/**
+ * 
+ * @param {ReactElement      } WrappedComonent 
+ * @param {withFetchAPIConfig} config 
+ */
 export function withFetchAPI(WrappedComonent, config){
   const API = config.fetchAPI;
   
@@ -27,7 +37,7 @@ export function withFetchAPI(WrappedComonent, config){
     componentDidMount(){
       const { fetchTimestamp } = this.state;
 
-      if(!fetchTimestamp){
+      if(!fetchTimestamp && config.fetchOnMount){
         this.getFetchData();
       };
     };
